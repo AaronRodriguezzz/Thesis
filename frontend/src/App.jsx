@@ -5,7 +5,7 @@ import HomePage from "./User/HomePage";
 import Login from "./User/Login";
 import QueueingForm from "./User/QueueingForm";
 import Registration from "./User/Registration";
-import Faq from "./User/FAQ.JSX";
+import Faq from "./User/FrequentlyQuestions";
 
 import './index.css';
 
