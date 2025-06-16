@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Footer from "../../components/Footer";
-import Navigation from  '../../components/Footer';
+import Navigation from  '../../components/NavBar';
 
 export default function BarberStatusPage() {
   const [date, setDate] = useState("");
@@ -46,7 +46,7 @@ export default function BarberStatusPage() {
       <main className="h-full flex flex-col items-center">
         <div className="w-[75%] flex justify-between items-center leading-3 bg-white p-4 my-4 shadow rounded">
           <div>
-            <h1 className="text-[30px] tracking-tighter text-center my-4">
+            <h1 className="text-[20px] lg:text-[30px] tracking-tighter text-left lg:text-center my-4">
               TOTO TUMBS STUDIO BRANCH
             </h1>
             <p>119 Ballecer, City Of Manila, Metro Manila</p>
@@ -90,12 +90,12 @@ export default function BarberStatusPage() {
                 <h1 className="text-xl tracking-tighter font-semibold">
                   APPOINTMENTS LISTS
                 </h1>
-                <div className="flex justify-between text-lg">
+                <div className="flex justify-between text-lg px-2">
                   <h2>TIME</h2>
                   <h3>CUSTOMERS</h3>
                 </div>
 
-                <div className="h-[200px] overflow-y-auto custom-scrollbar">
+                <div className="h-[40%] min-h-[170px] overflow-y-auto custom-scrollbar">
                   {Array.from({ length: 20 }).map((_, i) => (
                     <div
                       key={i}
