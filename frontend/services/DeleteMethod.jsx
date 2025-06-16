@@ -9,7 +9,7 @@ export const delete_data = async (id,route) => {
     }
 
     try{
-        const response = await axios.delete(`${route}/${id}`)
+        const response = await axios.delete(`/api/${route}/${id}`)
 
         if(response.status === 200){
             CustomAlert('success',  'Deletion Successful')
