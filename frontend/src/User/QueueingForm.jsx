@@ -43,23 +43,23 @@ export default function BarberStatusPage() {
     <div className="w-screen h-screen overflow-x-hidden bg-gray-100 bg-[url('/login.png')] bg-cover bg-center">
       <Navigation otherPage={true} />
 
-      <main className="h-full flex flex-col items-center">
-        <div className="w-[75%] flex justify-between items-center leading-3 bg-white p-4 my-4 shadow rounded">
-          <div>
-            <h1 className="text-[20px] lg:text-[30px] tracking-tighter text-left lg:text-center my-4">
-              TOTO TUMBS STUDIO BRANCH
+      <main className="h-full w-full flex flex-col items-center">
+        <div className="w-[90%] md:w-[95%] lg:w-[75%] flex justify-between items-center leading-3 bg-white p-4 my-4 shadow rounded">
+          <div className="leading-0.5">
+            <h1 className="text-s md:text-[20px] lg:text-[30px] tracking-tighter text-left my-4">
+              TOTO TUMBS STUDIO
             </h1>
-            <p>119 Ballecer, City Of Manila, Metro Manila</p>
+            <p className="text-xs md:text-[20px]">119 Ballecer South Signal Taguig City</p>
           </div>
-          <h2 className="text-[30px] font-extralight tracking-tighter text-center my-4">
+          <h2 className="text-xs md:text-[20px]  lg:text-[30px] font-extralight tracking-tighter text-center my-4">
             {date} {time}
           </h2>
         </div>
 
-        <div className="w-full h-[65%] flex flex-row items-center justify-center gap-x-4 px-4">
+        <div className="w-full h-auto md:h-[65%] flex flex-col md:flex-row items-center justify-center gap-4 px-4">
           {barbers.map((barber, index) => (
             <div
-              className="h-full w-[25%] flex-col bg-white rounded-lg shadow-md"
+              className="h-full w-[90%] md:w-[35%] lg:w-[25%] flex-col bg-white rounded-lg shadow-md"
               key={index}
             >
               <img
@@ -95,8 +95,8 @@ export default function BarberStatusPage() {
                   <h3>CUSTOMERS</h3>
                 </div>
 
-                <div className="h-[40%] min-h-[170px] overflow-y-auto custom-scrollbar">
-                  {Array.from({ length: 20 }).map((_, i) => (
+                <div className="h-[230px] lg:h-[170px] overflow-auto custom-scrollbar">
+                  {Array.from({ length: 10 }).map((_, i) => (
                     <div
                       key={i}
                       className="flex justify-between border-b border-gray-300 py-2 px-4"
