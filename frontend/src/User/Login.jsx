@@ -1,11 +1,27 @@
 import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
+import { post_service } from '../../services/PostMethod';
+import { useNavigate } from "react-router-dom";
+
 
 export default function Home() {
+  const navigate = useNavigate();
   const [credentials, setCredentials] = useState({
     email: "",
     password: "",
   });
+
+  const handle_submit = async () => {
+    try{
+      const response = await post_service(credentials, '/auth/user_login');
+
+      if(response){
+        navigate('/')
+      }
+    }catch(err){
+      console.log(err);
+    }
+  }
 
   return (
     <div className="h-screen w-screen bg-[url('/login.png')] bg-cover bg-center flex items-center justify-center">
@@ -49,7 +65,7 @@ export default function Home() {
 
         <p className="text-sm md:text-md">
           Don&apos;t have an account yet?{" "}
-          <a href="#" className="text-blue-400 underline">
+          <a href="/register" className="text-blue-400 underline">
             Create Account
           </a>
         </p>

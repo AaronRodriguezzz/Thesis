@@ -41,7 +41,6 @@ export default function BarberStatusPage() {
 
   return (
     <div className="w-screen h-screen overflow-x-hidden bg-gray-100 bg-[url('/login.png')] bg-cover bg-center">
-      <Navigation otherPage={true} />
 
       <main className="h-full w-full flex flex-col items-center">
         <div className="w-[90%] md:w-[95%] lg:w-[75%] flex justify-between items-center leading-3 bg-white p-4 my-4 shadow rounded">

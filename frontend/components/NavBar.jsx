@@ -6,24 +6,17 @@ export default function Navigation({ otherPage }) {
   const navigate = useNavigate();
 
   const navClicked = (id) => {
-    if (otherPage) {
-      navigate("/"); // navigate to home first
-      setTimeout(() => {
-        const element = document.getElementById(id);
-        if (element) {
-          element.scrollIntoView({ behavior: "smooth" });
-        }
-      }, 500);
-    } else {
+    navigate("/"); // navigate to home first
+    setTimeout(() => {
       const element = document.getElementById(id);
       if (element) {
         element.scrollIntoView({ behavior: "smooth" });
       }
-    }
+    }, 500);
   };
 
   return (
-    <div className="w-screen h-25 sticky top-0 left-0 shadow-sm flex flex-row justify-between items-center py-3 px-5 z-50 bg-white">
+    <div className="w-full sticky top-0 z-50 shadow-sm bg-white py-3 px-5 flex justify-between items-center">
       {/* Logo */}
       <div className="flex flex-col items-center">
         <p className="text-md tracking-[5px] font-extralight">TOTO TUMBS</p>
@@ -64,7 +57,7 @@ export default function Navigation({ otherPage }) {
       {/* Icons */}
       <div className="flex flex-row gap-x-2">
         <FiSearch size={30} className="text-gray-500" />
-        <FiUser size={30} className="text-gray-500" />
+        <FiUser size={30} onClick={() => navigate('/profile')} className="text-gray-500" />
       </div>
     </div>
   );

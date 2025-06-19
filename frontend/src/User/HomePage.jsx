@@ -32,13 +32,10 @@ export default function MainPage() {
   useEffect(() => {
     const get_services = async () => {
       const response = await get_data("/get_data/service");
-
-      console.log(response);
       if (response) {
         setServices(response);
       }
-    };      
-
+    };
     get_services();
   }, []);
 
@@ -51,197 +48,128 @@ export default function MainPage() {
   }, []);
 
   return (
-    <div className="w-screen h-screen overflow-x-hidden">
-      <Navigation />
-
+    <div className="w-full overflow-x-hidden">
       {/* Hero Section */}
       <div
         id="Home"
         style={{ backgroundImage: `url(${images[currentIndex]})` }}
-        className={`h-5/6 w-full flex flex-col justify-center text-white pl-20 bg-cover bg-center z-10 space-y-1 transition ease-in-out`}
+        className="h-[90vh] w-full flex flex-col justify-center text-white px-4 md:px-20 bg-cover bg-center z-10 space-y-2 transition ease-in-out"
       >
-        <div className="leading-ti">
-          <h1 className="font-bold text-[55px] leading-tight">
-            Where Tradition Meets Precision
-          </h1>
-          <p className="text-[25px] font-extralight leading-tight">
-            Book an appointment now
-          </p>
-        </div>
-
+        <h1 className="font-bold text-2xl md:text-4xl lg:text-6xl leading-tight">
+          Where Tradition Meets Precision
+        </h1>
+        <p className="text-sm md:text-lg lg:text-2xl font-extralight leading-tight mt-[-4px]">
+          Book an appointment now
+        </p>
         <Link
           to="/appointment"
-          className="inline-block w-[200px] bg-white text-xl text-gray-900 px-4 py-2 my-2 tracking-wider shadow-md hover:bg-gray-900 hover:text-white transition-colors ease-in-out text-center"
+          className="inline-block w-[150px] lg:w-[200px] bg-white text-md lg:text-xl text-gray-900 px-4 py-2 shadow-md hover:bg-gray-900 hover:text-white transition-colors text-center"
         >
           BOOK
         </Link>
       </div>
 
       {/* About Us */}
-      <div
-        id="About Us"
-        className="h-3/4 w-full bg-gray-100 flex flex-col items-center justify-center p-5"
-      >
-        <div className="flex flex-row justify-around items-center">
-          <div className="flex flex-col w-[50%] items-start">
-            <h1 className="text-center font-semibold text-[50px] ">ABOUT US</h1>
-            <p className="text-justify tracking-tight text-md">
-              Three years ago, we began as The Hauz Barbers—a neighborhood shop
-              with a mission to deliver high-quality grooming with a personal
-              touch. Founded by a seasoned barber who once styled celebrities at
-              Bruno’s Barbers, our journey has evolved into Toto Tumbs: a brand
-              that represents class, elegance, and refined barbering. The shift
-              from The Hauz to Toto Tumbs wasn’t just a name change, but a
-              transformation in style, ambiance, and service, blending
-              traditional techniques with modern flair. Now with six Toto Tumbs
-              branches—alongside the original Hauz Barbers still in
-              operation—we continue to offer premium grooming experiences for
-              clients who value craftsmanship and class.
-            </p>
-          </div>
-
-          <img
-            src="/about2.png"
-            alt="About us"
-            width={500}
-            height={500}
-            className="rounded-lg"
-          />
+      <div id="About Us" className="w-full bg-gray-100 flex flex-col md:flex-row items-center justify-center px-4 md:px-10 py-10 gap-6">
+        <div className="w-full md:w-1/2 flex flex-col items-start">
+          <h1 className="text-center font-semibold text-3xl md:text-5xl mb-4">ABOUT US</h1>
+          <p className="text-justify text-sm md:text-lg tracking-tight">
+            Three years ago, we began as The Hauz Barbers—a neighborhood shop with a mission to deliver high-quality grooming with a personal touch. Founded by a seasoned barber who once styled celebrities at Bruno’s Barbers, our journey has evolved into Toto Tumbs: a brand that represents class, elegance, and refined barbering. The shift from The Hauz to Toto Tumbs wasn’t just a name change, but a transformation in style, ambiance, and service, blending traditional techniques with modern flair. Now with six Toto Tumbs branches—alongside the original Hauz Barbers still in operation—we continue to offer premium grooming experiences for clients who value craftsmanship and class.
+          </p>
         </div>
+        <img
+          src="/about2.png"
+          alt="About us"
+          className="w-full max-w-xs md:max-w-sm lg:max-w-xl h-auto rounded-lg"
+        />
       </div>
 
       {/* Products */}
-      <div
-        id="Products"
-        className="min-h-3/4 h-auto w-full flex flex-col justify-center items-center bg-white"
-      >
-        <div className="w-full gap-5 flex flex-wrap items-center justify-center">
-          {Array(4)
-            .fill(0)
-            .map((_, i) => (
-              <div
-                key={i}
-                className="block h-[450px] w-[350px] hover:scale-105 hover:shadow-lg transition delay-100 ease-in"
-              >
-                <img
-                  src="/product.png"
-                  alt="Pomade"
-                  className="w-[100%] h-[70%]"
-                />
-                <div className="p-2">
-                  <h1 className="text-[20px] font-semibold">
-                    TOTO TUMBS HAIR WAX
-                  </h1>
-                  <p className="text-[18px]">₱189.00 PHP</p>
-                </div>
+      <div id="Products" className="w-full flex flex-col justify-center items-center bg-white py-10">
+        <div className="w-full px-4 md:px-10 gap-5 flex flex-wrap items-center justify-center">
+          {Array(4).fill(0).map((_, i) => (
+            <div
+              key={i}
+              className="block h-[400px] w-[90%] sm:w-[250px] md:w-[300px] p-5 hover:scale-105 hover:shadow-lg transition delay-100 ease-in"
+            >
+              <img src="/product.png" alt="Pomade" className="w-full h-[70%] object-cover" />
+              <div className="p-2">
+                <h1 className="text-lg md:text-xl font-semibold">TOTO TUMBS HAIR WAX</h1>
+                <p className="text-base">₱189.00 PHP</p>
               </div>
-            ))}
+            </div>
+          ))}
         </div>
-
         <Link
           to="/"
-          className="mt-10 bg-gray-800 text-white py-3 px-8 rounded-sm hover:bg-black transition-colors ease-in-out"
+          className="mt-10 bg-gray-800 text-white py-3 px-8 rounded-sm hover:bg-black transition-colors"
         >
           VIEW ALL
         </Link>
       </div>
 
       {/* Services */}
-      <h1 className="text-center my-6 font-extralight tracking-tighter text-[60px] bg-white" id="Services">
+      <h1 className="text-center my-6 font-extralight tracking-tighter text-4xl md:text-5xl bg-white" id="Services">
         SERVICES WE OFFER
       </h1>
 
-      <div className="w-full h-auto flex flex-col px-10 gap-y-2 my-4">
+      <div className="w-full flex flex-col px-4 md:px-10 gap-y-4">
         {services &&
           services.map((service, index) => (
             <div
               key={index}
-              className={`w-full shadow-sm flex flex-row justify-between items-center p-2 ${
-                index % 2 === 0 ? "bg-gray-100" : "bg-white"
-              }`}
+              className={`w-full shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center p-4 gap-2 ${index % 2 === 0 ? "bg-gray-100" : "bg-white"}`}
             >
-              <div className="block gap-y-2">
-                <h1 className="font-semibold text-[22px]">{service?.name}</h1>
-                <p className="tracking-tighter text-lg">
-                  {service?.description}
-                </p>
+              <div className="flex-1">
+                <h1 className="font-semibold text-xl">{service?.name}</h1>
+                <p className="tracking-tighter text-base">{service?.description}</p>
               </div>
-
-              <p className="tracking-tighter text-lg">
-                ₱{service?.price}.00 PHP
-              </p>
+              <p className="text-base font-medium">₱{service?.price}.00 PHP</p>
             </div>
           ))}
       </div>
 
       {/* Feedback Prompt */}
-      <div className="w-full h-1/2 bg-white flex items-center justify-center">
-        <div className="w-1/2 h-2/3 bg-gray-200 rounded-lg flex flex-col justify-center items-center">
-          <h1 className="text-[45px] font-semibold tracking-tight">
-            Give us your feedback!
-          </h1>
-          <p className="text-lg tracking-tight">
-            Help us to find what are we could improve!
-          </p>
-          <button className="py-3 px-6 my-3 bg-gray-800 text-white hover:bg-black transition-colors ease-in-out">
-            Feedback Form
-          </button>
+      <div className="w-full bg-white flex items-center justify-center py-10 px-4">
+        <div className="w-full md:w-2/3 lg:w-1/2 bg-gray-200 rounded-lg flex flex-col justify-center items-center text-center p-6">
+          <h1 className="text-2xl md:text-4xl font-semibold">Give us your feedback!</h1>
+          <p className="text-lg">Help us to find what we could improve!</p>
+          <button className="py-3 px-6 my-3 bg-gray-800 text-white hover:bg-black transition-colors">Feedback Form</button>
         </div>
       </div>
 
       {/* Reviews */}
-      <div className="px-10 md:px-20">
-        <div className="flex justify-between items-center mb-4">
-          <h1 className="my-6 font-extralight tracking-tighter text-[40px] bg-white">
-            REVIEWS
-          </h1>
-          <Link
-            to="/"
-            className="h-8 text-center underline hover:scale-110 transition ease-in-out"
-          >
+      <div className="px-4 md:px-10">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-4">
+          <h1 className="my-6 font-extralight tracking-tighter text-3xl md:text-4xl">REVIEWS</h1>
+          <Link to="/" className="text-center underline hover:scale-110 transition">
             VIEW MORE
           </Link>
         </div>
 
-        <div>
-          <div className="flex flex-row items-center justify-center gap-x-4">
-            {feedbacks.map((feeds, index) => (
-              <div
-                key={index}
-                className="w-[30%] min-w-[300px] h-[300px] flex flex-col gap-y-4 justify-center items-center shadow p-2"
-              >
-                <Rating name="read-only" value={feeds.rating} readOnly />
-                <p className="tracking-tighter text-lg text-center">
-                  "{feeds.feedback}"
-                </p>
-                <h2>-{feeds.customerName}</h2>
-              </div>
-            ))}
-          </div>
+        <div className="flex flex-wrap gap-4 justify-center">
+          {feedbacks.map((feeds, index) => (
+            <div
+              key={index}
+              className="w-full sm:w-[300px] h-[300px] flex flex-col gap-y-4 justify-center items-center shadow p-4"
+            >
+              <Rating name="read-only" value={feeds.rating} readOnly />
+              <p className="tracking-tighter text-center">"{feeds.feedback}"</p>
+              <h2>-{feeds.customerName}</h2>
+            </div>
+          ))}
         </div>
       </div>
 
       {/* Subscription */}
-      <div className="h-1/2 w-full flex flex-col justify-center items-center gap-y-3 bg-gray-100 py-10 mt-10">
-        <h1 className="text-center text-[40px] tracking-tight font-extralight ">
-          Do you want to be always updated?
-        </h1>
-        <p className="tracking-tighter text-lg text-center font-semibold">
-          Be the first to know about new collections and exclusive offers by
-          subscribing to our emails for free
+      <div className="w-full flex flex-col justify-center items-center gap-y-4 bg-gray-100 py-10 px-4 mt-10 text-center">
+        <h1 className="text-2xl md:text-4xl font-light">Do you want to be always updated?</h1>
+        <p className="text-base font-semibold max-w-2xl">
+          Be the first to know about new collections and exclusive offers by subscribing to our emails for free
         </p>
-        <TextField
-          id="outlined-basic"
-          label="Email"
-          variant="outlined"
-          sx={{ width: "350px" }}
-        />
-        <button className="bg-gray-800 text-white rounded-full py-3 px-8 hover:bg-black">
-          Subscribe
-        </button>
+        <TextField id="outlined-basic" label="Email" variant="outlined" sx={{ width: "100%", maxWidth: "350px" }} />
+        <button className="bg-gray-800 text-white rounded-full py-3 px-8 hover:bg-black">Subscribe</button>
       </div>
-
-      <Footer />
     </div>
   );
 }

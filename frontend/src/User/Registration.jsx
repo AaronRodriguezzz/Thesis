@@ -27,7 +27,7 @@ export default function RegisterPage() {
     const response = await post_service(formData, "/user_registration");
 
     if (response) {
-      navigate("/mainpage");
+      navigate("/");
     }
   };
 

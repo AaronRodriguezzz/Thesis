@@ -41,13 +41,12 @@ const AppointmentPage = () => {
 
   return (
     <div className="w-screen h-screen overflow-x-hidden bg-[url('/login.png')] bg-cover bg-center">
-      <Navigation otherPage={true} />
 
-      <main className="flex gap-x-3 p-5 justify-center items-center">
+      <main className="flex gap-x-3 justify-center items-center my-2">
         <div>
           <video
             src="/barbering.mp4"
-            width="350"
+            width="300"
             autoPlay
             loop
             muted
@@ -56,7 +55,7 @@ const AppointmentPage = () => {
           />
         </div>
 
-        <form className="flex flex-col gap-4 p-4 w-1/3">
+        <form className="flex flex-col p-4 w-1/3">
           <h1 className="text-3xl font-semibold tracking-tight my-6">
             APPOINTMENT FORM
           </h1>
@@ -66,7 +65,7 @@ const AppointmentPage = () => {
             id="branch"
             value={formData.branch}
             onChange={handleChange('branch')}
-            className="border px-3 py-2 rounded"
+            className="border px-3 py-2 rounded mb-3"
           >
             <option value="">Select Branch</option>
             {branch &&
@@ -85,7 +84,7 @@ const AppointmentPage = () => {
             max={oneMonthAhead.toISOString().split('T')[0]}
             value={formData.date}
             onChange={handleChange('date')}
-            className="border px-3 py-2 rounded"
+            className="border px-3 py-2 rounded mb-3"
           />
 
           <label htmlFor="time">Time</label>
@@ -93,7 +92,7 @@ const AppointmentPage = () => {
             id="time"
             value={formData.time}
             onChange={handleChange('time')}
-            className="border px-3 py-2 rounded"
+            className="border px-3 py-2 rounded mb-3"
           >
             <option value="">Select Time</option>
             {appointments &&
@@ -120,7 +119,7 @@ const AppointmentPage = () => {
             id="serviceType"
             value={formData.serviceType}
             onChange={handleChange('serviceType')}
-            className="border px-3 py-2 rounded"
+            className="border px-3 py-2 rounded mb-3"
           >
             <option value="">Select Service</option>
             {services &&
@@ -139,7 +138,7 @@ const AppointmentPage = () => {
             id="additionalService"
             value={formData.additionalService}
             onChange={handleChange('additionalService')}
-            className="border px-3 py-2 rounded"
+            className="border px-3 py-2 rounded mb-3"
           >
             <option value="">Select Extra Service (Optional)</option>
             {services &&
@@ -162,7 +161,6 @@ const AppointmentPage = () => {
         </form>
       </main>
 
-      <Footer />
     </div>
   );
 };

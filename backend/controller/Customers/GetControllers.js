@@ -1,6 +1,7 @@
 const Product = require('../../models/Product');
 const Service = require('../../models/Services');
 const Branches = require('../../models/Branch');
+const Appointments = require('../../models/Appointment');
 
 /**
  * Maps category strings to their corresponding Mongoose model.
@@ -8,7 +9,9 @@ const Branches = require('../../models/Branch');
 const modelMap = {
   product: Product,
   service: Service,
-  branch: Branches
+  branch: Branches,
+  appointments: Appointments
+
 };
 
 /**

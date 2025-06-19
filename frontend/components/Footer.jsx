@@ -4,7 +4,7 @@ import { FaFacebookF, FaInstagram, FaTwitter, FaCut } from "react-icons/fa";
 
 export default function Footer() {
   return (
-    <div className="w-full h-20 shadow-sm flex items-center justify-between px-6 z-50 bg-white">
+    <div className="w-full h-20 shadow-sm flex items-center justify-between px-6 z-50 bg-white  ">
 
       {/* Left: Logo */}
       <div className="flex items-center gap-2">
