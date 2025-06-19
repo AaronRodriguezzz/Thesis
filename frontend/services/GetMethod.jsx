@@ -3,7 +3,7 @@ import { CustomAlert } from '../components/modal/CustomAlert';
 
 export const get_data = async (route) => {
     try {
-        const response = await axios.get(`/api/${route}`, {
+        const response = await axios.get(`/api${route}`, {
             withCredentials: true, // This is required to include cookies like the JWT
         });
         

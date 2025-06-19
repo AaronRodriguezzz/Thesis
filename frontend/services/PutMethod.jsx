@@ -4,7 +4,7 @@ import { CustomAlert } from '../components/modal/CustomAlert';
 export const update_data = async (route, newData) => {
 
     try{
-        const response = await axios.put(`/api/${route}` , { newData })
+        const response = await axios.put(`/api${route}` , { newData })
 
         if(response.status === 200){
             CustomAlert('success',  'Updating Successful')
