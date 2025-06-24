@@ -35,7 +35,7 @@ const AdminSidebar = () => {
   };
 
   return (
-    <div className="w-64 h-screen bg-gray-900 text-white flex flex-col justify-between fixed">
+    <div className="w-48 h-screen bg-gray-900 text-white flex flex-col justify-between fixed">
       <div>
         <h2 className="text-2xl font-extralight p-4 border-b border-gray-700 tracking-tighter">TOTO TUMBS BARBERSHOP</h2>
         <ul className="mt-4 space-y-1">

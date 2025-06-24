@@ -1,9 +1,10 @@
 import axios from 'axios';
 import { CustomAlert } from '../components/modal/CustomAlert';
 
-export const get_data = async (route) => {
+export const get_data = async (route, page) => {
     try {
         const response = await axios.get(`/api${route}`, {
+            params: { page: page},
             withCredentials: true, // This is required to include cookies like the JWT
         });
         

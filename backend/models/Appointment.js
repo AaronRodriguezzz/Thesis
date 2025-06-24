@@ -37,6 +37,10 @@ const AppointmentSchema = new mongoose.Schema({
         enum: ['booked', 'completed', 'cancelled'], 
         default: 'booked' 
     },
+    uniqueCode: {
+        type: String, 
+        required: true
+    }
 },{ timestamps: true });
 
 module.exports = mongoose.model('Appointment', AppointmentSchema);

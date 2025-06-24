@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
-import { post_service } from "../../services/PostMethod"; // Adjust this path as needed
+import { post_data } from "../../services/PostMethod"; // Adjust this path as needed
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -24,7 +24,7 @@ export default function RegisterPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const response = await post_service(formData, "/user_registration");
+    const response = await post_data(formData, "/user_registration");
 
     if (response) {
       navigate("/");

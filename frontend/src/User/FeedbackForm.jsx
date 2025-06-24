@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import Rating from "@mui/material/Rating";
 import Navigation from "../../components/NavBar";
-import { post_service } from "../../services/PostMethod"; // Adjust path if needed
+import { post_data } from "../../services/PostMethod"; // Adjust path if needed
 
 export default function FeedbackForm() {
   const [formData, setFormData] = useState({
@@ -27,7 +27,7 @@ export default function FeedbackForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await post_service(formData, "/submit_feedback"); // Adjust endpoint
+    const response = await post_data(formData, "/submit_feedback"); // Adjust endpoint
 
     if (response) {
       alert("Feedback submitted successfully!");

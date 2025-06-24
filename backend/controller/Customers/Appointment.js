@@ -48,6 +48,7 @@ const appointment_creation = async (req, res) => {
             barber,
             scheduledDate: new Date(scheduledDate),
             scheduledTime,
+            uniqueCode  
         });
 
         const appointmentSaved = await appointment.save();

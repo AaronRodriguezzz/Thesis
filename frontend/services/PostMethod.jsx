@@ -2,7 +2,7 @@
 import axios from 'axios';
 import { CustomAlert } from '../components/modal/CustomAlert';
 
-export const post_service = async (credentials, route) => {
+export const post_data = async (credentials, route) => {
     try {
         const response = await axios.post(`/api${route}`, credentials , {
             withCredentials: true

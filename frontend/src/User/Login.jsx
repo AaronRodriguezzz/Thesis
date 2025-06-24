@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
-import { post_service } from '../../services/PostMethod';
+import { post_data } from '../../services/PostMethod';
 import { useNavigate } from "react-router-dom";
 
 
@@ -13,7 +13,7 @@ export default function Home() {
 
   const handle_submit = async () => {
     try{
-      const response = await post_service(credentials, '/auth/user_login');
+      const response = await post_data(credentials, '/auth/user_login');
 
       if(response){
         navigate('/')

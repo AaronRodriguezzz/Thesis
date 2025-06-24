@@ -3,5 +3,6 @@ const router = express.Router();
 const Appointment = require('../../controller/Admin/AppointmentControls');
 
 router.get('/api/all_appointments', Appointment.getAllAppointments);
+router.get('/api/today_appointments', Appointment.today_appointments);
 
 module.exports = router;
