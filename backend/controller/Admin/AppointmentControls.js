@@ -20,7 +20,11 @@ const getAllAppointments = async (req, res) => {
             .populate('service')
             .populate('additionalService')
             .populate('branch')
-            .populate('barber')
+            .populate({
+                path: 'barber',
+                match: { role: 'Barber' }, 
+                select: '-password'
+            })            
             .sort({ createdAt: -1 })
             .skip(skip)
             .limit(limit);

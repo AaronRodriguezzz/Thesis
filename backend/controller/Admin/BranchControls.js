@@ -1,5 +1,49 @@
 const Branch = require('../../models/Branch');
 
+
+/**
+ * @desc Fetch paginated list of customers
+ * @route GET /api/branches?page=1
+ * @access Admin or Private
+ */
+const get_branches = async (req, res) => {
+    try {
+        // Get the current page number from the query; default to 1
+        const page = parseInt(req.query.page) || 1;
+
+        // Set how many customers to return per page
+        const limit = 10;
+
+        // Calculate how many customers to skip
+        const skip = (page - 1) * limit;
+ 
+        // Count total number of customers (for pagination calculation)
+        const totalCount = await Branch.countDocuments(); // ❗ Fixed: was mistakenly using Request
+
+        // Fetch customers with pagination, sorted by most recent
+        const branches = await Branch.find()
+            .sort({ createdAt: -1 }) // Show latest first
+            .skip(skip)
+            .limit(limit);
+
+        // Calculate total pages needed (rounded up)
+        const pageCount = Math.ceil(totalCount / limit);
+
+        console.log("hello", branches);
+        // Send customers and pagination info to frontend
+        return res.status(200).json({
+            branches,
+            pageCount
+        });
+
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: 'Server error fetching customers.' });
+    }
+};
+
+
+
 /**
  * @desc Adds a new branch to the system
  * @route POST /api/add_branch
@@ -104,6 +148,7 @@ const delete_branch = async (req, res) => {
 };
 
 module.exports = {
+    get_branches,
     add_new_branch,
     update_branch,
     delete_branch

@@ -13,6 +13,7 @@ export const delete_data = async (id,route) => {
 
         if(response.status === 200){
             CustomAlert('success',  'Deletion Successful')
+            return response.data
         }
         
     }catch(err){

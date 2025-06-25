@@ -1,4 +1,5 @@
 const Customer = require('../../models/CustomerAccount');
+const mongoose = require('mongoose');
 
 /**
  * @desc Fetch paginated list of customers
@@ -11,7 +12,7 @@ const get_customers = async (req, res) => {
         const page = parseInt(req.query.page) || 1;
 
         // Set how many customers to return per page
-        const limit = 20;
+        const limit = 10;
 
         // Calculate how many customers to skip
         const skip = (page - 1) * limit;
@@ -21,6 +22,7 @@ const get_customers = async (req, res) => {
 
         // Fetch customers with pagination, sorted by most recent
         const customers = await Customer.find()
+            .select('-password') // Exclude password field
             .sort({ createdAt: -1 }) // Show latest first
             .skip(skip)
             .limit(limit);
@@ -40,6 +42,83 @@ const get_customers = async (req, res) => {
     }
 };
 
+
+/**
+ * @desc Fetch paginated list of customers
+ * @route PUT /api/update_customer
+ * @access Admin or Private
+ */
+const update_customer = async (req, res) => {
+    const { id, firstName, lastName, email, phone, status } = req.body.newData;
+
+    const updateData = {
+        firstName,
+        lastName,
+        email,
+        phone,
+        status
+    };
+
+    try {
+        const duplicate = await Customer.findOne({ 
+            email: email,
+            _id: { $ne: id }
+        });
+        if (duplicate) {
+            return res.status(400).json({ message: 'Phone or email already in use by another customer.' });
+        }
+
+        const updatedCustomer = await Customer.findByIdAndUpdate(
+            id,
+            updateData,
+            { new: true }
+        ).select('-password');
+
+        if (!updatedCustomer) {
+            return res.status(404).json({ message: 'Customer not found.' });
+        }
+        
+        console.log(updatedCustomer)
+        return res.status(200).json({
+            message: 'Customer updated successfully',
+            customer: updatedCustomer
+        });
+
+    } catch (error) {
+        console.error('Update failed:', error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+/**
+ * @desc Fetch paginated list of customers
+ * @route DELETE /api/delete_customer
+ * @access Admin or Private
+ */
+const delete_customer = async (req, res) => {
+    const { id } = req.params 
+
+    try {
+        
+        const deleted_customer = await Customer.findByIdAndDelete(id);
+
+        if(!deleted_customer){
+            return res.status(400).json({ message: 'Deletion problem' });
+        }
+        
+        return res.status(200).json({
+            message: 'Customer Deleted successfully',
+            deleted: true
+        });
+
+    } catch (error) {
+        console.error('Update failed:', error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
 module.exports = {
     get_customers,
+    update_customer,
+    delete_customer
 };

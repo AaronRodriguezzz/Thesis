@@ -28,12 +28,13 @@ const Appointments = () => {
 
     useEffect(() => {
         const get_employees = async () => {
-        const data = await get_data('/all_appointments', page);
-        //exclude the barber's password
-        if (data) {
-            setAppointmentList(data.appointments);
-            setPaginationLimit(data.pageCount);
-        }
+            const data = await get_data('/all_appointments', page);
+
+            //exclude the barber's password
+            if (data) {
+                setAppointmentList(data.appointments);
+                setPaginationLimit(data.pageCount);
+            }
         };
         get_employees();
     }, [page]);
@@ -52,7 +53,7 @@ const Appointments = () => {
                 <div className="relative w-full sm:w-auto flex-grow">
                     <input 
                     type="text"
-                    placeholder="Search employees (Name, Role, Email)..."
+                    placeholder="Search Appointment (Name, Date, Time)..."
                     className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full text-sm tracking-tight focus:outline-none focus:ring-1 focus:ring-gray-500 focus:border-gray-500"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}

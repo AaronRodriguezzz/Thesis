@@ -11,7 +11,6 @@ const modelMap = {
   service: Service,
   branch: Branches,
   appointments: Appointments
-
 };
 
 /**

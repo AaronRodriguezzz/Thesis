@@ -9,8 +9,8 @@ export const post_data = async (credentials, route) => {
         });
 
         if (response.status === 200) {
-            console.log(response.data);
-            CustomAlert('success',  response.data.message);
+            console.log('post success')
+            CustomAlert('success',  response.data.message || 'Successful');
             return response.data;
         }
 

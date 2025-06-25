@@ -2,6 +2,47 @@ const bcrypt = require('bcrypt'); // Ensure this is imported
 const EmployeeAccount = require('../../models/EmployeeAccount');
 
 /**
+ * @desc Fetch paginated list of customers
+ * @route GET /api/employees?page=1
+ * @access Admin or Private
+ */
+const get_employees = async (req, res) => {
+    try {
+        // Get the current page number from the query; default to 1
+        const page = parseInt(req.query.page) || 1;
+
+        // Set how many customers to return per page
+        const limit = 10;
+
+        // Calculate how many customers to skip
+        const skip = (page - 1) * limit;
+ 
+        // Count total number of customers (for pagination calculation)
+        const totalCount = await EmployeeAccount.countDocuments(); // ❗ Fixed: was mistakenly using Request
+
+        // Fetch customers with pagination, sorted by most recent
+        const employees = await EmployeeAccount.find()
+            .select('-password') // Exclude password field
+            .sort({ createdAt: -1 }) // Show latest first
+            .skip(skip)
+            .limit(limit);
+
+        // Calculate total pages needed (rounded up)
+        const pageCount = Math.ceil(totalCount / limit);
+
+        // Send customers and pagination info to frontend
+        return res.status(200).json({
+            employees,
+            pageCount
+        });
+
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: 'Server error fetching customers.' });
+    }
+};
+
+/**
  * @desc Adds a new admin or employee account
  * @route POST /api/new_employees
  * @access Admin
@@ -42,7 +83,7 @@ const new_admin = async (req, res) => {
             return res.status(500).json({ message: 'Adding user unsuccessful' });
         }
 
-        return res.status(201).json({ message: 'New user added', added: true });
+        return res.status(200).json({ message: 'New user added', added: true });
     } catch (err) {
         console.error(err);
         return res.status(500).json({ message: err });
@@ -55,7 +96,8 @@ const new_admin = async (req, res) => {
  * @access Admin
  */
 const update_admin_account = async (req, res) => {
-    const { id, email, fullName, role } = req.body;
+    console.log(req.body);
+    const { id, email, fullName, role } = req.body.newData;
 
     // Basic input validation
     if (!id || !email || !fullName || !role) {
@@ -97,7 +139,7 @@ const delete_employee = async (req, res) => {
             return res.status(404).json({ message: 'Employee not found or already deleted' });
         }
 
-        return res.status(200).json({ message: 'Deletion successful' });
+        return res.status(200).json({ message: 'Deletion successful', deleted: true });
     } catch (err) {
         console.error(err);
         return res.status(500).json({ message: err });
@@ -105,6 +147,7 @@ const delete_employee = async (req, res) => {
 };
 
 module.exports = {
+    get_employees,
     new_admin,
     update_admin_account,
     delete_employee

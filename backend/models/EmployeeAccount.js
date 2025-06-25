@@ -15,8 +15,9 @@ const EmployeeSchema = new mongoose.Schema({
         required: true 
     },
     branchAssigned: {
-        type: String, 
-        required: true 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Branch',
+        required: true,
     },
     role: { 
         type: String, 
