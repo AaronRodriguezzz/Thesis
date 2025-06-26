@@ -4,7 +4,6 @@ import { get_data } from '../../services/GetMethod';
 
 const UpdateEmployee = ({ currentData, onCancel, setUpdatedData, route}) => {
     const [branches, setBranches] = useState(null);
-    console.log(currentData);
     const [newState, setNewState] = useState({  
         id: currentData?._id,
         email: currentData?.email,
@@ -30,14 +29,9 @@ const UpdateEmployee = ({ currentData, onCancel, setUpdatedData, route}) => {
     };
 
     useEffect(() => {
-        console.log('brancnhes', branches);
-    },[branches])
-
-    useEffect(() => {
         const get_branches = async () => {
             const data = await get_data('/get_data/branch')
 
-            console.log(data);
             if(data){
                 setBranches(data);
             }

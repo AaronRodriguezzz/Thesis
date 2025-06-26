@@ -36,10 +36,12 @@ const new_product = async (req, res) => {
         price,
         stock,
         branch,
+        description
     } = req.body;
 
+    console.log(req.body);
     try {
-        const requiredFields = ['name', 'imagePath', 'price', 'stock', 'branch'];
+        const requiredFields = ['name', 'imagePath', 'price', 'stock', 'branch', 'description'];
         const missingFields = requiredFields.filter(field => {
             const value = req.body[field];
             return value === undefined || value === null || (typeof value === 'string' && value.trim() === '');
@@ -49,12 +51,21 @@ const new_product = async (req, res) => {
             return res.status(400).json({ message: `Missing fields: ${missingFields.join(', ')}` });
         }
 
+        const productExist = await Product.findOne({
+            name: { $regex: `^${name}$`, $options: 'i' }
+        });
+
+        if(productExist){
+            return res.status(400).json({ message: 'Product already added'});
+        }
+
         const newProduct = new Product({
             name,
             imagePath,
             stock,
             price,
             branch,
+            description
         });
 
         const savedProduct = await newProduct.save();
@@ -63,7 +74,7 @@ const new_product = async (req, res) => {
             return res.status(500).json({ message: 'Failed to save the product.' });
         }
 
-        return res.status(201).json({ message: 'Product created successfully.', product: savedProduct });
+        return res.status(200).json({ message: 'Product created successfully.', added: true });
 
     } catch (err) {
         console.error(err);

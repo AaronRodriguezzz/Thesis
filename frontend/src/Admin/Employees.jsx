@@ -90,24 +90,25 @@ const Employees = () => {
 
                         <div className="flex justify-between items-center my-4 text-sm">
                             <div>
-                            <select 
-                                name="filter" 
-                                value={filterValue} 
-                                className="p-2 w-[200px] bg-gray-200 rounded-md outline-0 tracking-tight text-xs"
-                                onChange={(e) => setFilterValue(e.target.value)}
-                            >
-                                <option value="" disabled>Sort by</option>
-                                <option value="Date">Date</option>
-                                <option value="Status">Status</option>
-                                <option value="Service">Service</option>
-                                <option value="Branch">Branch</option>
-                            </select>
+                                <select 
+                                    name="filter" 
+                                    value={filterValue} 
+                                    className="p-2 w-[200px] bg-gray-200 rounded-md outline-0 tracking-tight text-xs"
+                                    onChange={(e) => setFilterValue(e.target.value)}
+                                >
+                                    <option value="" disabled>Sort by</option>
+                                    <option value="Date">Date</option>
+                                    <option value="Status">Status</option>
+                                    <option value="Service">Service</option>
+                                    <option value="Branch">Branch</option>
+                                </select>
                             </div>
+
                             <Pagination
-                            count={paginationLimit}
-                            size="small"
-                            page={page}
-                            onChange={(event, value) => setPage(value)}
+                                count={paginationLimit}
+                                size="small"
+                                page={page}
+                                onChange={(event, value) => setPage(value)}
                             />
                         </div>
 

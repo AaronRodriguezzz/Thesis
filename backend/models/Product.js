@@ -22,6 +22,10 @@ const ProductSchema = new mongoose.Schema({
         ref: 'Branch', 
         required: true 
     },
+    description: { 
+        type: String, 
+        required: true 
+    },
 },{ timestamps: true });
 
 module.exports = mongoose.model('Product', ProductSchema);
