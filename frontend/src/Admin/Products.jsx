@@ -7,7 +7,7 @@ import UpdateEmployee from "../../components/modal/UpdateEmployeeModal";
 import NewProduct from "../../components/modal/AddProductModal";
 
 const Products = () => {
-    const baseUrl = import.meta.env.MODE === 'development' ? 'http://localhost:4001/uploads/products' : 'https://your-production-backend.com';
+    const baseUrl = import.meta.env.MODE === 'development' ? 'http://localhost:4001/uploads/products' : 'https://tototumbs.onrender.com';
     const [productList, setProductList] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [page, setPage] = useState(1);
