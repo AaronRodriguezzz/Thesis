@@ -22,13 +22,14 @@ const get_service = async (req, res) => {
   try {
     const category = req.params.category?.toLowerCase(); // Get category from URL param
 
+    
     // Look up the correct model for the requested category
     const Model = modelMap[category];
 
     // If category is not valid, return an error
     if (!Model) {
       return res.status(400).json({ message: 'Invalid category' });
-    }
+    }   
 
     // Fetch all documents from the selected model
     const items = await Model.find();
