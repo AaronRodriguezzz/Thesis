@@ -123,7 +123,7 @@ const update_product = async (req, res) => {
 
         console.log(updatedProduct);
 
-        return res.status(200).json({ message: 'Product updated successfully.', product: updatedProduct });
+        return res.status(200).json({ message: 'Product updated successfully.', updatedInfo: updatedProduct });
 
     } catch (err) {
         console.error(err);

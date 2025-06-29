@@ -23,13 +23,21 @@ const new_service = async (req, res) => {
         if(missingFields.length > 0) {
             return res.status(400).json({ message: 'Please fill in all required fields.' });
         }
+        
+        const serviceExists = await Service.findOne({
+            name: { $regex: `^${name}$`, $options: 'i' }
+        });
+
+        if (serviceExists) {
+            return res.status(400).json({ message: 'Service already added' });
+        }
 
         const service = new Service({
             name,
             description,
             duration,
             price,
-            serviceType,
+            serviceType,    
         });
 
         const serviceSaved = await service.save();
@@ -38,7 +46,7 @@ const new_service = async (req, res) => {
             return res.status(500).json({ message: 'Error saving the new service.' });
         }
 
-        return res.status(201).json({ message: 'New Service Saved', service: serviceSaved });
+        return res.status(200).json({ message: 'New Service Saved', service: serviceSaved });
 
     } catch (err) {
         console.error(err);
@@ -51,16 +59,32 @@ const new_service = async (req, res) => {
  * @route PUT /api/services
  */
 const update_service = async (req, res) => {
-    const { id, newData } = req.body;
+    const { id, name, price, duration, description, serviceType } = req.body.newData;
 
-    if (!id || !newData || typeof newData !== 'object') {
-        return res.status(400).json({ message: 'Invalid data for update.' });
-    }
+    try {   
+        const requiredFields = ['name', 'description', 'duration', 'price', 'serviceType'];
+        const missingFields = requiredFields.filter(field => {
+            const value = req.body.newData[field];
+            return value === undefined || value === null || (typeof value === 'string' && value.trim() === '');
+        });
 
-    try {
+        console.log(missingFields);
+
+        if(missingFields.length > 0) {
+            return res.status(400).json({ message: 'Please fill in all required fields.' });
+        }
+
+        const updatedData = { 
+            name, 
+            price, 
+            duration, 
+            description, 
+            serviceType 
+        }
+
         const updatedService = await Service.findByIdAndUpdate(
             id,
-            newData,
+            updatedData,
             { new: true }
         );
 
@@ -68,7 +92,7 @@ const update_service = async (req, res) => {
             return res.status(404).json({ message: 'Service not found or update failed.' });
         }
 
-        return res.status(200).json({ message: 'Update successful', service: updatedService });
+        return res.status(200).json({ message: 'Update successful', updatedInfo: updatedService });
 
     } catch (err) {
         console.error(err);
@@ -90,7 +114,7 @@ const delete_service = async (req, res) => {
             return res.status(404).json({ message: 'Service not found.' });
         }
 
-        return res.status(200).json({ message: 'Service deleted successfully.' });
+        return res.status(200).json({ message: 'Service deleted successfully.', deleted: true});
 
     } catch (err) {
         console.error(err);

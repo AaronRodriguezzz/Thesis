@@ -22,7 +22,7 @@ const UpdateProduct = ({ currentData, onCancel, setUpdatedData, route}) => {
   
     const update_Clicked = async (e) => {
         e.preventDefault();
-        if (newState) {
+        if (newState && newState.description.length <= 100) {
             const info = await update_data(route, newState)
 
             setUpdatedData((prev) =>
@@ -69,10 +69,6 @@ const UpdateProduct = ({ currentData, onCancel, setUpdatedData, route}) => {
         get_branches();
     },[])
 
-    useEffect(() => {
-        console.log(newState);
-    },[newState])
-    
     return (
         <div className='h-screen w-screen flex items-center justify-center bg-transparent fixed top-0 left-0 z-50'>
             <form

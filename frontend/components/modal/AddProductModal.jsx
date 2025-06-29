@@ -157,7 +157,7 @@ const NewProduct = ({ onCancel, route, setUpdatedData }) => {
                         maxLength={100}
                     />
 
-                    <p className={`text-sm mt-1 ${newProduct.description.length === 20 ? 'text-red-500' : 'text-gray-500'}`}>
+                    <p className={`text-sm mt-1 ${newProduct.description.length === 100 ? 'text-red-500' : 'text-gray-500'}`}>
                         {newProduct.description.length}/100 characters
                     </p>
                 </div>
