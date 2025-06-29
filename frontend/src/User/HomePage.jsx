@@ -6,7 +6,7 @@ import TextField from "@mui/material/TextField";
 import { get_data } from "../../services/GetMethod";
 
 export default function MainPage() {
-  const baseUrl = import.meta.env.MODE === 'development' ? 'http://localhost:4001/uploads/products' : 'https://tototumbs.onrender.com/uploads/products';
+  const baseUrl = import.meta.env.MODE === 'development' ? 'http://localhost:4001' : 'https://tototumbs.onrender.com';
   const [currentIndex, setCurrentIndex] = useState(0);
   const [services, setServices] = useState(null);
   const [products, setProducts] = useState(null);

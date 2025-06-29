@@ -3,11 +3,11 @@ import { FaUserPlus, FaSearch, FaEdit, FaTrash, FaClipboardList } from "react-ic
 import Pagination from "@mui/material/Pagination";
 import { get_data } from "../../services/GetMethod";
 import { delete_data } from "../../services/DeleteMethod";
-import UpdateEmployee from "../../components/modal/UpdateEmployeeModal";
 import NewProduct from "../../components/modal/AddProductModal";
+import UpdateProduct from "../../components/modal/UpdateProductModal";
 
 const Products = () => {
-    const baseUrl = import.meta.env.MODE === 'development' ? 'http://localhost:4001/uploads/products' : 'https://tototumbs.onrender.com/uploads/products';
+    const baseUrl = import.meta.env.MODE === 'development' ? 'http://localhost:4001' : 'https://tototumbs.onrender.com';
     const [productList, setProductList] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [page, setPage] = useState(1);
@@ -137,11 +137,11 @@ const Products = () => {
             </main>
 
             {onUpdate && updatingData && 
-                <UpdateEmployee 
+                <UpdateProduct 
                     currentData={updatingData} 
                     onCancel={setOnUpdate} 
                     setUpdatedData={setProductList}
-                    route={'/update_employee'}
+                    route={'/update_product'}
                 />
             }
 

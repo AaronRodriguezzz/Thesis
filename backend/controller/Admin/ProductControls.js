@@ -30,22 +30,29 @@ const get_product = async (req, res) => {
  * @route POST /api/new_product
  */
 const new_product = async (req, res) => {
-    const {
+   const {
         name,
-        imagePath,
         price,
         stock,
         branch,
         description
     } = req.body;
 
-    console.log(req.body);
     try {
-        const requiredFields = ['name', 'imagePath', 'price', 'stock', 'branch', 'description'];
+        // Get the image path from req.file
+        const imagePath = req.file
+            ? `${req.file.destination}/${req.file.filename}`.replace(/\\/g, '/')
+            : null;
+
+        const requiredFields = ['name', 'price', 'stock', 'branch', 'description'];
         const missingFields = requiredFields.filter(field => {
             const value = req.body[field];
             return value === undefined || value === null || (typeof value === 'string' && value.trim() === '');
         });
+
+        if (!imagePath) {
+            missingFields.push('imagePath');
+        }
 
         if (missingFields.length > 0) {
             return res.status(400).json({ message: `Missing fields: ${missingFields.join(', ')}` });
@@ -55,8 +62,8 @@ const new_product = async (req, res) => {
             name: { $regex: `^${name}$`, $options: 'i' }
         });
 
-        if(productExist){
-            return res.status(400).json({ message: 'Product already added'});
+        if (productExist) {
+            return res.status(400).json({ message: 'Product already added' });
         }
 
         const newProduct = new Product({
@@ -74,12 +81,17 @@ const new_product = async (req, res) => {
             return res.status(500).json({ message: 'Failed to save the product.' });
         }
 
-        return res.status(200).json({ message: 'Product created successfully.', added: true });
+        return res.status(200).json({
+            message: 'Product created successfully.',
+            added: true,
+            product: savedProduct
+        });
 
     } catch (err) {
         console.error(err);
-        return res.status(500).json({ message: err});
+        return res.status(500).json({ message: 'Server error', error: err.message });
     }
+
 };
 
 /**
@@ -87,22 +99,29 @@ const new_product = async (req, res) => {
  * @route PUT /api/update_products
  */
 const update_product = async (req, res) => {
-    const { id, newData } = req.body;
+    const { id, name, price, stock, description, branch, imagePath} = req.body.newData;
 
-    if (!id || !newData || typeof d !== 'object') {
-        return res.status(400).json({ message: 'Invalid or incomplete update data.' });
+    const updatedData = {
+        name, 
+        price, 
+        stock, 
+        description, 
+        branch, 
+        imagePath
     }
 
     try {
         const updatedProduct = await Product.findByIdAndUpdate(
             id,
-            newData,
+            updatedData,
             { new: true }
         );
 
         if (!updatedProduct) {
             return res.status(404).json({ message: 'Product not found or update failed.' });
         }
+
+        console.log(updatedProduct);
 
         return res.status(200).json({ message: 'Product updated successfully.', product: updatedProduct });
 

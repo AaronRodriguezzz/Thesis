@@ -24,7 +24,21 @@ const NewProduct = ({ onCancel, route, setUpdatedData }) => {
         e.preventDefault();
 
         if(newProduct.description   .length <= 100) {
-            const result = await post_data(newProduct, route);
+
+            const formData = new FormData();
+
+            formData.append("name", newProduct.name);
+            formData.append("price", newProduct.price);
+            formData.append("stock", newProduct.stock);
+            formData.append("branch", newProduct.branch);
+            formData.append("description", newProduct.description);
+            formData.append("uploadType", "product");
+
+            if (newProduct.imagePath) {
+                formData.append("image", newProduct.imagePath); // File object
+            }
+
+            const result = await post_data(formData, route);
 
             if (result?.added) {
                 onCancel(false);
@@ -39,7 +53,7 @@ const NewProduct = ({ onCancel, route, setUpdatedData }) => {
         if (selectedFile) {
             const imageURL = URL.createObjectURL(selectedFile);
             setDisplayedImage(imageURL)
-            setNewProduct({ ...newProduct, imagePath: selectedFile.name });
+            setNewProduct({ ...newProduct, imagePath: selectedFile });
         }
     };
 
@@ -65,10 +79,6 @@ const NewProduct = ({ onCancel, route, setUpdatedData }) => {
 
         get_branches();
     }, []);
-
-    useEffect(() => {
-        console.log(debouncedInput);
-    },[debouncedInput])
 
     return (
         <div className='h-screen w-screen flex items-center justify-center bg-transparent fixed top-0 left-0 z-50'>

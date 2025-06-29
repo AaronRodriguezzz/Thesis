@@ -7,9 +7,8 @@ export const post_data = async (credentials, route) => {
         const response = await axios.post(`/api${route}`, credentials , {
             withCredentials: true
         });
-
+            
         if (response.status === 200) {
-            console.log('post success')
             CustomAlert('success',  response.data.message || 'Successful');
             return response.data;
         }
