@@ -46,7 +46,8 @@ export default function MainPage() {
 
 
   useEffect(() => {
-    const get_services = async () => {
+
+    const initialize_homePage = async () => {
       const service = await get_data("/get_data/service");
       const product = await get_data("/get_data/product")
 
@@ -55,15 +56,18 @@ export default function MainPage() {
         setProducts(product)
       }
     };
-    get_services();
+    initialize_homePage();
+
   }, []);
 
   useEffect(() => {
+
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 10000);
+    }, 5000);
 
     return () => clearInterval(interval);
+
   }, []);
 
   return (
@@ -89,7 +93,7 @@ export default function MainPage() {
       </div>
 
       {/* About Us */}
-      <div id="About Us" className="w-full bg-white flex flex-col md:flex-row items-center justify-center px-4 md:px-10 py-10 gap-6">
+      <div id="About Us" className="h-[90vh] w-full bg-white flex flex-col md:flex-row items-center justify-center px-4 md:px-10 py-10 gap-6">
         <div className="w-full md:w-1/2 flex flex-col items-start">
           <h1 className="text-center font-extralight tracking-widest text-3xl md:text-5xl mb-4">ABOUT US</h1>
           <p className="text-justify text-sm md:text-lg tracking-tight">
@@ -104,40 +108,50 @@ export default function MainPage() {
       </div>
 
       {/* Products */}
-      <div id="Products" className="w-full flex flex-col justify-center items-center bg-gray-800 py-15">
-          <h1 className="text-white text-center my-10 font-extralight tracking-widest text-4xl md:text-5xl" id="Services">
-              PRODUCT CATALOG
-          </h1>
-          <div className="w-full flex flex-row justify-around items-center">
-            <button onClick={handlePrev} className="text-2xl font-semibold rounded-full p-2 hover:bg-gray-400 transition ease-in-out">
-              <FaChevronLeft className="text-white" size={40}/>
-            </button>
+      <div id="Products" className="w-full flex flex-col items-center bg-gray-800 py-20 px-4">
+        <h1 className="text-white text-center font-extralight tracking-widest text-4xl md:text-5xl mb-10">
+          PRODUCT CATALOG
+        </h1>
+    
+        <div className="w-full flex flex-col md:flex-row justify-between items-center gap-4">
+          {/* Left Arrow */}
+          <button
+            onClick={handlePrev}
+            className="hidden md:flex items-center justify-center p-2 hover:bg-gray-500 rounded-full"
+          >
+            <FaChevronLeft className="text-white" size={40} />
+          </button>
 
-            <div className="w-full px-4 md:px-10 gap-5 flex flex-wrap items-center justify-center">
-              {visibleProducts && visibleProducts.map((product) => (
-                <div
-                  key={product._id}
-                  className="bg-gray-700 block h-[450px] w-[90%] sm:w-[250px] md:w-[300px] p-5 hover:scale-105 hover:shadow-lg transition delay-100 ease-in shadow-inside rounded-lg"
-                >
-                  <img
-                    src={`${baseUrl}/${product.imagePath}`}
-                    alt=""
-                    className="w-full h-[60%] mb-4 object-cover shadow-lg shadow-gray-700 rounded-md"
-                  />
-                  <div className="p-2 text-white tracking-tighter">
-                    <h1 className="text-lg md:text-xl font-bold">{product.name}</h1>
-                    <p className="text-lg font-semibold">₱{product.price}</p>
-                    <p>{product.description}</p>
-                  </div>
+          {/* Product Cards Container */}
+          <div className="w-full flex flex-wrap justify-center gap-6">
+            {visibleProducts?.map((product) => (
+              <div
+                key={product._id}
+                className="bg-gray-700 h-[500px] w-full sm:w-[45%] md:w-[30%] lg:w-[250px] p-4 hover:scale-105 transition-transform rounded-lg shadow-md"
+              >
+                <img
+                  src={`${baseUrl}/${product.imagePath}`}
+                  alt={product.name}
+                  className="w-full h-[60%] object-cover rounded-md mb-4 shadow"
+                />
+                <div className="text-white tracking-tight space-y-1">
+                  <h2 className="text-lg md:text-xl font-bold">{product.name}</h2>
+                  <p className="text-base font-semibold">₱{product.price}</p>
+                  <p className="text-md">{product.description}</p>
                 </div>
-              ))}
-            </div>
-
-            <button onClick={handleNext} className="text-2xl font-semibold rounded-full p-2 hover:bg-gray-400 transition ease-in-out">
-              <FaChevronRight className="text-white" size={40} />
-            </button>
+              </div>
+            ))}
           </div>
-        
+
+          {/* Right Arrow */}
+          <button
+            onClick={handleNext}
+            className="hidden md:flex items-center justify-center p-2 hover:bg-gray-500 rounded-full"
+          >
+            <FaChevronRight className="text-white" size={40} />
+          </button>
+        </div>
+
         <Link
           to="/"
           className="mt-10 bg-white text-gray-800 py-3 px-8 rounded-sm hover:bg-green-500 tracking-tight transition-colors"
@@ -145,6 +159,8 @@ export default function MainPage() {
           VIEW ALL
         </Link>
       </div>
+
+
 
       {/* Services */}
 
@@ -159,7 +175,7 @@ export default function MainPage() {
               key={index}
               className={`w-full shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center p-4 gap-2 ${index % 2 === 0 ? "bg-gray-100" : "bg-white"}`}
             >
-              <div className="flex-1">
+              <div className="flex-1">  
                 <h1 className="font-semibold text-xl">{service?.name}</h1>
                 <p className="tracking-tighter text-base">{service?.description}</p>
               </div>
@@ -169,11 +185,11 @@ export default function MainPage() {
       </div>
 
       {/* Feedback Prompt */}
-      <div className="w-full bg-white flex items-center justify-center py-10 px-4">
-        <div className="w-full md:w-2/3 lg:w-1/2 bg-gray-200 rounded-lg flex flex-col justify-center items-center text-center p-6">
-          <h1 className="text-2xl md:text-4xl font-semibold">Give us your feedback!</h1>
-          <p className="text-lg">Help us to find what we could improve!</p>
-          <button className="py-3 px-6 my-3 bg-gray-800 text-white hover:bg-black transition-colors">Feedback Form</button>
+      <div className="w-full bg-white flex items-center justify-center py-20 px-4">
+        <div className="w-full md:w-2/3 lg:w-1/2 bg-gray-800 rounded-xl flex flex-col justify-center items-center text-center p-10 text-white">
+          <h1 className="text-3xl md:text-5xl font-semibold">Give us your feedback!</h1>
+          <p className="text-md md:text-lg">Help us to find what we could improve!</p>
+          <button className="py-2 md:py-3 px-3 md:px-6 my-3 bg-white text-gray-500 text-sm md:text-md hover:bg-black transition-colors">Feedback Form</button>
         </div>
       </div>
 
@@ -201,13 +217,21 @@ export default function MainPage() {
       </div>
 
       {/* Subscription */}
-      <div className="w-full flex flex-col justify-center items-center gap-y-4 bg-gray-800 py-10 px-4 mt-10 text-center text-white">
-        <h1 className="text-2xl md:text-4xl font-light">Do you want to be always updated?</h1>
-        <p className="text-base font-semibold max-w-2xl">
+      <div className="w-full flex flex-col justify-center items-center gap-y-4 bg-gray-800 py-12 px-4 mt-10 text-center text-white">
+        <h1 className="text-2xl md:text-4xl font-light">
+          Do you want to be always updated?
+        </h1>
+        <p className="text-sm md:text-base font-semibold max-w-2xl">
           Be the first to know about new collections and exclusive offers by subscribing to our emails for free
         </p>
-        <input type="email" className="w-[400px] px-4 py-4 border border-white rounded-md outline-none shadow-inside" placeholder="Email" />
-        <button className="bg-green-700 text-white rounded-full py-3 px-8 hover:bg-green-500 transition ease-in-out">Subscribe</button>
+        <input
+          type="email"
+          className="w-full max-w-md px-4 py-3 border border-white rounded-md outline-none shadow-inside text-white"
+          placeholder="Enter your email"
+        />
+        <button className="bg-white text-black rounded-full py-3 px-6 text-sm md:text-base hover:bg-green-500 transition">
+          Subscribe
+        </button>
       </div>
     </div>
   );

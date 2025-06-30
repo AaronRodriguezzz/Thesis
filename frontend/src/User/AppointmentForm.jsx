@@ -22,6 +22,8 @@ const AppointmentPage = () => {
     additionalService: '',
   });
 
+  
+
   const handleChange = (field) => (event) => {
     setFormData({ ...formData, [field]: event.target.value });
   };
@@ -29,6 +31,7 @@ const AppointmentPage = () => {
   useEffect(() => {
     const initializeData = async () => {
       const response = await get_data('/initialize_appointment_info');
+      
       if (response) {
         setAppointments(response?.appointmentRecord);
         setServices(response?.services);

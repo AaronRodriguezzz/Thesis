@@ -47,6 +47,7 @@ const AppointmentHistory = () => {
 
     initializeData();
   },[])
+  
 
   return (
     <>
@@ -55,7 +56,7 @@ const AppointmentHistory = () => {
 
         {appointments && appointments.map((appointment) => (
           <HistoryCard 
-            id={appoint.id}
+            id={appointment.id}
             service={appointment.service}
             date={appointment.date}
             status={appointment.status}
