@@ -11,6 +11,7 @@ import Faq from "./User/FrequentlyQuestions";
 import FeedbackForm from "./User/FeedbackForm";
 import ProfilePage from "./User/Profile";
 import AppointmentHistory from "./User/AppointmentHistory";
+import BranchesPage from "./User/BranchesPage";
 
 // Admin Pages
 import Dashboard from "./Admin/Dashboard";
@@ -21,7 +22,6 @@ import Employees from "./Admin/Employees";
 import Products from "./Admin/Products";
 import Sales from "./Admin/Sales";
 import Services from "./Admin/Services";
-import Schedules from "./Admin/Schedules";
 import AdminLogin from "./Admin/Login";
 
 // Layouts
@@ -39,6 +39,7 @@ function App() {
           <Route path="/appointment" element={<AppointmentForm />} />
           <Route path="/queueing" element={<QueueingForm />} />
           <Route path="/faq" element={<Faq />} />
+          <Route path="/branches" element={<BranchesPage />} />
           <Route path="/feedback" element={<FeedbackForm />} />
           <Route path="/" element={<HomePage />} />
 
@@ -53,7 +54,6 @@ function App() {
           <Route path="employees" element={<Employees />} />
           <Route path="products" element={<Products />} />
           <Route path="sales" element={<Sales />} />
-          <Route path="schedules" element={<Schedules />} />
           <Route path="services" element={<Services />} />
         </Route>
 

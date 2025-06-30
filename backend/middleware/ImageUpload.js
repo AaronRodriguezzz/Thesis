@@ -5,7 +5,7 @@ const path = require('path');
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const uploadType = req.body.uploadType; 
-        const folder = uploadType === "employee" ? "uploads/employees/" : "uploads/products/";
+        const folder = uploadType === "employee" ? "uploads/employees/" :  uploadType === "employee" ? "uploads/products/" : "uploads/branches/";
 
         console.log("🧾 DESTINATION FOLDER:", folder); // log for debugging
 

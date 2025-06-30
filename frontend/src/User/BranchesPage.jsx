@@ -1,0 +1,67 @@
+import React from "react";
+
+const branches = [
+  {
+    id: 1,
+    name: "Downtown Branch",
+    location: "123 Main St, City Center",
+    imageUrl: "/images/branch1.jpg",
+  },
+  {
+    id: 2,
+    name: "Uptown Branch",
+    location: "456 North Ave, Uptown",
+    imageUrl: "/images/branch2.jpg",
+  },
+  {
+    id: 3,
+    name: "Westside Branch",
+    location: "789 West St, West District",
+    imageUrl: "/images/branch3.jpg",
+  },
+  {
+    id: 4,
+    name: "East End Branch",
+    location: "321 East Ave, Eastside",
+    imageUrl: "/images/branch4.jpg",
+  },
+  // Add more branches as needed
+];
+
+const BranchesPage = () => {
+    const baseUrl = import.meta.env.MODE === 'development' ? 'http://localhost:4001' : 'https://tototumbs.onrender.com';
+
+    return (
+        <div className="min-h-screen bg-gray-100 p-6">
+        {/* Header */}
+        <div className="text-center mb-10">
+            <h1 className="text-4xl font-bold text-gray-800 mb-2">Our Branches</h1>
+            <p className="text-gray-600 max-w-xl mx-auto">
+            Find your nearest Toto Tumbs Barbershop branch and experience premium service at your convenience.
+            </p>
+        </div>
+
+        {/* Branch Cards Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
+            {branches.map((branch) => (
+            <div key={branch.id} className="bg-white rounded-2xl shadow-lg overflow-hidden transition hover:scale-[1.02]">
+                <img    
+                    src={`${baseUrl}/uploads/branches//1751295166646-IMG_7504.JPG`}
+                    alt={branch.name}
+                    className="h-60 w-full object-cover"
+                />
+                <div className="p-4">
+                <h2 className="text-xl font-semibold text-gray-800">{branch.name}</h2>
+                <p className="text-gray-600">{branch.location}</p>
+                <button className="mt-3 px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 text-sm">
+                    Book Now
+                </button>
+                </div>
+            </div>
+            ))}
+        </div>
+        </div>
+    );
+};
+
+export default BranchesPage;

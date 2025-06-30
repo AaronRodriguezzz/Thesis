@@ -7,7 +7,6 @@ import {
   MdStore,
   MdLogin,
   MdOutlineLogout,
-  MdSchedule,
   MdShoppingCart,
   MdDesignServices,
   MdInventory,
@@ -24,7 +23,6 @@ const AdminSidebar = () => {
     { name: "Employees", icon: <MdStore />, path: "/admin/employees" },
     { name: "Products", icon: <MdInventory />, path: "/admin/products" },
     { name: "Sales", icon: <MdShoppingCart />, path: "/admin/sales" },
-    { name: "Schedules", icon: <MdSchedule />, path: "/admin/schedules" },
     { name: "Services", icon: <MdDesignServices />, path: "/admin/services" },
     { name: "Branches", icon: <MdLocationOn />, path: "/admin/branches" },
   ];

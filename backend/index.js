@@ -28,6 +28,8 @@ app.use(cors({ origin: 'http://localhost:5173', credentials: true}));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use("/uploads/employees", express.static("uploads/employees"));
 app.use("/uploads/products", express.static("uploads/products"));
+app.use("/uploads/branches", express.static("uploads/branches"));
+
 app.use((req,res,next) => {
     console.log(req.path, req.method);
     next()

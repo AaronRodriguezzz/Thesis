@@ -30,7 +30,7 @@ const get_product = async (req, res) => {
  * @route POST /api/new_product
  */
 const new_product = async (req, res) => {
-   const {
+    const {
         name,
         price,
         stock,
