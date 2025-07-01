@@ -8,7 +8,6 @@ export const get_data = async (route, page) => {
             withCredentials: true, // This is required to include cookies like the JWT
         });
         
-        console.log(response.data);
         if (response.status === 200) {
             return response.data    
         }

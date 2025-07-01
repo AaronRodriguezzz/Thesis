@@ -27,6 +27,7 @@ import AdminLogin from "./Admin/Login";
 // Layouts
 import UserLayout from "../layouts/UserLayout";
 import AdminLayout from "../layouts/AdminLayout";
+import ProtectedRoute from "../components/routes/ProtectedRoute";
 
 function App() {
   return (
@@ -34,15 +35,51 @@ function App() {
       <Routes>
         {/* User Layout */}
         <Route element={<UserLayout />}>
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/my-appointments" element={<AppointmentHistory />} />
-          <Route path="/appointment" element={<AppointmentForm />} />
+          <Route 
+            path="/profile" 
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/my-appointments" 
+            element={
+              <ProtectedRoute>
+                <AppointmentHistory />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/appointment" 
+            element={
+              <ProtectedRoute>
+                <AppointmentForm />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/appointment/:branchId" 
+            element={
+              <ProtectedRoute>
+                <AppointmentForm />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/feedback" 
+            element={
+              <ProtectedRoute>
+                <FeedbackForm />
+              </ProtectedRoute>
+            } 
+          />
+
           <Route path="/queueing" element={<QueueingForm />} />
           <Route path="/faq" element={<Faq />} />
           <Route path="/branches" element={<BranchesPage />} />
-          <Route path="/feedback" element={<FeedbackForm />} />
           <Route path="/" element={<HomePage />} />
-
         </Route>
 
         {/* Admin Layout */}  

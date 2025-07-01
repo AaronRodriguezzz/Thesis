@@ -44,8 +44,8 @@ export default function Navigation({ otherPage }) {
             </Link>
           </li>
           <li>
-            <Link
-              to="/contact"
+            <Link 
+              to="/branches"
               className="hover:underline transition duration-200 ease-in-out"
             >
               Branches
@@ -56,7 +56,6 @@ export default function Navigation({ otherPage }) {
 
       {/* Icons */}
       <div className="flex flex-row gap-x-2">
-        <FiSearch size={30} className="text-gray-500" />
         <FiUser size={30} onClick={() => navigate('/profile')} className="text-gray-500" />
       </div>
     </div>

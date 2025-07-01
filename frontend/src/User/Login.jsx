@@ -11,13 +11,17 @@ export default function Home() {
     password: "",
   });
 
-  const handle_submit = async () => {
+  const handle_submit = async (e) => {
+    e.preventDefault();
+
     try{
       const response = await post_data(credentials, '/auth/user_login');
 
       if(response){
+        localStorage.setItem('user', JSON.stringify(response?.user));
         navigate('/')
       }
+      
     }catch(err){
       console.log(err);
     }
@@ -25,7 +29,7 @@ export default function Home() {
 
   return (
     <div className="h-screen w-screen bg-[url('/login.png')] bg-cover bg-center flex items-center justify-center">
-      <div className="w-[40%] min-w-[340px] max-w-[500px] flex flex-col items-center gap-y-4 md:shadow-lg rounded-xl bg-white bg-opacity-90">
+      <form className="w-[40%] min-w-[340px] max-w-[500px] flex flex-col items-center gap-y-4 md:shadow-lg rounded-xl bg-white bg-opacity-90" onSubmit={handle_submit}>
         {/* Optional header image */}
         {/* <img
           src="/my-image.png"
@@ -59,7 +63,10 @@ export default function Home() {
           sx={{ width: "80%" }}
         />
 
-        <button className="w-[80%] bg-green-500 py-3 rounded-md text-white my-4 hover:bg-green-600 transition duration-200 ease-in-out">
+        <button 
+          className="w-[80%] bg-green-500 py-3 rounded-md text-white my-4 hover:bg-green-600 transition duration-200 ease-in-out"
+          type="submit"
+        >
           LOG IN
         </button>
 
@@ -83,7 +90,7 @@ export default function Home() {
           <img src="/google.png" alt="Google" width={30} height={30} />
           Sign In with Google
         </button>
-      </div>
+      </form>
     </div>
   );
 }

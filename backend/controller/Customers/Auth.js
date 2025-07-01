@@ -11,26 +11,25 @@ const user_login = async (req, res) => {
         const { email, password } = req.body;
 
         // Find the user by email
-        const user = await UserAccount.findOne({ email });
+       const user = await UserAccount.findOne({ email }).select('-password');
 
         if (!user) {
-            return res.status(404).json({ message: 'Sorry, account does not exist' });
+        return res.status(404).json({ message: 'Sorry, account does not exist' });
         }
 
-        // Compare the password
-        const password_compare = await bcrypt.compare(password, user.password);
+        // Compare password manually using the original document (you’ll need to fetch password separately)
+        const passwordMatch = await bcrypt.compare(
+            password, 
+            await UserAccount.findOne({ email }).select('password').then(u => u?.password)
+        );
 
-        if (!password_compare) {
-            return res.status(401).json({ message: 'Invalid credentials' });
+        if (!passwordMatch) {
+             res.status(401).json({ message: 'Invalid credentials' });
         }
-
-        // Remove password from user object
-        const userObj = user.toObject();
-        const { password: _, ...userAccount } = userObj;
 
         // Create JWT token
         const token = jwt.sign(
-            { user: userAccount },
+            { user: user },
             process.env.JWT_SECRET,
             { expiresIn: '1d' }
         );
@@ -43,7 +42,7 @@ const user_login = async (req, res) => {
             secure: process.env.NODE_ENV === 'production',
         });
 
-        return res.status(200).json({ message: 'Log In Successful', token });
+        return res.status(200).json({ message: 'Log In Successful', user });
 
     } catch (err) {
         console.error(err);
@@ -113,6 +112,7 @@ const account_registration = async (req, res) => {
         if (!userSave) {
             return res.status(500).json({ message: 'Adding user unsuccessful' });
         }
+
 
         return res.status(200).json({ message: 'New user added', added: true });
 

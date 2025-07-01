@@ -4,20 +4,9 @@ import Navigation from "../../components/NavBar";
 
 const ProfilePage = () => {
   const navigate = useNavigate();
-
-  const [user, setUser] = useState({
-    name: "Juan Dela Cruz",
-    email: "juan@example.com",
-    phone: "09171234567",
-    address: "Taguig City, Philippines",
-  });
-
+  const user = JSON.parse(localStorage.getItem('user'));
   const [editMode, setEditMode] = useState(false);
-  const [formData, setFormData] = useState(user);
-
-  useEffect(() => {
-    setFormData(user);
-  }, [user]);
+  const [formData, setFormData] = useState(user); 
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -60,28 +49,28 @@ const ProfilePage = () => {
         <div className="space-y-4">
             <ProfileField
               label="Name"
-              value={formData.name}
+              value={`${formData?.lastName}, ${formData?.firstName}`}
               editable={editMode}
               name="name"
               onChange={handleChange}
             />
             <ProfileField
               label="Email"
-              value={formData.email}
+              value={formData?.email}
               editable={editMode}
               name="email"
               onChange={handleChange}
             />
             <ProfileField
               label="Phone"
-              value={formData.phone}
+              value={formData?.phone}
               editable={editMode}
               name="phone"
               onChange={handleChange}
             />
             <ProfileField
               label="Address"
-              value={formData.address}
+              value={formData?.status}
               editable={editMode}
               name="address"
               onChange={handleChange}
@@ -98,6 +87,13 @@ const ProfilePage = () => {
               </div>
             )}
         </div>
+
+        <button 
+          className="bg-green underline text-lg tracking-tighter text-blue-500 my-5"
+          style={{display: editMode ? "none": "block" }}
+        >
+          Change Password
+        </button>
       </div>
     </div>
     

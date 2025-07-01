@@ -1,32 +1,54 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import Navigation from '../../components/NavBar'; // adjust if your folder is different
-import Footer from '../../components/Footer';
+import { Link, useNavigate } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 import { time } from '../../data/TimeData';
-import { get_data } from '../../services/GetMethod'; // adjust based on actual location
+import { get_data } from '../../services/GetMethod'; 
+import { post_data } from '../../services/PostMethod'; 
 
 const AppointmentPage = () => {
+  const { branchId } = useParams();
+  const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem('user'));
   const today = new Date();
   const oneMonthAhead = new Date();
   oneMonthAhead.setMonth(oneMonthAhead.getMonth() + 1);
 
   const [branch, setBranches] = useState(null);
   const [services, setServices] = useState(null);
-  const [appointments, setAppointments] = useState(null);
+  const [appointments, setAppointments] = useState(null); 
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
+    customer: user?._id,
     branch: '',
-    date: '',
-    time: '',
-    serviceType: '',
+    scheduledDate: '',
+    scheduledTime: '',
+    service: '',
     additionalService: '',
   });
-
-  
 
   const handleChange = (field) => (event) => {
     setFormData({ ...formData, [field]: event.target.value });
   };
+
+  const handle_Submit = async (e) => {
+    e.preventDefault();
+    setLoading(true); // Show loading
+
+    const response = await post_data(formData, '/new_appointment');
+
+    setLoading(false); // Hide loading after response
+
+    if (response.appointment) {
+      navigate('/queueing');
+    }
+  };
+
+  useEffect(() => {
+    if(branchId){
+      setFormData({...formData, branch: branchId})
+    }
+  },[])
 
   useEffect(() => {
     const initializeData = async () => {
@@ -43,13 +65,13 @@ const AppointmentPage = () => {
   }, []);
 
   return (
-    <div className="w-screen h-screen overflow-x-hidden bg-[url('/login.png')] bg-cover bg-center">
+    <div className="w-screen h-screen overflow-x-hidden bg-[url('/login.png')] bg-cover bg-center pt-10">
 
       <main className="flex gap-x-3 justify-center items-center my-2">
         <div>
           <video
             src="/barbering.mp4"
-            width="300"
+            width="350"
             autoPlay
             loop
             muted
@@ -58,7 +80,7 @@ const AppointmentPage = () => {
           />
         </div>
 
-        <form className="flex flex-col p-4 w-1/3">
+        <form className="flex flex-col p-4 w-1/3" onSubmit={handle_Submit}>
           <h1 className="text-3xl font-semibold tracking-tight my-6">
             APPOINTMENT FORM
           </h1>
@@ -82,19 +104,19 @@ const AppointmentPage = () => {
           <label htmlFor="date">Date</label>
           <input
             type="date"
-            id="date"
+            id="scheduledDate"
             min={today.toISOString().split('T')[0]}
             max={oneMonthAhead.toISOString().split('T')[0]}
-            value={formData.date}
-            onChange={handleChange('date')}
+            value={formData.scheduledDate}
+            onChange={handleChange('scheduledDate')}
             className="border px-3 py-2 rounded mb-3"
           />
 
           <label htmlFor="time">Time</label>
           <select
-            id="time"
-            value={formData.time}
-            onChange={handleChange('time')}
+            id="scheduledTime"
+            value={formData.scheduledTime}
+            onChange={handleChange('scheduledTime')}
             className="border px-3 py-2 rounded mb-3"
           >
             <option value="">Select Time</option>
@@ -119,9 +141,9 @@ const AppointmentPage = () => {
 
           <label htmlFor="serviceType">Service Type</label>
           <select
-            id="serviceType"
-            value={formData.serviceType}
-            onChange={handleChange('serviceType')}
+            id="service"
+            value={formData.service}
+            onChange={handleChange('service')}
             className="border px-3 py-2 rounded mb-3"
           >
             <option value="">Select Service</option>
@@ -155,12 +177,15 @@ const AppointmentPage = () => {
               )}
           </select>
 
-          <Link
-            to="/queueing"
-            className="bg-green-500 py-2 my-4 rounded-md text-white text-lg text-center"
+          <button
+            type="submit"
+            disabled={loading}
+            className={`py-2 my-4 rounded-md text-white text-lg text-center ${
+              loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-500'
+            }`}
           >
-            SUBMIT
-          </Link>
+            {loading ? 'Submitting...' : 'SUBMIT'}
+          </button>
         </form>
       </main>
 

@@ -1,7 +1,6 @@
 const Appointment = require('../../models/Appointment');
 const Customer = require('../../models/CustomerAccount');
 const Branch = require('../../models/Branch');
-const Service = require('../../models/Services');
 const EmailService = require('../../Services/EmailService');
 const Services = require('../../models/Services');
 
@@ -21,12 +20,14 @@ const appointment_creation = async (req, res) => {
         scheduledTime,
     } = req.body;
 
+    console.log(req.body);
+
     try {
         // Validate required fields
         const requiredFields = ['customer', 'service', 'branch', 'scheduledDate', 'scheduledTime'];
         const missingFields = requiredFields.filter(field => {
             const value = req.body[field];
-            return (
+                return (
                 value === undefined ||
                 value === null ||
                 (typeof value === 'string' && value.trim() === '')
