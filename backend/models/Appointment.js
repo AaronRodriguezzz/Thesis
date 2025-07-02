@@ -6,7 +6,7 @@ const AppointmentSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Customer', 
         required: true
-    },
+    },  
     service: { 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Service',
@@ -34,7 +34,7 @@ const AppointmentSchema = new mongoose.Schema({
     },
     status: { 
         type: String, 
-        enum: ['booked', 'completed', 'cancelled'], 
+        enum: ['booked', 'completed', 'cancelled', 'no-show'], 
         default: 'booked' 
     },
     uniqueCode: {

@@ -68,18 +68,6 @@ const AppointmentPage = () => {
     <div className="w-screen h-screen overflow-x-hidden bg-[url('/login.png')] bg-cover bg-center pt-10">
 
       <main className="flex gap-x-3 justify-center items-center my-2">
-        <div>
-          <video
-            src="/barbering.mp4"
-            width="350"
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="rounded-lg shadow-lg shadow-gray-800"
-          />
-        </div>
-
         <form className="flex flex-col p-4 w-1/3" onSubmit={handle_Submit}>
           <h1 className="text-3xl font-semibold tracking-tight my-6">
             APPOINTMENT FORM

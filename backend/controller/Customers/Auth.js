@@ -87,15 +87,12 @@ const account_registration = async (req, res) => {
 
     try {
         // Check if account exists
-        const existingUser = await UserAccount.findOne({
-            $or: [{ email }]
-        });
+        const existingUser = await UserAccount.findOne({ email });
 
         if (existingUser) {
             return res.status(404).json({ message: 'Account already exists' });
         }
 
-        // Hash the password
         const encryptedPassword = await bcrypt.hash(password, 10);
 
         // Create the new user
@@ -113,8 +110,9 @@ const account_registration = async (req, res) => {
             return res.status(500).json({ message: 'Adding user unsuccessful' });
         }
 
+        const { password: _pw, ...securedUser } = userSave._doc;
 
-        return res.status(200).json({ message: 'New user added', added: true });
+        return res.status(200).json({ message: 'New user added', added: true, user: securedUser});
 
     } catch (err) {
         console.error(err);

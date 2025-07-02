@@ -88,27 +88,28 @@ const appointment_initial_data = async (req, res) => {
       scheduledDate: { $gte: startOfDay, $lte: endOfDay },
     });
 
-    // Count appointments per hour
-    const countsByHour = appointments.reduce((acc, appointment) => {
-      const hour = appointment.scheduledTime;
+    // // Count appointments per hour
+    // const countsByHour = appointments.reduce((acc, appointment) => {
+    //   const hour = appointment.scheduledTime;
 
-      acc[hour] = (acc[hour] || 0) + 1;
+    //   acc[hour] = (acc[hour] || 0) + 1;
 
-      return acc;
-    }, {});
+    //   return acc;
+    // }, {});
 
-    // Convert count object to array
-    const appointmentRecord = Object.entries(countsByHour).map(
-      ([hour, count]) => ({
-        hour: Number(hour),
-        count,
-      })
-    );
+    // // Convert count object to array
+    // const appointmentRecord = Object.entries(countsByHour).map(
+    //   ([hour, count]) => ({
+    //     hour: Number(hour),
+    //     count,
+    //   })
+    // );
 
     // Fetch branches and services
-    const [branches, services] = await Promise.all([
+    const [branches, services, appointmentRecord ] = await Promise.all([
       Branch.find(),
       Services.find(),
+      Appointment.find({status: 'booked'})
     ]);
 
     return res

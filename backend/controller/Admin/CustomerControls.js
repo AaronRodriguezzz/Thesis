@@ -42,6 +42,30 @@ const get_customers = async (req, res) => {
     }
 };
 
+/**
+ * @desc Fetch paginated list of customers
+ * @route GET /api/customers/:email
+ * @access Admin or Private
+ */
+const get_specific_customer = async (req, res) => {
+    const email = req.params.email;
+ 
+    try {
+        // Fetch customers with pagination, sorted by most recent
+        const user = await Customer.findOne({email})
+
+        if(!user){  
+            return res.status(400).json({message: 'Finding Customer Email Failed'})
+        }
+
+        return res.status(200).json({ user });
+
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: 'Server error fetching customers.' });
+    }
+};
+
 
 /**
  * @desc Fetch paginated list of customers
@@ -119,6 +143,7 @@ const delete_customer = async (req, res) => {
 
 module.exports = {
     get_customers,
+    get_specific_customer,
     update_customer,
     delete_customer
 };

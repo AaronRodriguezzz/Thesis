@@ -24,9 +24,14 @@ import Sales from "./Admin/Sales";
 import Services from "./Admin/Services";
 import AdminLogin from "./Admin/Login";
 
+//FrontDesk Pages
+import FdDashboard from "./FrontDesk/Dashboard";
+import FdAppointment from "./FrontDesk/Appointments";
+
 // Layouts
 import UserLayout from "../layouts/UserLayout";
 import AdminLayout from "../layouts/AdminLayout";
+import FrontDeskLayout from "../layouts/FrontDeskLayout";
 import ProtectedRoute from "../components/routes/ProtectedRoute";
 
 function App() {
@@ -93,6 +98,15 @@ function App() {
           <Route path="sales" element={<Sales />} />
           <Route path="services" element={<Services />} />
         </Route>
+
+
+        <Route path="/front-desk" element={<FrontDeskLayout />}>
+          <Route path="dashboard" element={<FdDashboard />} />
+          <Route path="appointments" element={<FdAppointment />} />
+          <Route path="customers" element={<Customers />} />
+          <Route path="products" element={<Products />} />
+          <Route path="barbers" element={<Products />} />
+        </Route>  
 
         {/* (outside layout) */}
         <Route path="/login" element={<Login />} />

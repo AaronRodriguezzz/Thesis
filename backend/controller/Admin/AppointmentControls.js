@@ -64,7 +64,39 @@ const today_appointments = async (req, res) => {
 };
 
 
+/**
+ * @desc Update the status only
+ * @route PUT /api/update_appointment
+ * @access Public or Authenticated (based on your setup)
+ */
+const update_appointment_status = async (req, res) => {
+    const {currentlyUpdatingId, newStatus} = req.body.newData;
+
+    try {        
+        if(!currentlyUpdatingId || !newStatus) return res.status(400).json({message: 'Empty Fields'})
+
+        const appointmentUpdate = await Appointment.findOneAndUpdate(
+            { _id: currentlyUpdatingId }, 
+            { status: newStatus },
+            { new: true }
+        );
+
+        if(!appointmentUpdate) {
+            return res.status(404).json({message: 'Updating Failed'}) 
+        }   
+            
+
+        return res.status(200).json({ message:'Updating Successful', appointmentUpdate });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: 'Error fetching appointments', error: err.message });
+    }
+};
+
+
+
 module.exports = {
     getAllAppointments,
     today_appointments,
+    update_appointment_status
 }

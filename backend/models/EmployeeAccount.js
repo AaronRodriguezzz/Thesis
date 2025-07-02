@@ -8,7 +8,7 @@ const EmployeeSchema = new mongoose.Schema({
     },
     fullName: {
         type: String, 
-        required: true 
+        required: true      
     },
     password: { 
         type: String, 
