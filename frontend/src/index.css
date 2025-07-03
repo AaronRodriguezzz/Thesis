@@ -17,3 +17,7 @@
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+html {
+  scroll-padding-top: 100px;
+} 

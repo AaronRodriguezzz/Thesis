@@ -189,7 +189,7 @@ export default function MainPage() {
         <div className="w-full md:w-2/3 lg:w-1/2 bg-gray-800 rounded-xl flex flex-col justify-center items-center text-center p-10 text-white">
           <h1 className="text-3xl md:text-5xl font-semibold">Give us your feedback!</h1>
           <p className="text-md md:text-lg">Help us to find what we could improve!</p>
-          <button className="py-2 md:py-3 px-3 md:px-6 my-3 bg-white text-gray-500 text-sm md:text-md hover:bg-black transition-colors">Feedback Form</button>
+          <button className="py-2 md:py-3 px-3 md:px-6 my-3 bg-white text-black text-sm md:text-md hover:bg-green-500 transition-colors">Feedback Form</button>
         </div>
       </div>
 

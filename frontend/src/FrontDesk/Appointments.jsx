@@ -2,7 +2,6 @@ import React, { useEffect, useState, useMemo } from "react";
 import { FaUserPlus, FaSearch, FaEdit, FaTimes, FaCheck } from "react-icons/fa";
 import Pagination from "@mui/material/Pagination";
 import { get_data } from "../../services/GetMethod";
-import { delete_data } from "../../services/DeleteMethod";
 import { time } from "../../data/TimeData";
 import ThreeLayerModal from "../../components/modal/WalkinAppointment";
 import { update_data } from "../../services/PutMethod";

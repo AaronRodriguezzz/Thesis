@@ -27,6 +27,7 @@ import AdminLogin from "./Admin/Login";
 //FrontDesk Pages
 import FdDashboard from "./FrontDesk/Dashboard";
 import FdAppointment from "./FrontDesk/Appointments";
+import POS from "./FrontDesk/POS";
 
 // Layouts
 import UserLayout from "../layouts/UserLayout";
@@ -104,11 +105,11 @@ function App() {
           <Route path="dashboard" element={<FdDashboard />} />
           <Route path="appointments" element={<FdAppointment />} />
           <Route path="customers" element={<Customers />} />
-          <Route path="products" element={<Products />} />
+          <Route path="products" element={<POS />} />
           <Route path="barbers" element={<Products />} />
         </Route>  
 
-        {/* (outside layout) */}
+        {/* (outside layout) */}  
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Registration />} />
         <Route path="/admin/login" element={<AdminLogin />} />

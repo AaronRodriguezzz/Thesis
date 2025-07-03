@@ -6,9 +6,8 @@ export const update_data = async (route, newData) => {
     try{
         const response = await axios.put(`/api${route}` , { newData })
         
-        console.log(response.status);
         if(response.status === 200){    
-            CustomAlert('success',  'Updating Successful')
+            CustomAlert('success',  response.data.message || 'Updating Successful')
             return response.data
         }       
     }catch(err){

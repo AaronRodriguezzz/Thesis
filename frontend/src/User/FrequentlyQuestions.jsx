@@ -6,7 +6,7 @@ import {faqs} from '../../data/Questions';
 export default function Faq() {
 
   return (
-    <div className="min-h-screen w-screen overflow-x-hidden bg-gray-100 bg-[url('/login.png')] bg-cover bg-center">
+    <div id='Faq' className="min-h-screen w-screen overflow-x-hidden bg-gray-100 bg-[url('/login.png')] bg-cover bg-center">
 
       <h1 className="text-4xl font-bold my-10 text-center tracking-tighter">
         Frequently Asked Questions

@@ -125,12 +125,13 @@ const account_registration = async (req, res) => {
  * @route PUT /api/auth/update_user
  */
 const update_account = async (req, res) => {
-    const { id, email, lastName, firstName, phone } = req.body;
+    const { _id, email, lastName, firstName, phone, address } = req.body.newData;
+    console.log(req.body.newData);  
 
     try {
-        const updateData = { email, lastName, firstName, phone };
+        const updateData = { email, lastName, firstName, phone, address };
 
-        const account = await UserAccount.findByIdAndUpdate(id, updateData, { new: true });
+        const account = await UserAccount.findByIdAndUpdate(_id, updateData, { new: true });
 
         if (!account) {
             return res.status(404).json({ message: 'Updating Failed' });

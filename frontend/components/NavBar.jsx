@@ -1,12 +1,15 @@
-import React from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { FiSearch, FiUser } from "react-icons/fi";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { FiUser } from "react-icons/fi";
 
-export default function Navigation({ otherPage }) {
+export default function Navigation() {
   const navigate = useNavigate();
+  const [isActive, setIsActive] = useState('Home');
 
-  const navClicked = (id) => {
-    navigate("/"); // navigate to home first
+  const navClicked = (id, route) => {
+    setIsActive(id);
+    navigate(route ? route : '/');   
+    
     setTimeout(() => {
       const element = document.getElementById(id);
       if (element) {
@@ -30,26 +33,25 @@ export default function Navigation({ otherPage }) {
             <li
               key={text}
               onClick={() => navClicked(text)}
-              className="hover:underline transition duration-200 ease-in-out cursor-pointer"
+              className="hover:underline hover:font-extrabold  transition duration-200 ease-in-out cursor-pointer"
+              style={{  fontWeight: isActive === text ? 600 : 400  }}
             >
               {text}
             </li>
           ))}
-          <li>
-            <Link
-              to="/faq"
-              className="hover:underline transition duration-200 ease-in-out"
-            >
-              FAQ's
-            </Link>
+          <li 
+            onClick={() => navClicked('Faq', '/faq')}
+            className="hover:underline transition duration-200 ease-in-out"
+            style={{  fontWeight: isActive === 'Faq' ? 600 : 400  }}
+          >
+            FAQ's
           </li>
-          <li>
-            <Link 
-              to="/branches"
-              className="hover:underline transition duration-200 ease-in-out"
-            >
-              Branches
-            </Link>
+          <li 
+            onClick={() => navClicked('Branches', '/branches')}
+            className="hover:underline transition duration-200 ease-in-out"
+            style={{  fontWeight: isActive === 'Branches' ? 600 : 400  }}
+          >
+            Branches
           </li>
         </ul>
       </nav>

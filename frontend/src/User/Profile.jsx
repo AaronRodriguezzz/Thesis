@@ -1,21 +1,40 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navigation from "../../components/NavBar";
+import { isFormValid } from "../../utils/objectValidation";
+import { update_data } from "../../services/PutMethod";
 
 const ProfilePage = () => {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem('user'));
   const [editMode, setEditMode] = useState(false);
-  const [formData, setFormData] = useState(user); 
+  const [formData, setFormData] = useState({
+    ...user,
+    address: user?.address || '',  // Ensure address field is always present
+  });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSave = () => {
-    setUser(formData);
-    setEditMode(false);
-    // Optionally: send formData to backend here
+  const handleSave = async () => {
+
+    if (!isFormValid(formData, ['address'])) {
+      alert("Please fill in all required fields.");
+      return;
+    }
+
+    try{
+      const response = await update_data('/auth/update_user', formData );
+
+      if(response.updatedInfo){
+        localStorage.setItem('user', JSON.stringify(response?.updatedInfo));
+        setEditMode(false);
+      }
+
+    }catch(err){
+      console.log(err);
+    }
   };
 
   return (
@@ -47,13 +66,24 @@ const ProfilePage = () => {
 
         {/* Profile Form */}
         <div className="space-y-4">
-            <ProfileField
-              label="Name"
-              value={`${formData?.lastName}, ${formData?.firstName}`}
-              editable={editMode}
-              name="name"
-              onChange={handleChange}
-            />
+            <div className="flex gap-6">
+              <ProfileField
+                label="Last Name"
+                value={`${formData?.lastName},`}
+                editable={editMode}
+                name="lastName"
+                onChange={handleChange}
+              />
+
+              <ProfileField
+                label="First Name"
+                value={`${formData?.firstName}`}
+                editable={editMode}
+                name="firstName"
+                onChange={handleChange}
+              />
+            </div>
+            
             <ProfileField
               label="Email"
               value={formData?.email}
@@ -70,7 +100,7 @@ const ProfilePage = () => {
             />
             <ProfileField
               label="Address"
-              value={formData?.status}
+              value={formData?.address}
               editable={editMode}
               name="address"
               onChange={handleChange}
@@ -95,8 +125,7 @@ const ProfilePage = () => {
           Change Password
         </button>
       </div>
-    </div>
-    
+    </div> 
   );
 };
 
