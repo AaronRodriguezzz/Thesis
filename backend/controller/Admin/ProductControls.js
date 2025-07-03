@@ -168,8 +168,6 @@ const update_product = async (req, res) => {
 const checkout_Product = async (req, res) => {
     const productArray = req.body.newData; // 👈 This will be your array of objects
 
-    console.log(productArray);
-
     if (!Array.isArray(productArray)) {
         return res.status(400).json({ message: 'Invalid data format' });
     }
