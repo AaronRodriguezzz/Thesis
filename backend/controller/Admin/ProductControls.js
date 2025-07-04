@@ -191,8 +191,8 @@ const checkout_Product = async (req, res) => {
                 product: product._id,
                 quantity: product.checkOutQuantity,
                 totalPrice: product.price * product.checkOutQuantity,
-                soldBy: '685c0b91b4b47a3b04cf7f41',
-                branch: '6862a4bed08d2b82975b2ac6',
+                soldBy: product.soldBy,
+                branch: product.branch,
             })
         })
 

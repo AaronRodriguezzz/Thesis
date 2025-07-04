@@ -23,7 +23,46 @@ const getAllAppointments = async (req, res) => {
             .populate({
                 path: 'barber',
                 match: { role: 'Barber' }, 
-                select: '-password'
+            })            
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
+
+        res.status(200).json({ appointments, pageCount});
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Error fetching appointments', error: err.message });
+    }
+};
+
+
+/**
+ * @desc Gets all the appointment
+ * @route GET /api/all_appointments
+ * @access Public or Authenticated (based on your setup)
+ */
+const branchAppointments = async (req, res) => {
+    const branchId = req.params.branchId;
+
+    console.log('id', req.params);
+    
+    try {
+        
+        const page = parseInt(req.query.page) || 1;
+        const limit = 10;
+        const skip = (page - 1) * limit;
+
+        const totalCount = await Appointment.countDocuments();
+        const pageCount = Math.ceil(totalCount / limit);
+
+        const appointments = await Appointment.find({branch: branchId})
+            .populate('customer')
+            .populate('service')
+            .populate('additionalService')
+            .populate('branch')
+            .populate({
+                path: 'barber',
+                match: { role: 'Barber' }, 
             })            
             .sort({ createdAt: -1 })
             .skip(skip)
@@ -42,6 +81,8 @@ const getAllAppointments = async (req, res) => {
  * @access Public or Authenticated (based on your setup)
  */
 const today_appointments = async (req, res) => {
+    const hourToday = req.params?.hour;
+
     try {
         const startOfToday = new Date();
         startOfToday.setHours(0, 0, 0, 0);
@@ -63,6 +104,42 @@ const today_appointments = async (req, res) => {
     }
 };
 
+/**
+ * @desc Gets all the appointment today by hour
+ * @route GET /api/appointments/:hour
+ * @access Public or Authenticated (based on your setup)
+ */
+const getAppointmentsByHour = async (req, res) => {
+  const branchId = req.params.branchId;
+
+  if (!branchId) return res.status(400).json({ message: "Branch is required" });
+
+  try {
+        const currentHour = new Date().getHours();
+
+        const startOfToday = new Date();
+        startOfToday.setHours(0, 0, 0, 0);
+
+        const endOfToday = new Date();
+        endOfToday.setHours(23, 59, 59, 999); 
+        
+
+        const appointments = await Appointment.find({ 
+            createdAt: { $gte: startOfToday, $lte: endOfToday }, 
+            scheduledTime: currentHour, 
+            branch: branchId
+        })
+        .populate('customer')
+        .populate('service')
+        .populate('branch')
+        .populate('barber')
+            
+        return res.status(200).json({ appointments });
+
+  } catch (err) {
+    return res.status(500).json({ message: "Error fetching by hour" });
+  }
+};
 
 /**
  * @desc Update the status only
@@ -97,6 +174,8 @@ const update_appointment_status = async (req, res) => {
 
 module.exports = {
     getAllAppointments,
+    getAppointmentsByHour,
+    branchAppointments,
     today_appointments,
     update_appointment_status
 }

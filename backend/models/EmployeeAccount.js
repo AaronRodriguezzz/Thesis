@@ -10,9 +10,14 @@ const EmployeeSchema = new mongoose.Schema({
         type: String, 
         required: true      
     },
+    imagePath: {
+      type: String,
+      required: false,  
+    },
     password: { 
         type: String, 
-        required: true 
+        required: true, 
+        select: false
     },
     branchAssigned: {
         type: mongoose.Schema.Types.ObjectId, 
@@ -22,7 +27,14 @@ const EmployeeSchema = new mongoose.Schema({
     role: { 
         type: String, 
         enum: ['Barber', 'Front Desk'], 
+        required: true
     },
+    status: {
+        type: String,
+        required: true,
+        default: 'Unavailable',
+        enum: ['Available', 'Unavailable', 'On-break', 'Barbering']
+    }
 
 },{ timestamps: true });
 

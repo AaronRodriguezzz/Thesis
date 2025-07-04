@@ -7,6 +7,7 @@ import NewProduct from "../../components/modal/AddProductModal";
 import UpdateProduct from "../../components/modal/UpdateProductModal";
 
 const POS = () => {
+    const frontDesk = JSON.parse(localStorage.getItem('admin'));
     const baseUrl = import.meta.env.MODE === 'development' ? 'http://localhost:4001' : 'https://tototumbs.onrender.com';
     const [productList, setProductList] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
@@ -27,7 +28,12 @@ const POS = () => {
 
 
     const addTo_checkOutList = (item) => {
-        const newItem = {...item, checkOutQuantity: 1}
+        const newItem = {
+            ...item, 
+            checkOutQuantity: 1,
+            soldBy: frontDesk?._id,
+            branch: frontDesk?.branchAssigned
+        }
         setCheckOutList(prevList => [...prevList, newItem]);
     }
 
@@ -156,7 +162,7 @@ const POS = () => {
                         <h1 className="font-semibold text-2xl tracking-tight py-2">Check Out Summary</h1>
 
                         <div className="min-h-[550px] max-h-[70%] overflow-y-auto space-y-4">
-                            {checkOutList &&  checkOutList.map((product,index) => (
+                            {checkOutList &&  checkOutList.map((product) => (
                                 <div
                                     className="relative w-full flex gap-4 bg-gray-100 p-3 shadow-md rounded-lg items-start"
                                     key={product._id}

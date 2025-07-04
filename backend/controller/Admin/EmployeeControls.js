@@ -42,6 +42,40 @@ const get_employees = async (req, res) => {
     }
 };
 
+
+/**
+ * @desc Fetch barbers in specific branch
+ * @route GET /api/barbers/:branchId
+ * @access Admin or Private
+ */
+const get_Barbers = async (req, res) => {
+    
+    const branchId = req.params.branchId;
+
+    if (!branchId) {
+        return res.status(400).json({ message: 'Branch Missing' });
+    }
+
+    try {
+
+        const barberse = await EmployeeAccount.find();
+
+        console.log(barberse)
+
+        // Fetch customers with pagination, sorted by most recent
+        const barbers = await EmployeeAccount.find({ 
+            branchAssigned: branchId, 
+            role: 'Barber' 
+        });
+
+        return res.status(200).json({ barbers });
+
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: 'Server error fetching customers.' });
+    }
+};
+
 /**
  * @desc Adds a new admin or employee account
  * @route POST /api/new_employees
@@ -96,24 +130,19 @@ const new_admin = async (req, res) => {
  * @access Admin
  */
 const update_admin_account = async (req, res) => {
-    console.log(req.body);
-    const { id, email, fullName, role } = req.body.newData;
 
-    // Basic input validation
-    if (!id || !email || !fullName || !role) {
-        return res.status(400).json({ message: 'All fields are required' });
-    }
-    
     try {
         // Build the updated data object
-        const updateData = { email, fullName, role };
+        const id = req.body.newData._id;
 
         // Update the account
-        const account = await EmployeeAccount.findByIdAndUpdate(id, updateData, { new: true });
+        const account = await EmployeeAccount.findByIdAndUpdate(id, req.body.newData, { new: true });
 
         if (!account) {
             return res.status(404).json({ message: 'Account not found or update failed' });
         }
+
+        console.log(account);
 
         return res.status(200).json({ message: 'Update successful', updatedInfo: account });
     } catch (err) {
@@ -148,6 +177,7 @@ const delete_employee = async (req, res) => {
 
 module.exports = {
     get_employees,
+    get_Barbers,
     new_admin,
     update_admin_account,
     delete_employee

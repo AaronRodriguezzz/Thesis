@@ -7,7 +7,7 @@ import ThreeLayerModal from "../../components/modal/WalkinAppointment";
 import { update_data } from "../../services/PutMethod";
 
 const Appointments = () => {
- 
+    const frontDesk = JSON.parse(localStorage.getItem('admin'));
     const [searchTerm, setSearchTerm] = useState("");
     const [page, setPage] = useState(1);
     const [paginationLimit, setPaginationLimit] = useState(1);
@@ -54,12 +54,12 @@ const Appointments = () => {
         } catch (err) {
             console.error("Error updating appointment status:", err);
         }
-        };
+    };
 
 
     useEffect(() => {
         const get_employees = async () => {
-            const data = await get_data('/all_appointments', page);
+            const data = await get_data(`/branch_appointments/${frontDesk?.branchAssigned}`, page);
 
             //exclude the barber's password
             if (data) {
@@ -68,7 +68,7 @@ const Appointments = () => {
             }
         };
         get_employees();
-    }, [page]);
+    }, [page]); 
 
     return (
         <div className="flex min-h-screen">

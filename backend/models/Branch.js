@@ -19,6 +19,12 @@ const BranchSchema = new mongoose.Schema({
     numberOfBarber: {
         type: Number, 
         required: true 
+    },
+    status: {
+        type: String, 
+        required: true,
+        default: 'Close',
+        enum: ['Open', 'Close']
     }
 },{ timestamps: true });
 

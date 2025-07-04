@@ -90,37 +90,37 @@ const Appointments = () => {
 
                 <div className="overflow-x-auto min-h-[400px] max-h-[600px] w-full">
                     <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
-                        <tr>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Name</th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Service</th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Additional Service</th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Branch</th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Barber</th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Date</th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Time</th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                        {filteredAppointments.map((appointment) => (
-                            <tr key={appointment._id}>
-                                <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{appointment.customer?.lastName}, {appointment.customer?.firstName}</td>
-                                <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{appointment.service?.name}</td>
-                                <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight text-center">{appointment.additionalService?.name ? appointment.barber.fullName : "N/A"}</td>
-                                <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{appointment.branch?.name}</td>
-                                <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{appointment.barber?.fullName?.trim() ? appointment.barber.fullName : "N/A"}</td>
-                                <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{appointment?.scheduledDate?.split('T')[0]}</td>
-                                <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{appointment?.scheduledTime}</td>
-                                <td 
-                                    className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight" 
-                                    style={appointment.status === 'booked' ? { color: 'green' } : appointment.status === 'cancelled' || 'no show' ? { color: 'red' } : '' }
-                                >
-                                    {appointment?.status}
-                                </td>
+                        <thead className="bg-gray-50">
+                            <tr>
+                                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Name</th>
+                                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Service</th>
+                                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Additional Service</th>
+                                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Branch</th>
+                                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Barber</th>
+                                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Date</th>
+                                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Time</th>
+                                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Status</th>
                             </tr>
-                        ))}
-                    </tbody>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-gray-200">
+                            {filteredAppointments.map((appointment) => (
+                                <tr key={appointment._id}>
+                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{appointment.customer?.lastName}, {appointment.customer?.firstName}</td>
+                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{appointment.service?.name}</td>
+                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight text-center">{appointment.additionalService?.name ? appointment.barber.fullName : "N/A"}</td>
+                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{appointment.branch?.name}</td>
+                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{appointment.barber?.fullName?.trim() ? appointment.barber.fullName : "N/A"}</td>
+                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{appointment?.scheduledDate?.split('T')[0]}</td>
+                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{appointment?.scheduledTime}</td>
+                                    <td 
+                                        className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight" 
+                                        style={appointment.status === 'booked' ? { color: 'green' } : appointment.status === 'cancelled' || 'no show' ? { color: 'red' } : '' }
+                                    >
+                                        {appointment?.status}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
                     </table>
                 </div>
                 </div>

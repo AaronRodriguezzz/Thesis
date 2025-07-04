@@ -10,14 +10,15 @@ const jwt = require('jsonwebtoken'); // ✅ Make sure this is imported
 const admin_login = async (req, res) => {
     try {
         const { email, password } = req.body;
-
+        console.log(req.body);
         // Validate input
         if (!email || !password) {
             return res.status(400).json({ message: 'Email and password are required' });
         }
 
         // Check if account exists
-        const user = await EmployeeAccount.findOne({ email });
+        const user = await EmployeeAccount.findOne({ email }).select("+password");
+
         if (!user) {
             return res.status(404).json({ message: 'Sorry, account does not exist' });
         }
@@ -39,18 +40,18 @@ const admin_login = async (req, res) => {
             { expiresIn: '1d' }
         );
 
-        // Send token as HTTP-only cookie
-        // res.cookie('jwt', token, {
-        //     httpOnly: true,
-        //     maxAge: 24 * 60 * 60 * 1000, // 1 day
-        //     sameSite: 'lax',
-        //     secure: process.env.NODE_ENV === 'production' // Only secure in production
-        // });
+        res.cookie('jwt', token, {
+            httpOnly: true,
+            maxAge: 24 * 60 * 60 * 1000, // 1 day
+            sameSite: 'lax',
+            secure: process.env.NODE_ENV === 'production' // Only secure in production
+        });
+
+        console.log(employee);
 
         // Send success response
         return res.status(200).json({
             message: 'Login successful',
-            token,
             employee
         });
 

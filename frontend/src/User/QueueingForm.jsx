@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Footer from "../../components/Footer";
-import Navigation from  '../../components/NavBar';
 
 export default function BarberStatusPage() {
   const [date, setDate] = useState("");
@@ -30,6 +28,7 @@ export default function BarberStatusPage() {
     const formattedHours = rawHours.toString().padStart(2, "0");
     const ampm = hours >= 12 ? "PM" : "AM";
     const minutes = date.getMinutes().toString().padStart(2, "0");
+
     return `${formattedHours}:${minutes} ${ampm}`;
   };
 
@@ -110,8 +109,6 @@ export default function BarberStatusPage() {
           ))}
         </div>
       </main>
-
-      <Footer />
     </div>
   );
 }
