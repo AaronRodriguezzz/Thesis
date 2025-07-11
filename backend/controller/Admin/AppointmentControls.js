@@ -81,7 +81,6 @@ const branchAppointments = async (req, res) => {
  * @access Public or Authenticated (based on your setup)
  */
 const today_appointments = async (req, res) => {
-    const hourToday = req.params?.hour;
 
     try {
         const startOfToday = new Date();

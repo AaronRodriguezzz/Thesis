@@ -1,6 +1,7 @@
 const Appointment = require('../../models/Appointment');
 const Customer = require('../../models/CustomerAccount');
 const Branch = require('../../models/Branch');
+const Employee = require('../../models/EmployeeAccount');
 const EmailService = require('../../Services/EmailService');
 const Services = require('../../models/Services');
 
@@ -46,7 +47,7 @@ const appointment_creation = async (req, res) => {
             service,
             additionalService: additionalService ? additionalService : undefined,
             branch,
-            barber,
+            barber: barber?.trim() ? barber : undefined,
             scheduledDate: new Date(scheduledDate),
             scheduledTime,
             uniqueCode  
@@ -77,44 +78,20 @@ const appointment_creation = async (req, res) => {
 const appointment_initial_data = async (req, res) => {
   try {
     // Get start and end of today
-    const startOfDay = new Date();
-    startOfDay.setHours(0, 0, 0, 0);
-
-    const endOfDay = new Date();
-    endOfDay.setHours(23, 59, 59, 999);
-
-    // Fetch today's appointments
-    const appointments = await Appointment.find({
-      scheduledDate: { $gte: startOfDay, $lte: endOfDay },
-    });
-
-    // // Count appointments per hour
-    // const countsByHour = appointments.reduce((acc, appointment) => {
-    //   const hour = appointment.scheduledTime;
-
-    //   acc[hour] = (acc[hour] || 0) + 1;
-
-    //   return acc;
-    // }, {});
-
-    // // Convert count object to array
-    // const appointmentRecord = Object.entries(countsByHour).map(
-    //   ([hour, count]) => ({
-    //     hour: Number(hour),
-    //     count,
-    //   })
-    // );
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
     // Fetch branches and services
-    const [branches, services, appointmentRecord ] = await Promise.all([
+    const [branches, services, appointmentRecord, barbers] = await Promise.all([
       Branch.find(),
       Services.find(),
-      Appointment.find({status: 'booked'})
+      Appointment.find({status: 'booked', scheduledDate: { $gte: today }}),
+      Employee.find({role: 'Barber'})
     ]);
 
     return res
       .status(200)
-      .json({ appointmentRecord, branches, services });
+      .json({ appointmentRecord, branches, services, barbers });
 
   } catch (err) {
     console.error("Error fetching appointments:", err);

@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { time } from '../../data/TimeData';
 import { get_data } from '../../services/GetMethod'; 
 import { post_data } from '../../services/PostMethod'; 
+import { isFormValid } from '../../utils/objectValidation';
 
 const AppointmentPage = () => {
   const { branchId } = useParams();
@@ -16,11 +17,13 @@ const AppointmentPage = () => {
   const [branch, setBranches] = useState(null);
   const [services, setServices] = useState(null);
   const [appointments, setAppointments] = useState(null); 
+  const [barbers, setBarbers] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     customer: user?._id,
     branch: '',
+    barber: '',
     scheduledDate: '',
     scheduledTime: '',
     service: '',
@@ -58,6 +61,8 @@ const AppointmentPage = () => {
         setAppointments(response?.appointmentRecord);
         setServices(response?.services);
         setBranches(response?.branches);
+        setBarbers(response?.barbers);
+        console.log(response?.appointmentRecord);
       }
     };
 
@@ -110,31 +115,69 @@ const AppointmentPage = () => {
             className="border px-3 py-2 rounded mb-3"
           />
 
+          <label htmlFor="barber">Service Barber</label>
+          <select
+            id="barber"
+            value={formData.barber}
+            onChange={handleChange('barber')}
+            className="border px-3 py-2 rounded mb-3"
+            disabled={!formData.branch}
+          >
+            <option value="">Select Barber</option>
+            {barbers && formData?.branch &&
+              barbers.map(
+                (barber) => (
+                  barber?.branchAssigned === formData.branch ? (
+                    <option key={barber?._id} value={barber?._id}>
+                      {barber?.fullName}
+                    </option>
+                  ) : (
+                    null
+                  )
+                )
+              )}
+          </select>
+
           <label htmlFor="time">Time</label>
           <select
             id="scheduledTime"
             value={formData.scheduledTime}
             onChange={handleChange('scheduledTime')}
             className="border px-3 py-2 rounded mb-3"
+            disabled={!formData.scheduledDate && !formData.barber}
           >
             <option value="">Select Time</option>
-            {appointments &&
+            {appointments ? (
               time.map((slot) => {
+                const slotHour = slot.value;
                 const currentHour = today.getHours();
+                const isToday = new Date(formData.scheduledDate).toDateString() === today.toDateString();
+
                 const matchingAppointment = appointments.find(
-                  (a) => a.hour === slot.value
+                  (a) => a.scheduledTime === slotHour 
                 );
 
-                const timeHasPast = currentHour < slot.value;
-                const isAvailable =
-                  !matchingAppointment || matchingAppointment?.count < 3;
+                const timeHasPassed = isToday && currentHour >= slotHour;
+                const isAvailable = !matchingAppointment || matchingAppointment.count < 3;
 
-                return timeHasPast && isAvailable ? (
-                  <option key={slot.value} value={slot.value}>
-                    {slot.time}
-                  </option>
-                ) : null;
-              })}
+                // Show if time hasn't passed and it's available
+                if (!timeHasPassed && isAvailable) {
+                  return (
+                    <option key={slotHour} value={slotHour}>
+                      {slot.timeTxt}    
+                    </option>
+                  );
+                }
+
+                return null;
+              })
+            ) : (
+              time.map((slot) => (
+                <option key={slot.value} value={slot.value}>
+                  {slot.timeTxt}
+                </option>
+              ))
+            )}
           </select>
 
           <label htmlFor="serviceType">Service Type</label>

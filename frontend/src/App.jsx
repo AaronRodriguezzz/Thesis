@@ -8,7 +8,7 @@ import Login from "./User/Login";
 import QueueingForm from "./User/QueueingForm";
 import Registration from "./User/Registration";
 import Faq from "./User/FrequentlyQuestions";
-import FeedbackForm from "./User/FeedbackForm";
+import FeedbackForm from "./User/ReviewsForm";
 import ProfilePage from "./User/Profile";
 import AppointmentHistory from "./User/AppointmentHistory";
 import BranchesPage from "./User/BranchesPage";

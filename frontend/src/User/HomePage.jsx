@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { FaChevronLeft,  FaChevronRight} from 'react-icons/fa';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Rating from "@mui/material/Rating";
 import TextField from "@mui/material/TextField";
 import { get_data } from "../../services/GetMethod";
+import { post_data } from "../../services/PostMethod";
 
 export default function MainPage() {
+  const navigate = useNavigate();
   const baseUrl = import.meta.env.MODE === 'development' ? 'http://localhost:4001' : 'https://tototumbs.onrender.com';
   const [currentIndex, setCurrentIndex] = useState(0);
   const [services, setServices] = useState(null);
   const [products, setProducts] = useState(null);
   const [productIndex, setProductIndex] = useState(0);
+  const [subscribedEmail, setSubscribedEmail] = useState('');
+  const [subscribing, setSubscribing] = useState(false);
+
   const itemsPerPage = 5;  
   const images = ["/lower_bicutan.png", "/toto_studio.JPG", "/totobg.JPG"];
 
@@ -44,6 +49,19 @@ export default function MainPage() {
 
   const visibleProducts = products && products.slice(productIndex, productIndex + itemsPerPage);
 
+  const handle_subscribed_email = async (e) => {
+    e.preventDefault();
+
+    try{
+        const response = await post_data( { email: subscribedEmail }, '/subscribe');
+
+        if(response){
+          setSubscribedEmail('');
+        }
+    }catch(err){
+      console.log(err);
+    }
+  }
 
   useEffect(() => {
 
@@ -189,7 +207,12 @@ export default function MainPage() {
         <div className="w-full md:w-2/3 lg:w-1/2 bg-gray-800 rounded-xl flex flex-col justify-center items-center text-center p-10 text-white">
           <h1 className="text-3xl md:text-5xl font-semibold">Give us your feedback!</h1>
           <p className="text-md md:text-lg">Help us to find what we could improve!</p>
-          <button className="py-2 md:py-3 px-3 md:px-6 my-3 bg-white text-black text-sm md:text-md hover:bg-green-500 transition-colors">Feedback Form</button>
+          <button 
+            className="py-2 md:py-3 px-3 md:px-6 my-3 bg-white text-black text-sm md:text-md hover:bg-green-500 transition-colors"
+            onClick={() => navigate('/feedback')}
+          >
+            Feedback Form
+          </button>
         </div>
       </div>
 
@@ -217,7 +240,10 @@ export default function MainPage() {
       </div>
 
       {/* Subscription */}
-      <div className="w-full flex flex-col justify-center items-center gap-y-4 bg-gray-800 py-12 px-4 mt-10 text-center text-white">
+      <form 
+        className="w-full flex flex-col justify-center items-center gap-y-4 bg-gray-800 py-12 px-4 mt-10 text-center text-white"
+        onSubmit={handle_subscribed_email}
+      >
         <h1 className="text-2xl md:text-4xl font-light">
           Do you want to be always updated?
         </h1>
@@ -228,11 +254,16 @@ export default function MainPage() {
           type="email"
           className="w-full max-w-md px-4 py-3 border border-white rounded-md outline-none shadow-inside text-white"
           placeholder="Enter your email"
+          value={subscribedEmail}
+          onChange={(e) => setSubscribedEmail(e.target.value)}
         />
-        <button className="bg-white text-black rounded-full py-3 px-6 text-sm md:text-base hover:bg-green-500 transition">
+        <button 
+          className="bg-white text-black rounded-full py-3 px-6 text-sm md:text-base hover:bg-green-500 transition"
+          type="submit"
+        >
           Subscribe
         </button>
-      </div>
+      </form>
     </div>
   );
 }

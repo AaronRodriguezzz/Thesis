@@ -18,6 +18,9 @@ const ServiceRoutes = require('./routes/Admin/ServicesRoutes');
 const CustomerAuth = require('./routes/Customer/CustomerAuthRoutes');
 const CustomerAppointment = require('./routes/Customer/AppointmentRoutes');
 const Getter = require('./routes/Customer/GetRoutes');
+const Reviews = require('./routes/Customer/ReviewsRoutes');
+const Subscriber = require('./routes/Customer/SubscribeEmail');
+
 // Initialize Express app
 const app = express();
 
@@ -48,7 +51,9 @@ app.use(ServiceRoutes);
 //use router for customer
 app.use(CustomerAuth);
 app.use(CustomerAppointment);
+app.use(Reviews);
 app.use(Getter);
+app.use(Subscriber);
 
 const dirname = path.resolve();
 
