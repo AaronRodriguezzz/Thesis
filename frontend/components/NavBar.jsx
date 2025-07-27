@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiUser } from "react-icons/fi";
+import { motion } from "motion/react"
 
 export default function Navigation() {
   const navigate = useNavigate();
@@ -19,7 +20,13 @@ export default function Navigation() {
   };
 
   return (
-    <div className="w-full sticky top-0 z-50 shadow-sm bg-white py-3 px-5 flex justify-between items-center">
+    <motion.div 
+      initial={{ opacity: 0, y: -50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: .8, ease: "easeInOut" }}
+      exit={{ opacity: 0, y: -20 }}
+      className="w-full sticky top-0 z-50 shadow-sm bg-white py-3 px-5 flex justify-between items-center"
+    >
       {/* Logo */}
       <div className="flex flex-col items-center">
         <p className="text-md tracking-[5px] font-extralight">TOTO TUMBS</p>
@@ -60,6 +67,6 @@ export default function Navigation() {
       <div className="flex flex-row gap-x-2">
         <FiUser size={30} onClick={() => navigate('/profile')} className="text-gray-500" />
       </div>
-    </div>
+    </motion.div>
   );
 }

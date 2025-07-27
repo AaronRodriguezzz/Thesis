@@ -1,24 +1,30 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef} from "react";
 import { FaChevronLeft,  FaChevronRight} from 'react-icons/fa';
 import { Link, useNavigate } from "react-router-dom";
 import Rating from "@mui/material/Rating";
 import TextField from "@mui/material/TextField";
 import { get_data } from "../../services/GetMethod";
 import { post_data } from "../../services/PostMethod";
+import ShinyText from "../../components/animations/ShinyText";
+import { motion } from "motion/react"
+import { SlideTxt } from "../../components/animations/TextAnimation";
+import { useSectionViews } from "../../hooks/HomeRef";
+
+const baseUrl = import.meta.env.MODE === 'development' ? 'http://localhost:4001' : 'https://tototumbs.onrender.com';
+const images = ["/lower_bicutan.png", "/toto_studio.JPG", "/totobg.JPG"];
 
 export default function MainPage() {
+  const itemsPerPage = 5;  
+
   const navigate = useNavigate();
-  const baseUrl = import.meta.env.MODE === 'development' ? 'http://localhost:4001' : 'https://tototumbs.onrender.com';
+  const { sectionRefs, inViews } = useSectionViews();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [services, setServices] = useState(null);
   const [products, setProducts] = useState(null);
   const [productIndex, setProductIndex] = useState(0);
   const [subscribedEmail, setSubscribedEmail] = useState('');
   const [subscribing, setSubscribing] = useState(false);
-
-  const itemsPerPage = 5;  
-  const images = ["/lower_bicutan.png", "/toto_studio.JPG", "/totobg.JPG"];
-
+  
   const feedbacks = [
     {
       customerName: "James Cruz",
@@ -66,14 +72,20 @@ export default function MainPage() {
   useEffect(() => {
 
     const initialize_homePage = async () => {
-      const service = await get_data("/get_data/service");
-      const product = await get_data("/get_data/product")
 
-      if (service && product) {
-        setServices(service);
-        setProducts(product)
+      const [serviceResponse, productResponse] = await Promise.all([
+        await get_data("/get_data/service"), 
+        await get_data("/get_data/product")
+      ]); 
+
+      console.log(serviceResponse, productResponse);
+
+      if (serviceResponse && productResponse) {
+        setServices(serviceResponse);
+        setProducts(productResponse)
       }
     };
+
     initialize_homePage();
 
   }, []);
@@ -85,51 +97,77 @@ export default function MainPage() {
     }, 5000);
 
     return () => clearInterval(interval);
-
+ 
   }, []);
 
   return (
     <div className="w-full overflow-x-hidden">
       {/* Hero Section */}
-      <div
+      <motion.div 
         id="Home"
-        style={{ backgroundImage: `url(${images[currentIndex]})` }}
+        ref={sectionRefs.home}
+        initial={{ opacity: 0 }}
+        transition={{ type: 'spring', duration: 2, ease: "easeInOut"}}
+        animate={inViews.home ? { opacity: 1, y: 0 } : {}}
+        style={{ backgroundImage: `url(${images[currentIndex]})`}}
         className="h-[90vh] w-full flex flex-col justify-center text-white px-4 md:px-20 bg-cover bg-center z-10 space-y-2 transition ease-in-out"
       >
-        <h1 className="font-bold text-2xl md:text-4xl lg:text-6xl leading-tighter">
-          Where Tradition Meets Precision
-        </h1>
-        <p className="text-sm md:text-lg lg:text-2xl font-extralight leading-tighter mt-[-4px]">
-          Book an appointment now
-        </p>
-        <Link
-          to="/appointment"
+        
+        <SlideTxt
+          text="Where Tradition Meets Precision"
+          enable={inViews.home ? true : false}
+          speed={5}
+          className="font-bold text-2xl md:text-4xl lg:text-6xl leading-tighter"
+        />
+
+        <SlideTxt 
+          text="Book an appointment now and experience the art of grooming"
+          enable={inViews.home ? true : false}
+          speed={5}
+          className="text-sm md:text-lg lg:text-2xl font-extralight leading-tighter mt-[-4px]"
+        />
+        <motion.button
+          initial={{ opacity: 0, x: -100 }}
+          animate={inViews.home ? { opacity: 1, x: 0 } : {}}
+          transition={{ duration: 1, ease: "easeInOut" }}
+          whileHover={{ scale: 1.03 }}
+          onClick={() => navigate('/appointment')}
           className="inline-block w-[150px] lg:w-[200px] bg-white text-md lg:text-xl text-gray-900 px-4 py-2 shadow-md hover:bg-gray-900 hover:text-white transition-colors text-center"
         >
           BOOK
-        </Link>
-      </div>
+        </motion.button>
+      </motion.div >
 
       {/* About Us */}
-      <div id="About Us" className="h-[90vh] w-full bg-white flex flex-col md:flex-row items-center justify-center px-4 md:px-10 py-10 gap-6">
-        <div className="w-full md:w-1/2 flex flex-col items-start">
+      <div id="About Us" ref={sectionRefs.about} className="h-[90vh] w-full bg-white flex flex-col md:flex-row items-center justify-center px-4 md:px-10 py-10 gap-6">
+        <motion.div 
+          initial={{ opacity: 0, x: -100 }}
+          transition={{ duration: 2, ease: "easeInOut"}}
+          animate={inViews.about ? { opacity: 1, x: 0 } : {}}
+          className="w-full md:w-1/2 flex flex-col items-start">
           <h1 className="text-center font-extralight tracking-widest text-3xl md:text-5xl mb-4">ABOUT US</h1>
           <p className="text-justify text-sm md:text-lg tracking-tight">
             Three years ago, we began as The Hauz Barbers—a neighborhood shop with a mission to deliver high-quality grooming with a personal touch. Founded by a seasoned barber who once styled celebrities at Bruno’s Barbers, our journey has evolved into Toto Tumbs: a brand that represents class, elegance, and refined barbering. The shift from The Hauz to Toto Tumbs wasn’t just a name change, but a transformation in style, ambiance, and service, blending traditional techniques with modern flair. Now with six Toto Tumbs branches—alongside the original Hauz Barbers still in operation—we continue to offer premium grooming experiences for clients who value craftsmanship and class.
           </p>
-        </div>
-        <img
+        </motion.div>
+        <motion.img
           src="/about2.png"
           alt="About us"
+          initial={{ opacity: 0 }}
+          transition={{ duration: 2, ease: "easeInOut"}}
+          animate={inViews.about  ? { opacity: 1 } : {}}
           className="w-full max-w-xs md:max-w-sm lg:max-w-xl h-auto rounded-lg "
         />
       </div>
 
       {/* Products */}
-      <div id="Products" className="w-full flex flex-col items-center bg-gray-800 py-20 px-4">
-        <h1 className="text-white text-center font-extralight tracking-widest text-4xl md:text-5xl mb-10">
-          PRODUCT CATALOG
-        </h1>
+      <div id="Products" ref={sectionRefs.products} className="w-full flex flex-col items-center bg-gray-800 py-20 px-4">
+        <SlideTxt
+          text="PRODUCT CATALOG"
+          enable={inViews.products ? true : false}
+          speed={5}
+          className="text-white text-center font-extralight tracking-widest text-4xl md:text-5xl mb-10"
+        />
     
         <div className="w-full flex flex-col md:flex-row justify-between items-center gap-4">
           {/* Left Arrow */}
@@ -142,9 +180,12 @@ export default function MainPage() {
 
           {/* Product Cards Container */}
           <div className="w-full flex flex-wrap justify-center gap-6">
-            {visibleProducts?.map((product) => (
-              <div
+            {visibleProducts?.map((product, index) => (
+              <motion.div
                 key={product._id}
+                initial={{ opacity: 0, y: -20 }}
+                animate={inViews.products ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.3, ease: "easeInOut", delay: index * .3 }}
                 className="bg-gray-700 h-[500px] w-full sm:w-[45%] md:w-[30%] lg:w-[250px] p-4 hover:scale-105 transition-transform rounded-lg shadow-md"
               >
                 <img
@@ -153,11 +194,11 @@ export default function MainPage() {
                   className="w-full h-[60%] object-cover rounded-md mb-4 shadow"
                 />
                 <div className="text-white tracking-tight space-y-1">
-                  <h2 className="text-lg md:text-xl font-bold">{product.name}</h2>
+                  <h2 className="text-md md:text-lg font-bold">{product.name}</h2>
                   <p className="text-base font-semibold">₱{product.price}</p>
                   <p className="text-md">{product.description}</p>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
 
@@ -170,12 +211,15 @@ export default function MainPage() {
           </button>
         </div>
 
-        <Link
-          to="/"
+        <motion.button
+          initial={{ opacity: 0, y: 100}}
+          animate={inViews.products ? { opacity: 1, y:0} : {}}
+          transition={{ duration: 2, ease: "easeInOut" }}
+          onClick={() => navigate('/products')}
           className="mt-10 bg-white text-gray-800 py-3 px-8 rounded-sm hover:bg-green-500 tracking-tight transition-colors"
         >
-          VIEW ALL
-        </Link>
+          BRANCH AVAILABILITY
+        </motion.button>
       </div>
 
 
@@ -183,14 +227,22 @@ export default function MainPage() {
       {/* Services */}
 
 
-      <div className="w-full bg-white flex flex-col px-4 md:px-10 gap-y-4 my-10">
-        <h1 className="text-center my-10 font-extralight tracking-widest text-4xl md:text-5xl" id="Services">
-            SERVICES WE OFFER
-        </h1>
+      <div ref={sectionRefs.services} className="w-full bg-white flex flex-col px-4 md:px-10 gap-y-4 my-10">
+        <SlideTxt
+          text="SERVICES WE OFFER"
+          enable={inViews.services ? true : false}
+          speed={5}
+          className="text-center my-10 font-extralight tracking-widest text-4xl md:text-5xl" 
+          id="Services"
+        />
+
         {services &&
           services.map((service, index) => (
-            <div
+            <motion.div
               key={index}
+              initial={{ opacity: 0, x: -100 }}
+              animate={inViews.services ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: .5, ease: "easeInOut", delay: index * .1 }}
               className={`w-full shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center p-4 gap-2 ${index % 2 === 0 ? "bg-gray-100" : "bg-white"}`}
             >
               <div className="flex-1">  
@@ -198,12 +250,18 @@ export default function MainPage() {
                 <p className="tracking-tighter text-base">{service?.description}</p>
               </div>
               <p className="text-base font-medium">₱{service?.price}.00 PHP</p>
-            </div>
+            </motion.div>
           ))}
       </div>
 
       {/* Feedback Prompt */}
-      <div className="w-full bg-white flex items-center justify-center py-20 px-4">
+      <motion.div   
+        ref={sectionRefs.feedback}
+        initial={{ opacity: 0, x: -200 }}
+        animate={inViews.feedback ? { opacity: 1, x: 0 } : {}}
+        transition={{ duration: .7, ease: "easeInOut" }}
+        className="w-full bg-white flex items-center justify-center py-20 px-4"
+      >
         <div className="w-full md:w-2/3 lg:w-1/2 bg-gray-800 rounded-xl flex flex-col justify-center items-center text-center p-10 text-white">
           <h1 className="text-3xl md:text-5xl font-semibold">Give us your feedback!</h1>
           <p className="text-md md:text-lg">Help us to find what we could improve!</p>
@@ -214,7 +272,7 @@ export default function MainPage() {
             Feedback Form
           </button>
         </div>
-      </div>
+      </motion.div>
 
       {/* Reviews */}
       <div className="px-4 md:px-10">
@@ -225,16 +283,19 @@ export default function MainPage() {
           </Link>
         </div>
 
-        <div className="flex flex-wrap gap-4 justify-center">
+        <div className="flex flex-wrap gap-4 justify-center" ref={sectionRefs.feedback}>
           {feedbacks.map((feeds, index) => (
-            <div
+            <motion.div
               key={index}
+              initial={{ opacity: 0, y: -200 }}
+              animate={inViews.feedback ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: .5, ease: "easeInOut", delay: index * .2 }}
               className="w-full sm:w-[300px] h-[300px] flex flex-col gap-y-4 justify-center items-center shadow p-4"
             >
               <Rating name="read-only" value={feeds.rating} readOnly />
               <p className="tracking-tighter text-center">"{feeds.feedback}"</p>
               <h2>-{feeds.customerName}</h2>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
