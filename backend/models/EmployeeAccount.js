@@ -33,8 +33,12 @@ const EmployeeSchema = new mongoose.Schema({
         type: String,
         required: true,
         default: 'Unavailable',
-        enum: ['Available', 'Unavailable', 'On-break', 'Barbering']
-    }
+        enum: ['Available', 'Unavailable', 'On-break', 'Barbering', 'On Leave']
+    }, 
+    dateUnavailable: {
+        type: Date,
+        required: false,
+    },
 
 },{ timestamps: true });
 

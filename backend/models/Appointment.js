@@ -14,11 +14,13 @@ const AppointmentSchema = new mongoose.Schema({
     },
     additionalService: { 
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Service' 
+        ref: 'Service',
+        required: false
     },
     branch: { 
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Branch' 
+        ref: 'Branch',
+        required: true
     },
     barber:{
         type: mongoose.Schema.Types.ObjectId, 
@@ -34,8 +36,8 @@ const AppointmentSchema = new mongoose.Schema({
     },
     status: { 
         type: String, 
-        enum: ['booked', 'completed', 'cancelled', 'no-show'], 
-        default: 'booked' 
+        enum: ['Booked', 'Assigned', 'Completed', 'Cancelled', 'No-Show'], 
+        default: 'Booked' 
     },
     uniqueCode: {
         type: String, 

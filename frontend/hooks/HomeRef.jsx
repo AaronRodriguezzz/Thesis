@@ -9,9 +9,9 @@ export const useSectionViews = () => {
   const feedbackRef = useRef(null);
 
   const homeInView = useInView(homeRef, { once: true });
-  const aboutInView = useInView(aboutRef, { once: true, amount: 0.5 });
+  const aboutInView = useInView(aboutRef, { once: true, amount: 0.7 });
   const productsInView = useInView(productsRef, { once: true, amount: 0.5});
-  const servicesInView = useInView(servicesRef, { once: true, amount: 0.7});
+  const servicesInView = useInView(servicesRef, { once: true, amount: 0.5});
   const feedbackInView = useInView(feedbackRef, { once: true, amount: 0.5});
 
   return {

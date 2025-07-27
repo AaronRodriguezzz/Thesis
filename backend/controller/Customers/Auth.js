@@ -42,6 +42,7 @@ const user_login = async (req, res) => {
             secure: process.env.NODE_ENV === 'production',
         });
 
+        console.log('User logged in successfully:', user);
         return res.status(200).json({ message: 'Log In Successful', user });
 
     } catch (err) {

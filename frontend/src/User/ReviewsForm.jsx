@@ -4,6 +4,7 @@ import { post_data } from '../../services/PostMethod';
 import debounce from 'lodash.debounce';
 import Rating from '@mui/material/Rating';
 import Box from '@mui/material/Box';
+import { motion } from 'framer-motion';
 
 const ReviewForm = () => {
   const navigate = useNavigate();
@@ -44,7 +45,12 @@ const ReviewForm = () => {
 
   return (
     <div className="w-screen h-screen bg-[url('/login.png')] bg-cover bg-center pt-10 flex justify-center items-start">
-      <form className="bg-white bg-opacity-90 rounded-md shadow-md p-6 w-[400px]" onSubmit={handleSubmit}>
+      <motion.form 
+        initial={{ opacity: 0}}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1 }}
+        className="bg-white bg-opacity-90 rounded-md shadow-md p-6 w-[400px]" 
+        onSubmit={handleSubmit}>
         <h1 className="text-2xl font-semibold mb-4">Leave a Review</h1>
 
         <label className="block mb-2">Rating</label>
@@ -61,7 +67,7 @@ const ReviewForm = () => {
         <textarea
           onChange={handleCommentChange}
           placeholder="Write your feedback here..."
-          className="w-full border px-3 py-2 rounded mb-1 resize-none"
+          className="w-full px-3 py-2 rounded mb-1 resize-none bg-gray-100 outline-gray-200"
           rows={4}
           maxLength={100}
         ></textarea>
@@ -78,7 +84,7 @@ const ReviewForm = () => {
         >
           {loading ? 'Submitting...' : 'Submit Review'}
         </button>
-      </form>           
+      </motion.form>           
     </div>
   );
 };

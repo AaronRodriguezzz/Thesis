@@ -13,6 +13,7 @@ const ProfilePage = () => {
     address: user?.address || '',  // Ensure address field is always present
   });
 
+  console.log("User Data:", user);
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -100,7 +101,7 @@ const ProfilePage = () => {
             />
             <ProfileField
               label="Address"
-              value={formData?.address}
+              value={formData?.address || 'N/A'}
               editable={editMode}
               name="address"
               onChange={handleChange}

@@ -4,11 +4,14 @@ import { useParams } from "react-router-dom";
 import { time } from '../../data/TimeData';
 import { get_data } from '../../services/GetMethod'; 
 import { post_data } from '../../services/PostMethod'; 
-import { isFormValid } from '../../utils/objectValidation';
+import { motion } from 'framer-motion';
+import { AnimatedDropDown } from '../../components/animations/DropDownAnimaton';
+import { CustomAlert } from '../../components/modal/CustomAlert';
 
 const AppointmentPage = () => {
   const { branchId } = useParams();
   const navigate = useNavigate();
+
   const user = JSON.parse(localStorage.getItem('user'));
   const today = new Date();
   const oneMonthAhead = new Date();
@@ -36,7 +39,13 @@ const AppointmentPage = () => {
 
   const handle_Submit = async (e) => {
     e.preventDefault();
-    setLoading(true); // Show loading
+
+    if(today.getHours() >= 21 &&  formData.scheduledDate === today.toISOString().split('T')[0]){
+      CustomAlert('error', "You can't book an appointment after 9 PM today.");
+      return;
+    } 
+
+    setLoading(true);
 
     const response = await post_data(formData, '/new_appointment');
 
@@ -69,12 +78,50 @@ const AppointmentPage = () => {
     initializeData();
   }, []);
 
+    useEffect(() => {
+
+      if(formData?.branch !== '' && formData?.scheduledDate !== '' || formData?.barber !== ''){    
+                        const currentHour = today.getHours();
+        
+        for(let i = 10; i <= 20; i++){
+            const isToday = new Date(formData.scheduledDate).toDateString() === today.toDateString();
+        const matchingAppointment = appointments.filter((a) =>
+            a.branch === formData?.branch &&
+            a.scheduledTime === i &&
+            new Date(a.scheduledDate).toDateString() === new Date(formData?.scheduledDate).toDateString()
+          );
+
+          const barberAvailable = matchingAppointment?.barber === formData?.barber ? false : true
+          const timeHasPassedToday = isToday && currentHour >= i;         
+          const isAvailable =  matchingAppointment?.length < 3; 
+
+          console.log(matchingAppointment);
+          console.log(i, 'Available:', isAvailable);    
+          if(!timeHasPassedToday) {   
+                    if (isAvailable && barberAvailable) {
+                      console.log(i);
+                    }
+                  }else{
+                    if (isAvailable && barberAvailable) {
+                                          console.log(i);
+
+                    }
+                  }
+
+        }
+        
+        
+      }
+    }, [formData]);
   return (
     <div className="w-screen h-screen overflow-x-hidden bg-[url('/login.png')] bg-cover bg-center pt-10">
 
       <main className="flex gap-x-3 justify-center items-center my-2">
 
-        <video
+        <motion.video
+          initial={{ opacity: 0}}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, ease: "easeInOut" }}
           src="/barbering.mp4"
           autoPlay
           loop
@@ -84,16 +131,22 @@ const AppointmentPage = () => {
         />
 
         <form className="flex flex-col p-4 w-1/3" onSubmit={handle_Submit}>
-          <h1 className="text-3xl font-semibold tracking-tight my-6">
+          <motion.h1 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}  
+            transition={{ duration: 1, ease: "easeInOut" }}
+            className="text-3xl font-semibold tracking-tight my-6">
             APPOINTMENT FORM
-          </h1>
+          </motion.h1>
 
-          <label htmlFor="branch">Branch</label>
-          <select
-            id="branch"
+          <AnimatedDropDown
+            label="Select Branch"
+            id="branch" 
+            delay={0.3}
             value={formData.branch}
             onChange={handleChange('branch')}
             className="border px-3 py-2 rounded mb-3"
+            disabled={!branch}
           >
             <option value="">Select Branch</option>
             {branch &&
@@ -101,11 +154,22 @@ const AppointmentPage = () => {
                 <option key={b._id} value={b._id}>
                   {b.name}
                 </option>
-              ))}
-          </select>
+              ))
+            }
+          </AnimatedDropDown>
 
-          <label htmlFor="date">Date</label>
-          <input
+          <motion.label 
+            htmlFor="date"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, ease: "easeInOut", delay: 0.5 }}
+          >
+            Date
+          </motion.label>
+          <motion.input
+            initial={{ opacity: 0, x: 200 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5,  ease: "easeInOut", delay: 0.5 }}
             type="date"
             id="scheduledDate"
             min={today.toISOString().split('T')[0]}
@@ -115,56 +179,69 @@ const AppointmentPage = () => {
             className="border px-3 py-2 rounded mb-3"
           />
 
-          <label htmlFor="barber">Service Barber</label>
-          <select
+          <AnimatedDropDown
+            label="Barber Selection"
             id="barber"
+            delay={0.7}
             value={formData.barber}
             onChange={handleChange('barber')}
             className="border px-3 py-2 rounded mb-3"
             disabled={!formData.branch}
           >
-            <option value="">Select Barber</option>
+            <option value="" disabled>Select Barber</option>
             {barbers && formData?.branch &&
               barbers.map(
                 (barber) => (
                   barber?.branchAssigned === formData.branch ? (
-                    <option key={barber?._id} value={barber?._id}>
-                      {barber?.fullName}
-                    </option>
+                    <option key={barber?._id} value={barber?._id} disabled={barber?.status === 'On Leave'}>
+                      {barber?.fullName} {barber?.status === 'On Leave' ? '(On Leave)' : ''}
+                    </option> 
                   ) : (
                     null
                   )
                 )
-              )}
-          </select>
+              )
+            }
+          </AnimatedDropDown>
 
-          <label htmlFor="time">Time</label>
-          <select
+
+          <AnimatedDropDown
+            label="Time"
             id="scheduledTime"
+            delay={0.9}
             value={formData.scheduledTime}
             onChange={handleChange('scheduledTime')}
             className="border px-3 py-2 rounded mb-3"
             disabled={!formData.scheduledDate && !formData.barber}
           >
-            <option value="">Select Time</option>
+            <option value="" disabled>Select Time</option>
             {appointments ? (
               time.map((slot) => {
                 const slotHour = slot.value;
                 const currentHour = today.getHours();
                 const isToday = new Date(formData.scheduledDate).toDateString() === today.toDateString();
 
-                const matchingAppointment = appointments.find(
-                  (a) => a.scheduledTime === slotHour 
+                const matchingAppointment = appointments.filter((a) =>
+                  a.branch === formData?.branch &&
+                  a.scheduledTime === slotHour &&
+                  new Date(a.scheduledDate).toDateString() === new Date(formData?.scheduledDate).toDateString()
                 );
 
-                const timeHasPassed = isToday && currentHour >= slotHour;
-                const isAvailable = !matchingAppointment || matchingAppointment.count < 3;
+                const barberUnavailable = matchingAppointment.some((a) => a.barber === formData.barber);
+                const barberAvailable = !barberUnavailable;
+                const timeHasPassedToday = isToday && currentHour >= slotHour;  
+                const isAvailable = matchingAppointment.length < 3;
 
-                // Show if time hasn't passed and it's available
-                if (!timeHasPassed && isAvailable) {
+                if (!timeHasPassedToday && isAvailable && barberAvailable) {
                   return (
                     <option key={slotHour} value={slotHour}>
-                      {slot.timeTxt}    
+                      {slot.timeTxt}
+                    </option>
+                  );
+                } else if (isAvailable && barberAvailable) {
+                  return (
+                    <option key={slotHour} value={slotHour}>
+                      {slot.timeTxt}
                     </option>
                   );
                 }
@@ -178,16 +255,17 @@ const AppointmentPage = () => {
                 </option>
               ))
             )}
-          </select>
+          </AnimatedDropDown>
 
-          <label htmlFor="serviceType">Service Type</label>
-          <select
+          <AnimatedDropDown
+            label="Service Type"
             id="service"
+            delay={1.1}
             value={formData.service}
             onChange={handleChange('service')}
             className="border px-3 py-2 rounded mb-3"
           >
-            <option value="">Select Service</option>
+            <option value="" disabled>Select Service</option>
             {services &&
               services.map(
                 (service) =>
@@ -195,13 +273,14 @@ const AppointmentPage = () => {
                     <option key={service._id} value={service._id}>
                       {service.name}
                     </option>
-                  )
-              )}
-          </select>
+                )
+            )}
+          </AnimatedDropDown>
 
-          <label htmlFor="additionalService">Additional Service</label>
-          <select
+          <AnimatedDropDown
+            label="Additional Service"
             id="additionalService"
+            delay={1.3}
             value={formData.additionalService}
             onChange={handleChange('additionalService')}
             className="border px-3 py-2 rounded mb-3"
@@ -216,9 +295,12 @@ const AppointmentPage = () => {
                     </option>
                   )
               )}
-          </select>
+          </AnimatedDropDown>
 
-          <button
+          <motion.button
+            initial={{ opacity: 0, x: 200 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, ease: "easeInOut", delay: 1.5 }}
             type="submit"
             disabled={loading}
             className={`py-2 my-4 rounded-md text-white text-lg text-center ${
@@ -226,7 +308,7 @@ const AppointmentPage = () => {
             }`}
           >
             {loading ? 'Submitting...' : 'SUBMIT'}
-          </button>
+          </motion.button>
         </form>
       </main>
 

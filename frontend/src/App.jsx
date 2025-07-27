@@ -91,11 +91,7 @@ function App() {
         </Route>
 
         {/* Admin Layout */}  
-        <Route path="/admin" 
-              element={
-                  <AdminLayout />
-              }
-        >
+        <Route path="/admin" element={<AdminLayout />}>
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="appointments" element={<Appointments />} />
           <Route path="branches" element={<Branches />} />

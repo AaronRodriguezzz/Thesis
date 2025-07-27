@@ -10,8 +10,7 @@ const WalkInSchema = new mongoose.Schema({
         ref: 'Service',
         required: true,
     },
-    additionalServices: 
-    {
+    additionalServices: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Service',
     },
@@ -42,7 +41,7 @@ const WalkInSchema = new mongoose.Schema({
     status:{
         type: String,
         default: 'Waiting',
-        enum: ['Waiting', 'Barbering', 'Finished']
+        enum: ['Waiting', 'Assigned', 'Finished']
     }
 }, { timestamps: true });
 

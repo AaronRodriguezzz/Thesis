@@ -73,8 +73,8 @@ const Appointments = () => {
                     <div className="leading-0.5">
                         <h1 className="text-s md:text-[20px] lg:text-[30px] tracking-tighter text-left my-4">
                            TOTO TUMBS STUDIO
-                            </h1>
-                            <p className="text-xs md:text-[20px]">119 Ballecer South Signal Taguig City</p>
+                        </h1>
+                        <p className="text-xs md:text-[20px]">119 Ballecer South Signal Taguig City</p>
                         </div>
                         <h2 className="text-xs md:text-[20px]  lg:text-[30px] font-extralight tracking-tighter text-center my-4">
                             {today.toISOString().split("T")[0]} {time}
