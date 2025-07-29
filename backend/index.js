@@ -14,6 +14,10 @@ const ProductRoutes = require('./routes/Admin/ProductRoutes');
 const SalesRoutes = require('./routes/Admin/SalesRoutes');
 const ServiceRoutes = require('./routes/Admin/ServicesRoutes');
 
+//Front Desk Routes
+const AssignmentRoutes = require('./routes/FrontDesk/AssignmentRoutes');
+const WalkInRoutes = require('./routes/FrontDesk/WalkInRoutes');
+
 //Customer Routes
 const CustomerAuth = require('./routes/Customer/CustomerAuthRoutes');
 const CustomerAppointment = require('./routes/Customer/AppointmentRoutes');
@@ -38,7 +42,7 @@ app.use((req,res,next) => {
     next()
 })
 
-//use routes 
+//use routes for admin
 app.use(AdminAuth);
 app.use(AppointmentRoutes);
 app.use(BranchRoutes);
@@ -47,6 +51,10 @@ app.use(EmployeeRoutes);
 app.use(ProductRoutes);
 app.use(SalesRoutes);
 app.use(ServiceRoutes);
+
+//use routes for front desk
+app.use(AssignmentRoutes);
+app.use(WalkInRoutes);
 
 //use router for customer
 app.use(CustomerAuth);

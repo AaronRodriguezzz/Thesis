@@ -39,6 +39,11 @@ const AppointmentSchema = new mongoose.Schema({
         enum: ['Booked', 'Assigned', 'Completed', 'Cancelled', 'No-Show'], 
         default: 'Booked' 
     },
+    paymentMethod: {
+        type: String, 
+        enum: ['Cash', 'Gcash'], 
+        default: 'Cash'
+    },  
     uniqueCode: {
         type: String, 
         required: true

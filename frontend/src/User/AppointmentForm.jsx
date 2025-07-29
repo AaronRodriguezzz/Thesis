@@ -71,48 +71,13 @@ const AppointmentPage = () => {
         setServices(response?.services);
         setBranches(response?.branches);
         setBarbers(response?.barbers);
-        console.log(response?.appointmentRecord);
+        console.log('record',   response?.appointmentRecord);
       }
     };
 
     initializeData();
   }, []);
 
-    useEffect(() => {
-
-      if(formData?.branch !== '' && formData?.scheduledDate !== '' || formData?.barber !== ''){    
-                        const currentHour = today.getHours();
-        
-        for(let i = 10; i <= 20; i++){
-            const isToday = new Date(formData.scheduledDate).toDateString() === today.toDateString();
-        const matchingAppointment = appointments.filter((a) =>
-            a.branch === formData?.branch &&
-            a.scheduledTime === i &&
-            new Date(a.scheduledDate).toDateString() === new Date(formData?.scheduledDate).toDateString()
-          );
-
-          const barberAvailable = matchingAppointment?.barber === formData?.barber ? false : true
-          const timeHasPassedToday = isToday && currentHour >= i;         
-          const isAvailable =  matchingAppointment?.length < 3; 
-
-          console.log(matchingAppointment);
-          console.log(i, 'Available:', isAvailable);    
-          if(!timeHasPassedToday) {   
-                    if (isAvailable && barberAvailable) {
-                      console.log(i);
-                    }
-                  }else{
-                    if (isAvailable && barberAvailable) {
-                                          console.log(i);
-
-                    }
-                  }
-
-        }
-        
-        
-      }
-    }, [formData]);
   return (
     <div className="w-screen h-screen overflow-x-hidden bg-[url('/login.png')] bg-cover bg-center pt-10">
 
@@ -187,8 +152,8 @@ const AppointmentPage = () => {
             onChange={handleChange('barber')}
             className="border px-3 py-2 rounded mb-3"
             disabled={!formData.branch}
-          >
-            <option value="" disabled>Select Barber</option>
+          >   
+            <option value="" disabled>Select Barber (Optional)</option>
             {barbers && formData?.branch &&
               barbers.map(
                 (barber) => (
@@ -221,16 +186,22 @@ const AppointmentPage = () => {
                 const currentHour = today.getHours();
                 const isToday = new Date(formData.scheduledDate).toDateString() === today.toDateString();
 
+
                 const matchingAppointment = appointments.filter((a) =>
                   a.branch === formData?.branch &&
                   a.scheduledTime === slotHour &&
                   new Date(a.scheduledDate).toDateString() === new Date(formData?.scheduledDate).toDateString()
                 );
 
-                const barberUnavailable = matchingAppointment.some((a) => a.barber === formData.barber);
+                console.log(matchingAppointment)  
+                
+
+                const barberUnavailable = formData.barber ? matchingAppointment.some((a) => a.barber === formData.barber) : false;
                 const barberAvailable = !barberUnavailable;
                 const timeHasPassedToday = isToday && currentHour >= slotHour;  
                 const isAvailable = matchingAppointment.length < 3;
+
+                // console.log(isAvailable, matchingAppointment.length, slot.value);    
 
                 if (!timeHasPassedToday && isAvailable && barberAvailable) {
                   return (
@@ -238,7 +209,7 @@ const AppointmentPage = () => {
                       {slot.timeTxt}
                     </option>
                   );
-                } else if (isAvailable && barberAvailable) {
+                } else if (!isToday && isAvailable && barberAvailable) {
                   return (
                     <option key={slotHour} value={slotHour}>
                       {slot.timeTxt}

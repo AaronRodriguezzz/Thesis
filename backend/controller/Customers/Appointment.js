@@ -83,17 +83,19 @@ const appointment_initial_data = async (req, res) => {
 
     // Fetch branches and services
     const [branches, services, appointmentRecord, barbers] = await Promise.all([
-      Branch.find(),
-      Services.find(),
-      Appointment.find({status: 'booked', scheduledDate: { $gte: today }}),
-      Employee.find({role: 'Barber'})
+        Branch.find(),
+        Services.find(),
+        Appointment.find({
+            status: { $regex: /^booked$/, $options: 'i' },
+        }),   
+        Employee.find({role: 'Barber'})                         
     ]);
-
+        
     return res
       .status(200)
-      .json({ appointmentRecord, branches, services, barbers });
+      .json({ appointmentRecord, branches, services, barbers });    
 
-  } catch (err) {
+  } catch (err) {   
     console.error("Error fetching appointments:", err);
     return res.status(500).json({ message: "Server error", error: err.message });
   }

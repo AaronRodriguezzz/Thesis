@@ -10,14 +10,13 @@ const WalkInSchema = new mongoose.Schema({
         ref: 'Service',
         required: true,
     },
-    additionalServices: {
+    additionalService: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Service',
     },
     barber: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Employee',
-        default: ''
     },
     branch: {
         type: mongoose.Schema.Types.ObjectId,

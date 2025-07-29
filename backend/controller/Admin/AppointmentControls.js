@@ -59,7 +59,7 @@ const branchAppointments = async (req, res) => {
             .populate('customer')
             .populate('service')
             .populate('additionalService')
-            .populate('branch')
+            .populate('branch')           
             .populate({
                 path: 'barber',
                 match: { role: 'Barber' }, 
@@ -130,6 +130,7 @@ const getAppointmentsByHour = async (req, res) => {
         })
         .populate('customer')
         .populate('service')
+        .populate('additionalService')
         .populate('branch')
         .populate('barber')
             

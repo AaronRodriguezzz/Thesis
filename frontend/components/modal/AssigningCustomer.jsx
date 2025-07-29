@@ -3,10 +3,49 @@ import { FaCaretRight } from 'react-icons/fa';
 import { update_data } from '../../services/PutMethod';
 import { get_data } from '../../services/GetMethod';
 import { post_data } from '../../services/PostMethod';
+import { appointmentTimeFormat } from '../../utils/formatDate';
 
-const AssignCustomer = ({  onCancel, appointments, walkIn, setSelectedCustomer }) => {
+const AssignCustomer = ({  
+        onCancel, 
+        appointments, 
+        walkIn, 
+        setUpdatedAppointments, 
+        setUpdatedWalkIns, 
+        setUpdatedBarber,
+        barber
+    }) => {
+
     const [selectedCategory, setSelectedCategory] = useState('Appointment');
     
+    const customerSelected = async (customer) => {
+        try{
+            const response = await update_data(`/assign_customer/${selectedCategory}`, {
+                id: customer._id,
+                barberId: barber._id
+            });
+
+            if(response) {
+
+                selectedCategory === 'Appointments' ? 
+                setUpdatedAppointments(prev => prev.map(a => 
+                    a._id === customer._id ? { ...a, barber: barber._id, status: 'Assigned' } : a
+                )) 
+
+                :
+
+                setUpdatedWalkIns(prev => prev.map(a => 
+                    a._id === customer._id ? { ...a, barber: barber._id, status: 'Assigned' } : a
+                )) 
+
+                setUpdatedBarber(prev => prev.map(a => a._id === barber._id ? { ...a, status: 'Barbering' } : a));
+                
+                onCancel(false);
+            }
+
+        }catch(err) {
+            console.error('Error selecting customer:', err);
+        }
+    };
 
     return (
         <div className='h-screen w-screen flex items-center justify-center bg-transparent fixed top-0 left-0 z-50'>
@@ -28,61 +67,61 @@ const AssignCustomer = ({  onCancel, appointments, walkIn, setSelectedCustomer }
                     </button>
                 </div>
 
-                <div className='min-h-[400px] flex flex-col'> 
+                <div className='min-h-[400px] flex flex-col overflow-y-auto'> 
                     {selectedCategory === 'Appointment' ? (
                         <div>
-                            <div className='flex flex-col justify-start'>
-                                <div className='w-full flex justify-between items-center bg-black text-white p-4 mt-2 rounded-l-lg'>
-                                    <div className='tracking-tight text-sm'>
-                                        <h1 className='text-lg font-semibold'>Renz Allen Rodriguez</h1>
-                                        <p>Service: Hit & Wack</p>
-                                        <p>Additional: Hot Towel</p>
-                                        <p>Code: 3584</p>
-                                    </div>
-                                        
-
-                                    <button className='h-full px-2'>
-                                        <FaCaretRight className='text-3xl text-white'/>
-                                    </button>
-                                </div>
-                                
-                                <div className='w-full flex justify-between items-center bg-black text-white p-4 mt-2 rounded-l-lg'>
-                                    <div className='tracking-tight text-sm'>
-                                        <h1 className='text-lg font-semibold'>Renz Allen Rodriguez</h1>
-                                        <p>Service: Hit & Wack</p>
-                                        <p>Additional: Hot Towel</p>
-                                        <p>Code: 3584</p>
-                                    </div>
-                                        
-
-                                    <button className='h-full px-2'>
-                                        <FaCaretRight className='text-3xl text-white'/>
-                                    </button>
-                                </div>
-
-                                <div className='w-full flex justify-between items-center bg-black text-white p-4 mt-2 rounded-l-lg'>
-                                    <div className='tracking-tight text-sm'>
-                                        <h1 className='text-lg font-semibold'>Renz Allen Rodriguez</h1>
-                                        <p>Service: Hit & Wack</p>
-                                        <p>Additional: Hot Towel</p>
-                                        <p>Code: 3584</p>
-                                    </div>
-                                        
-
-                                    <button className='h-full px-2'>
-                                        <FaCaretRight className='text-3xl text-white'/>
-                                    </button>
-                                </div>
+                            <div className='min-h-[380px] flex flex-col justify-start '>
+                                {appointments && appointments.length > 0 ? (
+                                    appointments.filter(a => a.status !== 'Assigned').map((appointment, index) => (
+                        
+                                        <div key={index} className='flex items-center bg-black text-white p-4 mt-2 rounded-l-lg' onClick={() => customerSelected(appointment)}>
+                                            <div className='flex-1 flex-col tracking-tight text-sm'>
+                                                <h1 className='w-full flex justify-between text-lg font-semibold'>
+                                                    <span>{appointment.customer?.firstName} {appointment.customer?.lastName}</span>
+                                                    <span>{appointment?.scheduledDate.toString().split('T')[0]} {appointmentTimeFormat(appointment?.scheduledTime)}</span>
+                                                </h1>
+                                                <p>Service: {appointment.service?.name} (P{appointment.service?.price})</p>
+                                                <p>Additional: {appointment?.additionalService || 'N/A'}</p>
+                                                <p>Barber: {appointment.barber?.fullName || 'N/A'}</p>
+                                                <p>Code: {appointment.uniqueCode}</p>
+                                            </div>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div className='text-center text-gray-500 my-auto'>No appointments available</div>
+                                )}
                                  
-
-                                 <button className='w-[100px] mt-2 bg-red-600 text-white' onClick={() => onCancel(false)}>Cancel</button>
                             </div>
                         </div>
                     ) : (
-                        <div> 
-                            
+                        <div>
+                            <div className='min-h-[380px] flex flex-col justify-start overflow-y-auto'>
+                                {walkIn && walkIn.length > 0 ? (
+                                    walkIn.filter(a => a.status !== 'Assigned').map((walkIn, index) => (
+                        
+                                        <div key={index} className='flex items-center bg-black text-white p-4 mt-2 rounded-l-lg' onClick={() => customerSelected(walkIn)}>
+                                            <div className='flex-1 flex-col tracking-tight text-sm'>
+                                                <h1 className='w-full flex justify-between text-lg font-semibold'>
+                                                    {walkIn.customerName || 'N/A'}
+                                                </h1>
+                                                <p>Service: {walkIn.service?.name} (P{walkIn.service?.price})</p>
+                                                <p>
+                                                    Additional: {walkIn?.additionalService || 'N/A'} 
+                                                    {walkIn.additionalService ? `(P${walkIn.additionalService?.price})` : ''}
+                                                </p>
+                                                <p>Total Payment: {walkIn.totalAmount}</p>
+                                            </div>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div className='text-center text-gray-500 my-auto '>No walk-in/s available</div>
+                                )}
+                                 
+                            </div>
                         </div>
                     )}
+
+                    <button className='w-[100px] mt-2 bg-red-600 text-white' onClick={() => onCancel(false)}>Cancel</button>
                 </div>
             </div>
         </div>

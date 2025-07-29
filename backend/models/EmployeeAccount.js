@@ -39,6 +39,10 @@ const EmployeeSchema = new mongoose.Schema({
         type: Date,
         required: false,
     },
+    customerTypeAssigned: {
+        type: String,
+        enum: ['Walk-In', 'Appointment']
+    }
 
 },{ timestamps: true });
 

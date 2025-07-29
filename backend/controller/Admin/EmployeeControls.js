@@ -58,10 +58,6 @@ const get_Barbers = async (req, res) => {
 
     try {
 
-        const barberse = await EmployeeAccount.find();
-
-        console.log(barberse)
-
         // Fetch customers with pagination, sorted by most recent
         const barbers = await EmployeeAccount.find({ 
             branchAssigned: branchId, 

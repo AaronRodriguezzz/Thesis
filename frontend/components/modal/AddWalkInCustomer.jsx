@@ -6,6 +6,7 @@ import { post_data } from '../../services/PostMethod';
 const NewWalkInCustomer = ({  onCancel, setUpdatedData, barbers }) => {
     const frontDesk = JSON.parse(localStorage.getItem('admin'));
     const [totalPayment, setTotalPayment] = useState(0);
+    const [loading, setLoading] = useState(false);
     const [services, setServices] = useState(null);
     const [walkInCustomer, setWalkInCustomer] = useState({
         customerName: '',
@@ -20,13 +21,16 @@ const NewWalkInCustomer = ({  onCancel, setUpdatedData, barbers }) => {
 
     const add_clicked = async (e) => {
         e.preventDefault();
-        const new_WalkIn = await post_data(walkInCustomer, '')
 
+        setLoading(true)
+        const newWalkInRes = await post_data(walkInCustomer, '/new-walkIn')
 
-        if(new_WalkIn.added){
+        if(newWalkInRes){
             onCancel(false);
-            setUpdatedData(prev => [{...prev, new_WalkIn}])
+            setUpdatedData(prev => [...prev, newWalkInRes.walkIn])
         }
+
+        setLoading(false);
     }
 
     useEffect(() => {
@@ -42,6 +46,7 @@ const NewWalkInCustomer = ({  onCancel, setUpdatedData, barbers }) => {
         }, 0);
 
         setTotalPayment(total);
+        setWalkInCustomer({...walkInCustomer, totalAmount: total});
     },[walkInCustomer.service, walkInCustomer.additionalService])
 
     useEffect(() => {
@@ -80,6 +85,7 @@ const NewWalkInCustomer = ({  onCancel, setUpdatedData, barbers }) => {
                         value={walkInCustomer.service}
                         onChange={(e) => setWalkInCustomer({ ...walkInCustomer, service: e.target.value })}
                         className="border-1 border-gray-200 px-3 py-2 rounded mb-3"
+                        required
                     >
                         <option value="" disabled>Select Service</option>
                         {services &&
@@ -139,10 +145,11 @@ const NewWalkInCustomer = ({  onCancel, setUpdatedData, barbers }) => {
                         value={walkInCustomer.paymentMethod}
                         onChange={(e) => setWalkInCustomer({ ...walkInCustomer, paymentMethod: e.target.value })}
                         className="border-1 border-gray-200 px-3 py-2 rounded mb-3"
+                        required
                     >
                         <option value="" disabled>Select Payment Method</option>
-                        <option value="Cash" disabled>Cash</option>
-                        <option value="Gcash" disabled>Gcash</option>
+                        <option value="Cash">Cash</option>
+                        <option value="Gcash">Gcash</option>
                     </select>
 
                     <p>Total Payment: ₱{totalPayment}.00 </p>
@@ -160,8 +167,9 @@ const NewWalkInCustomer = ({  onCancel, setUpdatedData, barbers }) => {
                     <button
                         type='submit'
                         className='px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 transition'
+                        disabled={loading}
                     >
-                        Finish
+                        {loading ? 'Adding...': 'Finish'}
                     </button>
                 </div>
             </form>

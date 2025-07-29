@@ -6,10 +6,11 @@ import { dateTimeFormat } from "../../utils/formatDate";
 import { update_data } from '../../services/PutMethod';
 import AssignCustomer from "../../components/modal/AssigningCustomer";
 import NewWalkInCustomer from "../../components/modal/AddWalkInCustomer";
+import ServiceCompleteModal from "../../components/modal/ServiceCompleteModal";
 
 const Appointments = () => {
-    const frontDesk = JSON.parse(localStorage.getItem('admin'));
     const baseUrl = import.meta.env.MODE === 'development' ? 'http://localhost:4001' : 'https://tototumbs.onrender.com';
+    const frontDesk = JSON.parse(localStorage.getItem('admin'));
     const today = new Date();
     const time = dateTimeFormat(today);
 
@@ -17,8 +18,9 @@ const Appointments = () => {
     const [appointmentsByHour, setAppointmentsByHour] = useState(null);
     const [walkInList, setWalkInList] = useState(null);
     const [isAssigning, setIsAssigning] = useState(false);
+    const [isCompleting, setIsCompleting] = useState(false);
+    const [barberToUpdate, setBarberToUpdate] = useState(null);
     const [isAddingWalkIn, setIsAddingWalkIn] = useState(false);
-    const [selectedCustomer, setSelectedCustomer] = useState('');
 
     const update_barberStatus = async (barber, newStatus) => {
 
@@ -46,18 +48,17 @@ const Appointments = () => {
 
                 if(!branchId) return 
 
-                const [barberData, appointmentData] = await Promise.all([
+                const [barberRes, appointmentRes, walkInRes] = await Promise.all([
                     get_data(`/barbers/${branchId}`),
                     get_data(`/appointments/${branchId}`),
+                    get_data(`/walkIns/${branchId}`),
                 ]);
 
-                if (barberData?.barbers) {
-                    setBarberList(barberData.barbers);
-                }
+                console.log(walkInRes);
+                setBarberList(barberRes?.barbers || []);
+                setAppointmentsByHour(appointmentRes?.appointments || []);
+                setWalkInList(walkInRes || []);
 
-                if (appointmentData?.appointments) {
-                    setAppointmentsByHour(appointmentData.appointments);
-                }
             } catch (err) {
                 console.error("Failed to fetch barbers or appointments", err);
             }
@@ -103,7 +104,7 @@ const Appointments = () => {
                                         Walk-In
                                     </h1>
                                     <p className="text-xs md:text-[20px] lg:text-[30px] font-extralight tracking-tighter text-left">
-                                        3  
+                                        {walkInList && walkInList.length || 0}  
                                     </p>
                                 </div>
                             </div>
@@ -119,8 +120,8 @@ const Appointments = () => {
                     </div>      
 
                     <div className="w-full h-full flex flex-row justify-center gap-8">
-                        {barberList && barberList.map((barber) => (
-                            <div className="relative w-[25%] h-[80%] flex flex-col items-center bg-white shadow-lg rounded-lg p-4">
+                        {barberList && barberList.map((barber,index) => (
+                            <div key={index} className="relative w-[25%] h-[80%] flex flex-col items-center bg-white shadow-lg rounded-lg p-4">
                                 {barber.imagePath ? (
                                         <img
                                             src={`${baseUrl}/${barber.imagePath}`}
@@ -147,20 +148,27 @@ const Appointments = () => {
                                 <div className="w-full flex flex-col space-y-3 mt-4 px-8">
                                     <button 
                                         className="w-full bg-black hover:bg-green-400 text-white tracking-tight py-2 rounded-lg transition-colors ease-in-out"
-                                        onClick={() => setIsAssigning(true)}
-                                        disabled={barber.status !== 'Available'}
+                                        onClick={() => { 
+                                            setIsAssigning(true); 
+                                            setBarberToUpdate(barber);
+                                        }}
+                                        disabled={barber.status !== 'Available' || barber.status === 'On-break' || barber.status == 'Barbering' }
                                     >
                                         Assign Customer
                                     </button>
                                     <button 
                                         className="w-full bg-black hover:bg-green-400 text-white tracking-tight py-2 rounded-lg transition-colors ease-in-out"
+                                        onClick={() => { 
+                                            setIsCompleting(true);
+                                            setBarberToUpdate(barber);
+                                         }}
                                         disabled={barber?.status !== 'Barbering'}
                                     >
                                         Complete Barbering
                                     </button>
                                     <button 
                                         className="w-full bg-black hover:bg-orange-400 text-white tracking-tight py-2 rounded-lg transition-colors ease-in-out"
-                                        disabled={barber?.status === 'Unavailable' || barber?.status === 'On-break' }
+                                        disabled={barber?.status === 'Unavailable' || barber?.status === 'On-break' || barber.status == 'Barbering'}
                                         onClick={() => update_barberStatus(barber, 'On-break')} 
                                     >
                                         Break Time
@@ -169,6 +177,7 @@ const Appointments = () => {
                                 <button 
                                     className="absolute bottom-0 left-0 w-full text-white py-2 tracking-tight"
                                     style={{backgroundColor: barber?.status === 'Unavailable' || barber?.status === 'On-break' ? 'green' : 'red' }}
+                                    disabled={barber?.status === 'Barbering'}
                                     onClick={() => update_barberStatus(barber, barber?.status === 'Unavailable' 
                                                                     || barber?.status === 'On-break' ? 'Available' : 'Unavailable' 
                                                                 )}
@@ -178,7 +187,6 @@ const Appointments = () => {
           
                             </div>
                         ))}
-
                     </div>
                 </main>
                 
@@ -186,13 +194,24 @@ const Appointments = () => {
                     onCancel={setIsAssigning}
                     appointments={appointmentsByHour}
                     walkIn={walkInList}
-                    setSelectedCustomer={setSelectedCustomer}
+                    setUpdatedAppointments={setAppointmentsByHour}
+                    setUpdatedWalkIns={setWalkInList}
+                    setUpdatedBarber={setBarberList}
+                    barber={barberToUpdate}
                 />}
 
                 {isAddingWalkIn && <NewWalkInCustomer 
                     onCancel={setIsAddingWalkIn} 
                     setUpdatedData={setWalkInList}
                     barbers={barberList}
+                />}
+
+                {isCompleting && <ServiceCompleteModal 
+                    onCancel={setIsCompleting}
+                    barber={barberToUpdate}
+                    setUpdatedAppointments={setAppointmentsByHour}
+                    setUpdatedWalkIns={setWalkInList}
+                    setUpdatedBarber={setBarberList}                
                 />}
             </div>
         );
