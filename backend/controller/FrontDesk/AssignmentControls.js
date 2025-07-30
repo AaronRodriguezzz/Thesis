@@ -76,13 +76,13 @@ const completeAssignment = async (req, res) => {
 
         const [customer, barber] = await Promise.all([
             
-            await Model.findByIdAndUpdate(
+            Model.findByIdAndUpdate(
                 csToFinish._id,
                 { status: 'Completed', paymentMethod },
                 { new: true }
             ),
 
-            await Employee.findByIdAndUpdate(
+            Employee.findByIdAndUpdate(
                 barberId,
                 { status: 'Available', customerTypeAssigned: '' },
                 { new: true }

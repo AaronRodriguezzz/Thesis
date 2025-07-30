@@ -162,52 +162,6 @@ const update_product = async (req, res) => {
 
 
 /**
- * @desc Update an existing product
- * @route PUT /api/checkout_product
- */
-const checkout_Product = async (req, res) => {
-    const productArray = req.body.newData; // 👈 This will be your array of objects
-
-    if (!Array.isArray(productArray)) {
-        return res.status(400).json({ message: 'Invalid data format' });
-    }
-
-    try {
-        const updatedProducts = await Promise.all(
-            productArray.map(async (product) => {
-                return await Product.findByIdAndUpdate(
-                    product._id,
-                    {
-                        $inc: { stock: -product.checkOutQuantity },
-                    },
-                    { new: true }
-                );
-            })
-        );
-
-
-        const salesRecord = productArray.map(product => {
-            return new Sales({
-                product: product._id,
-                quantity: product.checkOutQuantity,
-                totalPrice: product.price * product.checkOutQuantity,
-                soldBy: product.soldBy,
-                branch: product.branch,
-            })
-        })
-
-        await Promise.all(salesRecord.map(record => record.save()));
-        
-        return res.status(200).json({message: 'Check Out Successful', updatedProducts})
-
-    } catch (err) {
-        console.error(err);
-        return res.status(500).json({ message: 'Internal server error.' });
-    }
-};
-
-
-/**
  * @desc Delete a product by ID
  * @route DELETE /api/delete_products/:id
  */
@@ -237,7 +191,6 @@ module.exports = {
     get_product,
     get_branchProduct,
     new_product,
-    checkout_Product,
     update_product,
     delete_product
 };

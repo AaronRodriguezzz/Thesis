@@ -13,10 +13,7 @@ const POS = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [page, setPage] = useState(1);
     const [checkOutList, setCheckOutList] = useState([]);
-    const [totalSummary, setTotalSummary] = useState({
-        totalAmount: 0,
-        totalQuantity: 0,
-    })
+    const [totalSummary, setTotalSummary] = useState(0)
 
     const filteredProducts = useMemo(() => {
         return productList && productList.filter(product =>
@@ -29,10 +26,8 @@ const POS = () => {
 
     const addTo_checkOutList = (item) => {
         const newItem = {
-            ...item, 
+            ...item,
             checkOutQuantity: 1,
-            soldBy: frontDesk?._id,
-            branch: frontDesk?.branchAssigned
         }
         setCheckOutList(prevList => [...prevList, newItem]);
     }
@@ -47,10 +42,10 @@ const POS = () => {
         const updatedList = checkOutList.map(product => {
             if (product._id === id) {
                 const newQuantity = product.checkOutQuantity + value;
-                    return {
-                        ...product,
-                        checkOutQuantity: newQuantity < 1 ? 1 : newQuantity, // minimum quantity is 1
-                    };
+                return {
+                    ...product,
+                    checkOutQuantity: newQuantity, 
+                };
             }
             return product;
         });
@@ -60,16 +55,23 @@ const POS = () => {
 
     const handle_finish = async () => {
 
-        try{
-            const response = await update_data('/checkout_product', checkOutList);
+        const checkOutPayload = {
+            product: [...checkOutList],
+            soldBy: frontDesk?._id,
+            totalPrice: totalSummary,
+            branch: frontDesk?.branchAssigned
+        };
 
-            if (response.updatedProducts) {
+        try{
+            const response = await update_data('/checkout_product', checkOutPayload);
+
+            if (response.updatedData) {
                 setCheckOutList([]);
 
                 setProductList(prev =>
-                    prev.map(product => {
-                        const updated = response.updatedProducts.find(p => p._id === product._id);
-                        return updated ? updated : product;
+                    prev.map(p => {
+                        const updated = response.updatedData.find(prod => prod._id === p._id);
+                        return updated ? updated : p;
                     })
                 );
             }
@@ -82,14 +84,14 @@ const POS = () => {
     
     useEffect(() => {
         let totalAmount = 0;
-        let totalQuantity = 0;
 
         checkOutList.forEach(product => {
             totalAmount += product.price * product.checkOutQuantity;
-            totalQuantity += product.checkOutQuantity;
         });
 
-        setTotalSummary({ totalAmount, totalQuantity });
+        console.log(checkOutList);
+
+        setTotalSummary(totalAmount);
     },[checkOutList])
     
     useEffect(() => {
@@ -144,9 +146,9 @@ const POS = () => {
                                             <p className="text-sm font-semibold">On stock: {product?.stock}</p>
 
                                             <button 
-                                                className="bg-green-500 rounded-full text-white px-2 text-md my-2 font-semibold"
+                                                className="bg-green-500 rounded-full text-white px-2 text-md my-2 font-semibold disabled:opacity-50"
                                                 onClick={() => addTo_checkOutList(product)}
-                                                disabled={checkOutList.find(p => p._id === product?._id)}
+                                                disabled={checkOutList.find(p => p._id === product?._id) || product?.stock === 0}
                                             >
                                                 + Add
                                             </button>
@@ -188,6 +190,7 @@ const POS = () => {
                                                 <button 
                                                     className="bg-white px-2 text-lg" 
                                                     onClick={() => quantityChange(product._id, -1)}
+                                                    disabled={product.checkOutQuantity === 1 }
                                                 >
                                                     -
                                                 </button>
@@ -217,8 +220,7 @@ const POS = () => {
                         </div>
                         
                         <div className="flex flex-row justify-between items-center">
-                            <h1 className="text-xl font-semibold tracking-tight">Total Price: ₱{totalSummary.totalAmount || 0}.00</h1>
-                            <p className="text-xl font-semibold tracking-tight">Total Quantity: {totalSummary.totalQuantity || 0}</p>
+                            <h1 className="text-xl font-semibold tracking-tight">Total Price: ₱{totalSummary || 0}.00</h1>
                         </div>
                         
                         <button 

@@ -1,16 +1,19 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FiUser } from "react-icons/fi";
-import { motion } from "motion/react"
+import { FiUser, FiMenu, FiX } from "react-icons/fi";
+import { motion } from "motion/react";
 
 export default function Navigation() {
   const navigate = useNavigate();
-  const [isActive, setIsActive] = useState('Home');
+  const [isActive, setIsActive] = useState("Home");
+  const [navVisible, setNavVisible] = useState(false);
 
   const navClicked = (id, route) => {
     setIsActive(id);
-    navigate(route ? route : '/');   
-    
+    navigate(route || "/");
+
+    setNavVisible(false); // hide sidebar on click (mobile)
+
     setTimeout(() => {
       const element = document.getElementById(id);
       if (element) {
@@ -19,54 +22,84 @@ export default function Navigation() {
     }, 500);
   };
 
+  const toggleNav = () => {
+    setNavVisible(prev => !prev);
+  };
+
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: -50 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: .8, ease: "easeInOut" }}
+      transition={{ duration: 0.8, ease: "easeInOut" }}
       exit={{ opacity: 0, y: -20 }}
-      className="w-full sticky top-0 z-50 shadow-sm bg-white py-3 px-5 flex justify-between items-center"
+      className="w-screen fixed top-0 z-50 shadow-sm bg-white py-3 px-5 overflow-hidden p-4"
     >
-      {/* Logo */}
-      <div className="flex flex-col items-center">
-        <p className="text-md tracking-[5px] font-extralight">TOTO TUMBS</p>
-        <p className="text-[30px] tracking-[8px]">BARBERSHOP</p>
-      </div>
+      <div className="flex items-center justify-between w-full">
+        {/* Left: Burger icon (mobile only) */}
+        <div className="lg:hidden">
+          <button onClick={toggleNav} className="text-black">
+            {navVisible ? <FiX size={30} /> : <FiMenu size={30} />}
+          </button>
+        </div>
 
-      {/* Navigation Links */}
+        {/* Center: Logo */}
+        <div className="flex flex-col items-center ml-10 md:ml-20 lg:ml-0">
+          <p className="text-sm md:text-md tracking-wider md:tracking-[5px] font-extralight">TOTO TUMBS</p>
+          <p className="text-[20px] md:text-[30px] tracking-wider md:tracking-[8px]">BARBERSHOP</p>
+        </div>
+
+        {/* <img src="/shop_logo.png" alt="shop_logo" className="block lg:hidden w-20 h-20"/> */}
+
+        {/* Nav links (mobile sidebar or desktop inline) */}
       <nav>
-        <ul className="flex space-x-6 text-md tracking-wider">
-          {["Home", "About Us", "Services", "Products"].map((text) => (
+        <ul
+          className={`
+            ${navVisible ? "flex" : "hidden"}
+            fixed top-[70px] left-0 h-[calc(100vh-70px)]
+            flex-col items-center bg-white p-16 space-y-4 text-md tracking-wider
+            shadow-2xl transition-all duration-300 ease-in-out
+            z-40
+            lg:flex lg:static lg:h-auto lg:flex-row lg:items-center lg:justify-center lg:space-y-0 lg:space-x-6 lg:p-0 lg:bg-transparent lg:shadow-none
+          `}
+        >
+          {["Home", "About Us", "Services", "Products"].map(text => (
             <li
               key={text}
               onClick={() => navClicked(text)}
-              className="hover:underline hover:font-extrabold  transition duration-200 ease-in-out cursor-pointer"
-              style={{  fontWeight: isActive === text ? 600 : 400  }}
+              className="cursor-pointer hover:underline transition"
+              style={{ fontWeight: isActive === text ? 600 : 400 }}
             >
               {text}
             </li>
           ))}
-          <li 
-            onClick={() => navClicked('Faq', '/faq')}
-            className="hover:underline transition duration-200 ease-in-out"
-            style={{  fontWeight: isActive === 'Faq' ? 600 : 400  }}
+          <li
+            onClick={() => navClicked("Faq", "/faq")}
+            className="cursor-pointer hover:underline transition"
+            style={{ fontWeight: isActive === "Faq" ? 600 : 400 }}
           >
             FAQ's
           </li>
-          <li 
-            onClick={() => navClicked('Branches', '/branches')}
-            className="hover:underline transition duration-200 ease-in-out"
-            style={{  fontWeight: isActive === 'Branches' ? 600 : 400  }}
+          <li
+            onClick={() => navClicked("Branches", "/branches")}
+            className="cursor-pointer hover:underline transition"
+            style={{ fontWeight: isActive === "Branches" ? 600 : 400 }}
           >
             Branches
           </li>
         </ul>
       </nav>
-
-      {/* Icons */}
-      <div className="flex flex-row gap-x-2">
-        <FiUser size={30} onClick={() => navigate('/profile')} className="text-gray-500" />
+      
+        {/* Right: Profile icon */}
+        <div className="flex gap-x-2">
+          <FiUser
+            size={30}
+            onClick={() => navigate("/profile")}
+            className="text-gray-500 cursor-pointer"
+          />
+        </div>
       </div>
+
+      
     </motion.div>
   );
 }

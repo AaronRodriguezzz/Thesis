@@ -29,7 +29,7 @@ import FdDashboard from "./FrontDesk/Dashboard";
 import FdAppointment from "./FrontDesk/Appointments";
 import POS from "./FrontDesk/POS";
 import Barbers from "./FrontDesk/Barbers";
-
+import FrontDeskSales from "./FrontDesk/Sales";
 
 // Layouts
 import UserLayout from "../layouts/UserLayout";
@@ -115,6 +115,7 @@ function App() {
           <Route path="customers" element={<Customers />} />
           <Route path="products" element={<POS />} />
           <Route path="barbers" element={<Barbers />} />
+          <Route path="sales" element={<FrontDeskSales />} />
         </Route>  
 
         {/* (outside layout) */}  

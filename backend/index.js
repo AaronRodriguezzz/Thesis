@@ -17,6 +17,7 @@ const ServiceRoutes = require('./routes/Admin/ServicesRoutes');
 //Front Desk Routes
 const AssignmentRoutes = require('./routes/FrontDesk/AssignmentRoutes');
 const WalkInRoutes = require('./routes/FrontDesk/WalkInRoutes');
+const POSRoutes = require('./routes/FrontDesk/POSRoutes');
 
 //Customer Routes
 const CustomerAuth = require('./routes/Customer/CustomerAuthRoutes');
@@ -55,6 +56,7 @@ app.use(ServiceRoutes);
 //use routes for front desk
 app.use(AssignmentRoutes);
 app.use(WalkInRoutes);
+app.use(POSRoutes);
 
 //use router for customer
 app.use(CustomerAuth);

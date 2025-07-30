@@ -7,10 +7,10 @@ const UserLayout = () => {
   return (
     <div>
       <Navigation otherPage={true}/>
-      <main className="overflow-x-hidden">
+      <main className="overflow-x-hidden pt-20">
         <Outlet />
       </main>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 };
