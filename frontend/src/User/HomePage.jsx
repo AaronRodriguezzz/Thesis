@@ -142,9 +142,10 @@ export default function MainPage() {
       <div id="About Us" ref={sectionRefs.about} className="h-[90vh] w-full bg-white flex flex-col md:flex-row items-center justify-center px-4 md:px-10 py-10 gap-6">
         <motion.div 
           initial={{ opacity: 0, x: -100 }}
-          transition={{ duration: 2, ease: "easeInOut"}}
+          transition={{ duration: 1, ease: "easeInOut"}}
           animate={inViews.about ? { opacity: 1, x: 0 } : {}}
-          className="w-full md:w-1/2 flex flex-col items-start">
+          className="w-full md:w-1/2 flex flex-col items-start"
+        >
           <h1 className="text-center font-extralight tracking-widest text-3xl md:text-5xl mb-4">ABOUT US</h1>
           <p className="text-justify text-sm md:text-lg tracking-tight">
             Three years ago, we began as The Hauz Barbers—a neighborhood shop with a mission to deliver high-quality grooming with a personal touch. Founded by a seasoned barber who once styled celebrities at Bruno’s Barbers, our journey has evolved into Toto Tumbs: a brand that represents class, elegance, and refined barbering. The shift from The Hauz to Toto Tumbs wasn’t just a name change, but a transformation in style, ambiance, and service, blending traditional techniques with modern flair. Now with six Toto Tumbs branches—alongside the original Hauz Barbers still in operation—we continue to offer premium grooming experiences for clients who value craftsmanship and class.
@@ -154,7 +155,7 @@ export default function MainPage() {
           src="/about2.png"
           alt="About us"
           initial={{ opacity: 0 }}
-          transition={{ duration: 2, ease: "easeInOut"}}
+          transition={{ duration: 1, ease: "easeInOut"}}
           animate={inViews.about  ? { opacity: 1 } : {}}
           className="w-full max-w-xs md:max-w-sm lg:max-w-xl h-auto rounded-lg "
         />
@@ -185,13 +186,13 @@ export default function MainPage() {
                 key={product._id}
                 initial={{ opacity: 0, y: -20 }}
                 animate={inViews.products ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.3, ease: "easeInOut", delay: index * .3 }}
+                transition={{ duration: 0.3, ease: "easeInOut", delay: index * .2 }}
                 className="bg-gray-700 h-[500px] w-full sm:w-[45%] md:w-[30%] lg:w-[250px] p-4 hover:scale-105 transition-transform rounded-lg shadow-md"
               >
                 <img
                   src={`${baseUrl}/${product.imagePath}`}
                   alt={product.name}
-                  className="w-full h-[60%] object-cover rounded-md mb-4 shadow"
+                  className="w-full h-[70%] md:h-[40%] lg:h-[60%] object-cover rounded-md mb-4 shadow"
                 />
                 <div className="text-white tracking-tight space-y-1">
                   <h2 className="text-md md:text-lg font-bold">{product.name}</h2>

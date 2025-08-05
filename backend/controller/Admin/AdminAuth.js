@@ -47,8 +47,6 @@ const admin_login = async (req, res) => {
             secure: process.env.NODE_ENV === 'production' // Only secure in production
         });
 
-        console.log(employee);
-
         // Send success response
         return res.status(200).json({
             message: 'Login successful',

@@ -21,6 +21,7 @@ const Appointments = () => {
     const [isCompleting, setIsCompleting] = useState(false);
     const [barberToUpdate, setBarberToUpdate] = useState(null);
     const [isAddingWalkIn, setIsAddingWalkIn] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const update_barberStatus = async (barber, newStatus) => {
 
@@ -47,7 +48,8 @@ const Appointments = () => {
                 const branchId = frontDesk?.branchAssigned;
 
                 if(!branchId) return 
-
+                
+                setLoading(true);
                 const [barberRes, appointmentRes, walkInRes] = await Promise.all([
                     get_data(`/barbers/${branchId}`),
                     get_data(`/appointments/${branchId}`),
@@ -59,6 +61,8 @@ const Appointments = () => {
                 setAppointmentsByHour(appointmentRes?.appointments || []);
                 setWalkInList(walkInRes || []);
 
+                setLoading(false)
+
             } catch (err) {
                 console.error("Failed to fetch barbers or appointments", err);
             }
@@ -66,6 +70,9 @@ const Appointments = () => {
 
         getBarbersAndAppointments();
     }, []);
+
+    if (loading) return <div>Loading...</div>;
+    
 
     return (
         <div className="flex min-h-screen">
@@ -91,7 +98,7 @@ const Appointments = () => {
                                     Appointment
                                 </h1>
                                 <p className="text-xs md:text-[20px] lg:text-[30px] font-extralight tracking-tighter text-left">
-                                    {appointmentsByHour && appointmentsByHour.length}
+                                    {appointmentsByHour && appointmentsByHour.filter(a => a.status === 'Booked').length}
                                 </p>
                             </div>
                         </div>

@@ -9,6 +9,7 @@ const AdminAuth = require('./routes/Admin/AdminAuthRoutes');
 const AppointmentRoutes = require('./routes/Admin/AppointmentRoutes');
 const BranchRoutes = require('./routes/Admin/BranchRoutes');
 const CustomerRoutes = require('./routes/Admin/CustomerRoutes');
+const DashboardRoutes = require('./routes/Admin/DashboardRoutes');
 const EmployeeRoutes = require('./routes/Admin/EmployeeRoutes');
 const ProductRoutes = require('./routes/Admin/ProductRoutes');
 const SalesRoutes = require('./routes/Admin/SalesRoutes');
@@ -25,6 +26,7 @@ const CustomerAppointment = require('./routes/Customer/AppointmentRoutes');
 const Getter = require('./routes/Customer/GetRoutes');
 const Reviews = require('./routes/Customer/ReviewsRoutes');
 const Subscriber = require('./routes/Customer/SubscribeEmail');
+const ChatBotRoutes = require('./routes/Customer/ChatbotRoutes');
 
 // Initialize Express app
 const app = express();
@@ -48,6 +50,7 @@ app.use(AdminAuth);
 app.use(AppointmentRoutes);
 app.use(BranchRoutes);
 app.use(CustomerRoutes);
+app.use(DashboardRoutes);
 app.use(EmployeeRoutes);
 app.use(ProductRoutes);
 app.use(SalesRoutes);
@@ -64,6 +67,7 @@ app.use(CustomerAppointment);
 app.use(Reviews);
 app.use(Getter);
 app.use(Subscriber);
+app.use(ChatBotRoutes);
 
 const dirname = path.resolve();
 

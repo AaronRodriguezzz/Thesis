@@ -119,7 +119,14 @@ function App() {
         </Route>  
 
         {/* (outside layout) */}  
-        <Route path="/login" element={<Login />} />
+        <Route 
+          path="/login" 
+          element={
+            <ProtectedRoute role="user">
+              <Login />
+            </ProtectedRoute>
+          } 
+        />
         <Route path="/register" element={<Registration />} />
         <Route path="/admin/login" element={<AdminLogin />} />
 

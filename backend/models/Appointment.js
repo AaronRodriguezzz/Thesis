@@ -41,9 +41,13 @@ const AppointmentSchema = new mongoose.Schema({
     },
     paymentMethod: {
         type: String, 
-        enum: ['Cash', 'Gcash'], 
+        enum: ['Cash', 'GCash'], 
         default: 'Cash'
     },  
+    totalAmount: {
+      type: Number,
+      required: true  
+    },
     uniqueCode: {
         type: String, 
         required: true

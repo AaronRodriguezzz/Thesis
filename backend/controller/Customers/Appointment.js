@@ -19,6 +19,7 @@ const appointment_creation = async (req, res) => {
         barber,
         scheduledDate,
         scheduledTime,
+        totalAmount
     } = req.body;
 
     console.log(req.body);
@@ -50,6 +51,7 @@ const appointment_creation = async (req, res) => {
             barber: barber?.trim() ? barber : undefined,
             scheduledDate: new Date(scheduledDate),
             scheduledTime,
+            totalAmount,
             uniqueCode  
         });
 

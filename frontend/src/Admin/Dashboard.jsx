@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   FaUsers,
   FaCalendarCheck,
@@ -19,36 +19,55 @@ import {
   Pie,
   BarChart,
   Bar,
+  Area,
+  AreaChart
 } from "recharts";
+import { get_data } from "../../services/GetMethod";
 
 const DashboardStats = () => {
-  const salesData = [
-    { name: "Jan", thisYear: 24000, lastYear: 12000 },
-    { name: "Feb", thisYear: 22100, lastYear: 11000 },
-    { name: "Mar", thisYear: 22900, lastYear: 13000 },
-    { name: "Apr", thisYear: 20000, lastYear: 10000 },
-    { name: "May", thisYear: 21810, lastYear: 11500 },
-    { name: "Jun", thisYear: 25000, lastYear: 13500 },
-    { name: "Jul", thisYear: 21000, lastYear: 12500 },
-    { name: "Aug", thisYear: 28000, lastYear: 15000 },
-    { name: "Sep", thisYear: 26500, lastYear: 14000 },
-    { name: "Oct", thisYear: 30000, lastYear: 16000 },
-    { name: "Nov", thisYear: 32000, lastYear: 17000 },
-    { name: "Dec", thisYear: 35000, lastYear: 18000 },
-  ];
 
-  const branchSales = [
-    { subject: "South Signal", Revenue: 95000 },
-    { subject: "North Signal", Revenue: 88000 },
-    { subject: "Central Bicutan", Revenue: 100000 },
-    { subject: "Hagonoy", Revenue: 75000 },
-  ];
+  const [cardsData, setCardsData] = useState(null);
+  const [graphData, setGraphData] = useState({
+    monthlySales: [],
+    appointmentByStatus: [],
+    revenueByBranch: [],
+  });
 
-  const appointments = [
-    { status: "Completed", total: 150 },
-    { status: "Cancelled", total: 25 },
-    { status: "No Show", total: 10 },
-  ];
+  const data = [
+    { totalRevenue: 1600, date: '2025-07-29' },
+    { totalRevenue: 400, date: '2025-08-05' },
+    { totalRevenue: 4000, date: '2025-09-05' },
+    { totalRevenue: 10000, date: '2025-10-05' },
+    { totalRevenue: 9000, date: '2025-11-05' },
+    { totalRevenue: 1220, date: '2025-12-05' }
+  ]
+  
+  useEffect(() => {
+    const initializeData = async () => {
+      try{
+        const [cardData, graphData] = await Promise.all([
+          get_data('/card-data'),
+          get_data('/graph-data')
+        ])
+
+        if(cardData && graphData){
+          console.log(graphData);
+          setGraphData({
+            monthlySales: graphData?.totalRevenue,
+            appointmentByStatus: graphData?.appointmentByStatus,
+            revenueByBranch: graphData?.revenueByBranch,
+          })
+          setCardsData(cardData)
+        }
+
+      }catch(err){
+        console.log(err);
+      }
+    }
+
+    initializeData();
+  },[])
+
 
   return (
     <div className="h-full px-4 py-6 space-y-8">
@@ -56,45 +75,60 @@ const DashboardStats = () => {
       <div className="flex flex-wrap gap-4 w-full">
         <StatCard
           title="Customers"
-          value="15"
+          value={cardsData?.customers}
           icon={<FaUsers className="text-white" />}
           iconBg="bg-blue-500"
         />
         <StatCard
-          title="Appointments Today"
-          value="10"
+          title="Appointments this Month"
+          value={cardsData?.appointmentsThisMonth}
           icon={<FaCalendarCheck className="text-white" />}
           iconBg="bg-green-500"
         />
         <StatCard
-          title="Weekly Revenue"
-          value="₱ 56,030.00"
+          title="Monthly Service Revenue"
+          value={`₱ ${cardsData?.monthlyRevenue}.00`}
           icon={<FaMoneyBillWave className="text-white" />}
           iconBg="bg-yellow-500"
         />
         <StatCard
-          title="Products Sold"
-          value="56"
+          title="Products Revenue"
+          value={`₱ ${cardsData?.productRevenue}.00`}
           icon={<FaBoxOpen className="text-white" />}
           iconBg="bg-purple-500"
         />
       </div>
 
       {/* Main charts layout */}
-      <div className="flex flex-col lg:flex-row gap-6 w-full h-[550px]">
+      <div className="flex flex-col lg:flex-row gap-6 w-full h-[700px]">
         {/* Left: Line Chart (Big) */}
         <div className="flex-1 bg-white rounded-lg p-4 shadow-md">
           <h2 className="text-lg font-semibold mb-2">Monthly Sales</h2>
-          <ResponsiveContainer width="100%" height="90%">
-            <LineChart data={salesData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
+          {/* <ResponsiveContainer width="100%" height="90%">
+            <LineChart data={graphData.monthlySales} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" />
               <YAxis />
               <Tooltip />
               <Legend />
               <Line type="monotone" dataKey="lastYear" stroke="#1F2937" />
-              <Line type="monotone" dataKey="thisYear" stroke="#1F2937" />
             </LineChart>
+          </ResponsiveContainer> */}
+
+          <ResponsiveContainer width="100%" height="90%">
+            <AreaChart
+              width={500}
+              height={200}
+              data={data}
+              syncId="anyId"
+              margin={{ top: 5, right: 20, left: -10, bottom: 5 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" />
+              <YAxis />
+              <Tooltip />
+              <Area type="monotone" dataKey="totalRevenue" fill="#1F2937" />
+            </AreaChart>
           </ResponsiveContainer>
         </div>
 
@@ -104,7 +138,7 @@ const DashboardStats = () => {
           <div className="bg-white rounded-lg p-4 shadow-md h-[48%]">
             <h2 className="text-lg font-semibold mb-2">Appointment Status</h2>
             <ResponsiveContainer width="100%" height="90%">
-              <BarChart data={appointments}>
+              <BarChart data={graphData.appointmentByStatus}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="status" />
                 <YAxis />
@@ -120,9 +154,9 @@ const DashboardStats = () => {
             <ResponsiveContainer width="100%" height="90%">
               <PieChart>
                 <Pie
-                  data={branchSales}
-                  dataKey="Revenue"
-                  nameKey="subject"
+                  data={graphData.revenueByBranch}
+                  dataKey="totalRevenue"
+                  nameKey="branch"
                   outerRadius={80}
                   fill="#1F2937"
                   label={({ name, percent }) =>

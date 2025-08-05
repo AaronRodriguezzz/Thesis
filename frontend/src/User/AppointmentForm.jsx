@@ -31,6 +31,7 @@ const AppointmentPage = () => {
     scheduledTime: '',
     service: '',
     additionalService: '',
+    totalAmount: 0,
   });
 
   const handleChange = (field) => (event) => {
@@ -56,9 +57,26 @@ const AppointmentPage = () => {
     }
   };
 
+ useEffect(() => {
+    if (formData.service || formData.additionalService) {
+      const service = services.find(s => s._id === formData?.service) || { price: 0 };
+      const additionalService = services.find(s => s._id === formData?.additionalService) || { price: 0 };
+
+      setFormData(prev => ({
+        ...prev,
+        totalAmount: service.price + additionalService.price
+      }));
+
+      console.log(formData.totalAmount);
+    }
+  }, [formData.service, formData.additionalService, services]);
+
   useEffect(() => {
     if(branchId){
-      setFormData({...formData, branch: branchId})
+      setFormData(prev => ({
+        ...prev,
+        branch: branchId
+      }));
     }
   },[])
 
@@ -71,7 +89,6 @@ const AppointmentPage = () => {
         setServices(response?.services);
         setBranches(response?.branches);
         setBarbers(response?.barbers);
-        console.log('record',   response?.appointmentRecord);
       }
     };
 
@@ -92,15 +109,16 @@ const AppointmentPage = () => {
           loop
           muted
           playsInline
-          className="rounded-md w-[350px] h-auto"
+          className="hidden md:block rounded-md w-[350px] h-auto"
         />
 
-        <form className="flex flex-col p-4 w-1/3" onSubmit={handle_Submit}>
+        <form className="flex flex-col p-4 w-full md:w-1/3" onSubmit={handle_Submit}>
           <motion.h1 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}  
             transition={{ duration: 1, ease: "easeInOut" }}
-            className="text-3xl font-semibold tracking-tight my-6">
+            className="text-3xl font-semibold tracking-tight my-6"
+          >
             APPOINTMENT FORM
           </motion.h1>
 
@@ -113,12 +131,16 @@ const AppointmentPage = () => {
             className="border px-3 py-2 rounded mb-3"
             disabled={!branch}
           >
-            <option value="">Select Branch</option>
+            <option value="" className='hidden'>Select Branch</option>
             {branch &&
               branch.map((b) => (
-                <option key={b._id} value={b._id}>
-                  {b.name}
-                </option>
+                <>
+                  <optgroup label={b.address} />
+                  <option key={b._id} value={b._id}>
+                    {b.name}
+                  </option>
+                </>
+                
               ))
             }
           </AnimatedDropDown>
@@ -150,7 +172,7 @@ const AppointmentPage = () => {
             delay={0.7}
             value={formData.barber}
             onChange={handleChange('barber')}
-            className="border px-3 py-2 rounded mb-3"
+            className="border px-3 py-2 rounded mb-3 disabled:border-gray-300"
             disabled={!formData.branch}
           >   
             <option value="" disabled>Select Barber (Optional)</option>
@@ -176,7 +198,7 @@ const AppointmentPage = () => {
             delay={0.9}
             value={formData.scheduledTime}
             onChange={handleChange('scheduledTime')}
-            className="border px-3 py-2 rounded mb-3"
+            className="border px-3 py-2 rounded mb-3 disabled:border-gray-300"
             disabled={!formData.scheduledDate && !formData.barber}
           >
             <option value="" disabled>Select Time</option>
@@ -241,9 +263,13 @@ const AppointmentPage = () => {
               services.map(
                 (service) =>
                   service.serviceType === 'Package Service' && (
-                    <option key={service._id} value={service._id}>
-                      {service.name}
-                    </option>
+                    <>
+                      <optgroup label={service.description} className='text-sm font-semibold' />
+                      <option key={service._id} value={service._id}>
+                        {service.name}
+                      </option>
+                    </>
+                    
                 )
             )}
           </AnimatedDropDown>

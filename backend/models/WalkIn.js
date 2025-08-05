@@ -40,7 +40,7 @@ const WalkInSchema = new mongoose.Schema({
     status:{
         type: String,
         default: 'Waiting',
-        enum: ['Waiting', 'Assigned', 'Finished']
+        enum: ['Waiting', 'Assigned', 'Completed']
     }
 }, { timestamps: true });
 

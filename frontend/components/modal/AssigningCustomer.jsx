@@ -47,6 +47,8 @@ const AssignCustomer = ({
         }
     };
 
+    console.log(walkIn);
+
     return (
         <div className='h-screen w-screen flex items-center justify-center bg-transparent fixed top-0 left-0 z-50'>
             <div className='w-[50%] max-w-[600px] bg-white rounded-lg shadow-md p-5 shadow-gray-200'>
@@ -72,16 +74,16 @@ const AssignCustomer = ({
                         <div>
                             <div className='min-h-[380px] flex flex-col justify-start '>
                                 {appointments && appointments.length > 0 ? (
-                                    appointments.filter(a => a.status !== 'Assigned').map((appointment, index) => (
+                                    appointments.filter(a => a.status === 'Booked').map((appointment) => (
                         
-                                        <div key={index} className='flex items-center bg-black text-white p-4 mt-2 rounded-l-lg' onClick={() => customerSelected(appointment)}>
+                                        <div key={appointment?._id} className='flex items-center bg-black text-white p-4 mt-2 rounded-l-lg' onClick={() => customerSelected(appointment)}>
                                             <div className='flex-1 flex-col tracking-tight text-sm'>
                                                 <h1 className='w-full flex justify-between text-lg font-semibold'>
                                                     <span>{appointment.customer?.firstName} {appointment.customer?.lastName}</span>
                                                     <span>{appointment?.scheduledDate.toString().split('T')[0]} {appointmentTimeFormat(appointment?.scheduledTime)}</span>
                                                 </h1>
                                                 <p>Service: {appointment.service?.name} (P{appointment.service?.price})</p>
-                                                <p>Additional: {appointment?.additionalService || 'N/A'}</p>
+                                                <p>Additional: {appointment.additionalService?.name || 'N/A' } (P{appointment.additionalService?.price || ' '})</p>
                                                 <p>Barber: {appointment.barber?.fullName || 'N/A'}</p>
                                                 <p>Code: {appointment.uniqueCode}</p>
                                             </div>
