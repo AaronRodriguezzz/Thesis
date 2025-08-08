@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import { post_data } from '../../services/PostMethod';
 import { useNavigate } from "react-router-dom";
+import { useUserProtection } from "../../hooks/useUser";
 
 
 export default function Home() {
+  useUserProtection();
   const navigate = useNavigate();
   const [credentials, setCredentials] = useState({
     email: "",

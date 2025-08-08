@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { useCustomerPageProtection, useUserProtection} from "../../hooks/useUser";
 
 export default function BarberStatusPage() {
+  useCustomerPageProtection();
+  useUserProtection();
+  
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
 

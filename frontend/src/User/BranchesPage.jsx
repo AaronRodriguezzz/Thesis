@@ -2,8 +2,10 @@ import React, {useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
 import { get_data } from "../../services/GetMethod";
 import { motion } from "framer-motion";
+import { useUserProtection } from "../../hooks/useUser";
 
 export default function BranchesPage(){
+    useUserProtection();
     const baseUrl = import.meta.env.MODE === 'development' ? 'http://localhost:4001' : 'https://tototumbs.onrender.com';
     const navigate = useNavigate();
     const [branches, setBranches] = useState(null);

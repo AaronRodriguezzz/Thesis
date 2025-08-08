@@ -7,12 +7,16 @@ import { post_data } from '../../services/PostMethod';
 import { motion } from 'framer-motion';
 import { AnimatedDropDown } from '../../components/animations/DropDownAnimaton';
 import { CustomAlert } from '../../components/modal/CustomAlert';
+import { useCustomerPageProtection, useUserProtection, useUser } from '../../hooks/useUser';
 
 const AppointmentPage = () => {
+  useUserProtection();
+  useCustomerPageProtection();
+
   const { branchId } = useParams();
   const navigate = useNavigate();
 
-  const user = JSON.parse(localStorage.getItem('user'));
+  const user = useUser();
   const today = new Date();
   const oneMonthAhead = new Date();
   oneMonthAhead.setMonth(oneMonthAhead.getMonth() + 1);

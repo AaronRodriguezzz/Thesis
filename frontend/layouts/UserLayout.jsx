@@ -11,7 +11,6 @@ const UserLayout = () => {
       <main className="overflow-x-hidden pt-20">
         <Outlet />
       </main>
-      {/* <Chatbot /> */}
       <Footer />
     </div>
   );

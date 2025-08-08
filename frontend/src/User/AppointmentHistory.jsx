@@ -2,9 +2,12 @@ import React, { useState, useEffect } from "react";
 import Navigation from "../../components/NavBar";
 import { get_data } from "../../services/GetMethod";
 import { HistoryCard } from "../../components/UserHistoryCard";
+import { useCustomerPageProtection, useUserProtection } from '../../hooks/useUser';
 
 const AppointmentHistory = () => {
-  // Dummy appointment data — replace this with fetched backend data
+  useCustomerPageProtection();
+  useUserProtection();
+
   const [appointments, setAppointments] = useState([
     {
       id: 1,

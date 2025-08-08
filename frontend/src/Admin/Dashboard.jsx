@@ -51,7 +51,6 @@ const DashboardStats = () => {
         ])
 
         if(cardData && graphData){
-          console.log(graphData);
           setGraphData({
             monthlySales: graphData?.totalRevenue,
             appointmentByStatus: graphData?.appointmentByStatus,

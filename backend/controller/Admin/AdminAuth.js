@@ -10,7 +10,7 @@ const jwt = require('jsonwebtoken'); // ✅ Make sure this is imported
 const admin_login = async (req, res) => {
     try {
         const { email, password } = req.body;
-        console.log(req.body);
+
         // Validate input
         if (!email || !password) {
             return res.status(400).json({ message: 'Email and password are required' });
@@ -40,7 +40,7 @@ const admin_login = async (req, res) => {
             { expiresIn: '1d' }
         );
 
-        res.cookie('jwt', token, {
+        res.cookie('user', token, {
             httpOnly: true,
             maxAge: 24 * 60 * 60 * 1000, // 1 day
             sameSite: 'lax',

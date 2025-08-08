@@ -35,7 +35,7 @@ import FrontDeskSales from "./FrontDesk/Sales";
 import UserLayout from "../layouts/UserLayout";
 import AdminLayout from "../layouts/AdminLayout";
 import FrontDeskLayout from "../layouts/FrontDeskLayout";
-import ProtectedRoute from "../components/routes/ProtectedRoute";
+
 
 function App() {
   return (
@@ -43,52 +43,17 @@ function App() {
       <Routes>
         {/* User Layout */}
         <Route element={<UserLayout />}>
-          <Route 
-            path="/profile" 
-            element={
-              <ProtectedRoute role="user">
-                <ProfilePage />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/my-appointments" 
-            element={
-              <ProtectedRoute role="user">
-                <AppointmentHistory />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/appointment" 
-            element={
-              <ProtectedRoute role="user">
-                <AppointmentForm />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/appointment/:branchId" 
-            element={
-              <ProtectedRoute role="user">
-                <AppointmentForm />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/feedback" 
-            element={
-              <ProtectedRoute role="user">
-                <FeedbackForm />
-              </ProtectedRoute>
-            } 
-          />
-
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/my-appointments"  element={<AppointmentHistory />} />
+          <Route path="/appointment" element={<AppointmentForm />}/>
+          <Route path="/appointment/:branchId" element={<AppointmentForm />}/>
+          <Route path="/feedback" element={<FeedbackForm />}/>
           <Route path="/queueing" element={<QueueingForm />} />
           <Route path="/faq" element={<Faq />} />
           <Route path="/branches" element={<BranchesPage />} />
           <Route path="/" element={<HomePage />} />
         </Route>
+
 
         {/* Admin Layout */}  
         <Route path="/admin" element={<AdminLayout />}>
@@ -103,13 +68,7 @@ function App() {
         </Route>
 
 
-        <Route path="/front-desk" 
-              element={
-                <ProtectedRoute role="front-desk">
-                  <FrontDeskLayout />
-                </ProtectedRoute>
-              }
-        >          
+        <Route path="/front-desk" element={<FrontDeskLayout />}>          
           <Route path="dashboard" element={<FdDashboard />} />
           <Route path="appointments" element={<FdAppointment />} />
           <Route path="customers" element={<Customers />} />
@@ -119,14 +78,7 @@ function App() {
         </Route>  
 
         {/* (outside layout) */}  
-        <Route 
-          path="/login" 
-          element={
-            <ProtectedRoute role="user">
-              <Login />
-            </ProtectedRoute>
-          } 
-        />
+        <Route path="/login" element={<Login />}/>
         <Route path="/register" element={<Registration />} />
         <Route path="/admin/login" element={<AdminLogin />} />
 

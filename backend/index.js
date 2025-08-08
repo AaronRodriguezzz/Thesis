@@ -3,6 +3,8 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const path = require('path');
+const jwt = require('jsonwebtoken');
+
 // Routes Import
 //Admin Routes
 const AdminAuth = require('./routes/Admin/AdminAuthRoutes');
@@ -44,6 +46,22 @@ app.use((req,res,next) => {
     console.log(req.path, req.method);
     next()
 })
+
+app.get('/api/protected', (req, res) => {
+    const token = req.cookies.user; 
+    
+    if (!token) {
+      return res.status(401).json({ message: 'No token found' });
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        console.log('decoded', decoded);
+        res.json({ message: 'Access granted', user: decoded.user || decoded.employee});
+    } catch (err) {
+        res.status(403).json({ message: err.message });
+    }
+});
 
 //use routes for admin
 app.use(AdminAuth);

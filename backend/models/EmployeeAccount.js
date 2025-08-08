@@ -26,7 +26,7 @@ const EmployeeSchema = new mongoose.Schema({
     },
     role: { 
         type: String, 
-        enum: ['Barber', 'Front Desk'], 
+        enum: ['Barber', 'Front Desk', 'Admin'], 
         required: true
     },
     status: {

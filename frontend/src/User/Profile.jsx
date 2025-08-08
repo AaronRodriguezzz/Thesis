@@ -3,17 +3,20 @@ import { useNavigate } from "react-router-dom";
 import Navigation from "../../components/NavBar";
 import { isFormValid } from "../../utils/objectValidation";
 import { update_data } from "../../services/PutMethod";
+import { useCustomerPageProtection, useUserProtection, useUser } from '../../hooks/useUser';
 
 const ProfilePage = () => {
+  useCustomerPageProtection();
+  useUserProtection();
+
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem('user'));
+  const user = useUser();
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState({
     ...user,
     address: user?.address || '',  // Ensure address field is always present
   });
 
-  console.log("User Data:", user);
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -36,7 +39,7 @@ const ProfilePage = () => {
     }catch(err){
       console.log(err);
     }
-  };
+  };  
 
   return (
     <div className="h-screen w-screen bg-[url('/login.png')] bg-cover bg-center flex items-center justify-center">

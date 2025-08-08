@@ -1,21 +1,20 @@
 import React, { useEffect, useState, useRef} from "react";
 import { FaChevronLeft,  FaChevronRight} from 'react-icons/fa';
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, Navigate} from "react-router-dom";
 import Rating from "@mui/material/Rating";
-import TextField from "@mui/material/TextField";
 import { get_data } from "../../services/GetMethod";
 import { post_data } from "../../services/PostMethod";
-import ShinyText from "../../components/animations/ShinyText";
 import { motion } from "motion/react"
 import { SlideTxt } from "../../components/animations/TextAnimation";
 import { useSectionViews } from "../../hooks/HomeRef";
-
+import { useUserProtection } from "../../hooks/useUser";
 const baseUrl = import.meta.env.MODE === 'development' ? 'http://localhost:4001' : 'https://tototumbs.onrender.com';
 const images = ["/lower_bicutan.png", "/toto_studio.JPG", "/totobg.JPG"];
 
 export default function MainPage() {
+  useUserProtection();
+  
   const itemsPerPage = 5;  
-
   const navigate = useNavigate();
   const { sectionRefs, inViews } = useSectionViews();
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -24,7 +23,7 @@ export default function MainPage() {
   const [productIndex, setProductIndex] = useState(0);
   const [subscribedEmail, setSubscribedEmail] = useState('');
   const [subscribing, setSubscribing] = useState(false);
-  
+
   const feedbacks = [
     {
       customerName: "James Cruz",
@@ -70,15 +69,12 @@ export default function MainPage() {
   }
 
   useEffect(() => {
-
     const initialize_homePage = async () => {
 
       const [serviceResponse, productResponse] = await Promise.all([
         await get_data("/get_data/service"), 
         await get_data("/get_data/product")
       ]); 
-
-      console.log(serviceResponse, productResponse);
 
       if (serviceResponse && productResponse) {
         setServices(serviceResponse);
@@ -87,7 +83,6 @@ export default function MainPage() {
     };
 
     initialize_homePage();
-
   }, []);
 
   useEffect(() => {

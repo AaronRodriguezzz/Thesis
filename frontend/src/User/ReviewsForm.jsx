@@ -5,8 +5,12 @@ import debounce from 'lodash.debounce';
 import Rating from '@mui/material/Rating';
 import Box from '@mui/material/Box';
 import { motion } from 'framer-motion';
+import { useCustomerPageProtection, useUserProtection } from '../../hooks/useUser';
 
 const ReviewForm = () => {
+  useCustomerPageProtection();
+  useUserProtection();
+
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem('user'));
 

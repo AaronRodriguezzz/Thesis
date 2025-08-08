@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import { post_data } from "../../services/PostMethod"; // Adjust this path as needed
+import { useUserProtection } from "../../hooks/useUser";
 
 export default function RegisterPage() {
+  useUserProtection();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({

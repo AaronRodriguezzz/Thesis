@@ -29,13 +29,13 @@ const user_login = async (req, res) => {
 
         // Create JWT token
         const token = jwt.sign(
-            { user: user },
+            { user },
             process.env.JWT_SECRET,
             { expiresIn: '1d' }
         );
 
         // Store token in cookie
-        res.cookie('jwt', token, {
+        res.cookie('user', token, {
             httpOnly: true,
             maxAge: 24 * 60 * 60 * 1000,
             sameSite: 'lax',
