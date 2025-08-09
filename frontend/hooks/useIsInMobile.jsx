@@ -1,0 +1,18 @@
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+
+export const useIsMobile = () => {
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth < 640); // Tailwind's "sm" breakpoint
+        };
+
+        handleResize(); // check on mount
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
+    return isMobile;
+}

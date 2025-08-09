@@ -5,8 +5,10 @@ import { get_data } from "../../services/GetMethod";
 import { time } from "../../data/TimeData";
 import ThreeLayerModal from "../../components/modal/WalkinAppointment";
 import { update_data } from "../../services/PutMethod";
+import { useAdminPageProtection} from "../../hooks/useUser";
 
 const Appointments = () => {
+    useAdminPageProtection();
     const frontDesk = JSON.parse(localStorage.getItem('admin'));
     const [searchTerm, setSearchTerm] = useState("");
     const [page, setPage] = useState(1);

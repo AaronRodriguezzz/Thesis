@@ -16,7 +16,6 @@ const FrontDeskSideBar = () => {
   const menuItems = [
     { name: "Dashboard", icon: <MdDashboard />, path: "/front-desk/dashboard" },
     { name: "Appointments", icon: <MdCalendarToday />, path: "/front-desk/appointments" },
-    { name: "Queueing", icon: <MdDirectionsWalk />, path: "/front-desk/queueing" },
     { name: "Barbers", icon: <MdPeople />, path: "/front-desk/barbers" },
     { name: "Customers", icon: <MdPeople />, path: "/front-desk/customers" },
     { name: "Products", icon: <MdInventory />, path: "/front-desk/products" },

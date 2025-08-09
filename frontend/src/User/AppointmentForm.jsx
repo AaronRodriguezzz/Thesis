@@ -45,20 +45,27 @@ const AppointmentPage = () => {
   const handle_Submit = async (e) => {
     e.preventDefault();
 
+    console.log('form', formData);
+
     if(today.getHours() >= 21 &&  formData.scheduledDate === today.toISOString().split('T')[0]){
       CustomAlert('error', "You can't book an appointment after 9 PM today.");
       return;
     } 
 
-    setLoading(true);
+    try{
+      setLoading(true);
 
-    const response = await post_data(formData, '/new_appointment');
+      const response = await post_data(formData, '/new_appointment');
 
-    setLoading(false); // Hide loading after response
+      if (response) {
+        navigate('/queueing');
+      }
 
-    if (response.appointment) {
-      navigate('/queueing');
+      setLoading(false);
+    }catch(err){
+      console.log(err);
     }
+
   };
 
  useEffect(() => {
@@ -70,8 +77,6 @@ const AppointmentPage = () => {
         ...prev,
         totalAmount: service.price + additionalService.price
       }));
-
-      console.log(formData.totalAmount);
     }
   }, [formData.service, formData.additionalService, services]);
 
@@ -144,7 +149,7 @@ const AppointmentPage = () => {
                     {b.name}
                   </option>
                 </>
-                
+              
               ))
             }
           </AnimatedDropDown>
@@ -217,10 +222,7 @@ const AppointmentPage = () => {
                   a.branch === formData?.branch &&
                   a.scheduledTime === slotHour &&
                   new Date(a.scheduledDate).toDateString() === new Date(formData?.scheduledDate).toDateString()
-                );
-
-                console.log(matchingAppointment)  
-                
+                );                
 
                 const barberUnavailable = formData.barber ? matchingAppointment.some((a) => a.barber === formData.barber) : false;
                 const barberAvailable = !barberUnavailable;

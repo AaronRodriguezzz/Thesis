@@ -25,20 +25,6 @@ const appointment_creation = async (req, res) => {
     console.log(req.body);
 
     try {
-        // Validate required fields
-        const requiredFields = ['customer', 'service', 'branch', 'scheduledDate', 'scheduledTime'];
-        const missingFields = requiredFields.filter(field => {
-            const value = req.body[field];
-                return (
-                value === undefined ||
-                value === null ||
-                (typeof value === 'string' && value.trim() === '')
-            );
-        });
-
-        if (missingFields.length > 0) {
-            return res.status(400).json({ message: 'Please fill in all required fields.' });
-        }
 
         const uniqueCode = Math.floor(100000 + Math.random() * 900000).toString();
 
@@ -57,9 +43,12 @@ const appointment_creation = async (req, res) => {
 
         const appointmentSaved = await appointment.save();
 
+        console.log('appointment', appointmentSaved);
+
         if (!appointmentSaved) {
             return res.status(404).json({ message: 'Error saving the appointment' });
         }
+
 
         const customerData = await Customer.findById(customer)
 

@@ -1,12 +1,12 @@
-    import React from "react";
-    import {
+import React from "react";
+import {
     FaUsers,
     FaCalendarCheck,
     FaMoneyBillWave,
     FaBoxOpen,
-    } from "react-icons/fa";
-    import { StatCard } from "../../components/DashboardCards";
-    import {
+} from "react-icons/fa";
+import { StatCard } from "../../components/DashboardCards";
+import {
     ResponsiveContainer,
     YAxis,
     XAxis,
@@ -15,14 +15,14 @@
     CartesianGrid,
     LineChart,
     Line,
-    PieChart,
-    Pie,
     BarChart,
     Bar,
-    } from "recharts";
+} from "recharts";
+import { useAdminPageProtection } from "../../hooks/useUser";
 
-    const DashboardStats = () => {
-        const dailySalesData = [
+const DashboardStats = () => {
+    useAdminPageProtection();
+    const dailySalesData = [
             { date: 1, sales: 1200 },
             { date: 2, sales: 950 },
             { date: 3, sales: 1300 },
@@ -72,70 +72,70 @@
             { hour: '8 PM', sales: 400 }
         ];
 
-        return (
-            <div className="h-full px-4 py-6 space-y-8">
-            {/* Stat cards */}
-                <div className="flex flex-wrap gap-4 w-full">
-                    <StatCard
+    return (
+        <div className="h-full px-4 py-6 space-y-8">
+        {/* Stat cards */}
+            <div className="flex flex-wrap gap-4 w-full">
+                <StatCard
                     title="Customers"
                     value="15"
                     icon={<FaUsers className="text-white" />}
                     iconBg="bg-blue-500"
-                    />
-                    <StatCard
+                />
+                <StatCard
                     title="Appointments Today"
                     value="10"
                     icon={<FaCalendarCheck className="text-white" />}
                     iconBg="bg-green-500"
-                    />
-                    <StatCard
+                />
+                <StatCard
                     title="Weekly Revenue"
                     value="₱ 56,030.00"
                     icon={<FaMoneyBillWave className="text-white" />}
                     iconBg="bg-yellow-500"
-                    />
-                    <StatCard
+                />
+                <StatCard
                     title="Products Sold"
                     value="56"
                     icon={<FaBoxOpen className="text-white" />}
                     iconBg="bg-purple-500"
-                    />
+                />
+            </div>
+
+            {/* Main charts layout */}
+            <div className="flex flex-col lg:flex-row gap-6 w-full h-[700px]">
+            {/* Left: Line Chart (Big) */}
+                <div className="flex-2 bg-white rounded-lg p-4 shadow-md">
+                    <h2 className="text-lg font-semibold mb-2">Daily Sales</h2>
+                    <ResponsiveContainer width="100%" height="95%">
+                        <LineChart data={dailySalesData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="date" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Line type="monotone" dataKey="sales" stroke="black" />
+                        </LineChart>
+                    </ResponsiveContainer>
                 </div>
 
-                {/* Main charts layout */}
-                <div className="flex flex-col lg:flex-row gap-6 w-full h-[700px]">
-                {/* Left: Line Chart (Big) */}
-                    <div className="flex-2 bg-white rounded-lg p-4 shadow-md">
-                        <h2 className="text-lg font-semibold mb-2">Daily Sales</h2>
-                        <ResponsiveContainer width="100%" height="95%">
-                            <LineChart data={dailySalesData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="date" />
-                            <YAxis />
-                            <Tooltip />
-                            <Legend />
-                            <Line type="monotone" dataKey="sales" stroke="black" />
-                            </LineChart>
-                        </ResponsiveContainer>
-                    </div>
-
-                    {/* Right: Bar Chart for Peak Hours */}
-                    <div className="flex-1 bg-white rounded-lg p-4 shadow-md">
-                        <h2 className="text-lg font-semibold mb-2">Peak Hours</h2>
-                        <ResponsiveContainer width="100%" height="95%">
-                            <BarChart data={hourlySalesData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="hour" />
-                            <YAxis />
-                            <Tooltip />
-                            <Bar dataKey="sales" fill="black" />
-                            </BarChart>
-                        </ResponsiveContainer>
-                    </div>
+                {/* Right: Bar Chart for Peak Hours */}
+                <div className="flex-1 bg-white rounded-lg p-4 shadow-md">
+                    <h2 className="text-lg font-semibold mb-2">Peak Hours</h2>
+                    <ResponsiveContainer width="100%" height="95%">
+                        <BarChart data={hourlySalesData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="hour" />
+                        <YAxis />
+                        <Tooltip />
+                        <Bar dataKey="sales" fill="black" />
+                        </BarChart>
+                    </ResponsiveContainer>
                 </div>
             </div>
-        );
-    };
+        </div>
+    );
+};
 
-    export default DashboardStats;
+export default DashboardStats;
     

@@ -8,6 +8,8 @@ import { motion } from "motion/react"
 import { SlideTxt } from "../../components/animations/TextAnimation";
 import { useSectionViews } from "../../hooks/HomeRef";
 import { useUserProtection } from "../../hooks/useUser";
+import { useIsMobile } from "../../hooks/useIsInMobile";
+
 const baseUrl = import.meta.env.MODE === 'development' ? 'http://localhost:4001' : 'https://tototumbs.onrender.com';
 const images = ["/lower_bicutan.png", "/toto_studio.JPG", "/totobg.JPG"];
 
@@ -15,6 +17,8 @@ export default function MainPage() {
   useUserProtection();
   
   const itemsPerPage = 5;  
+
+  const isMobile = useIsMobile();
   const navigate = useNavigate();
   const { sectionRefs, inViews } = useSectionViews();
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -95,43 +99,65 @@ export default function MainPage() {
  
   }, []);
 
+  useEffect(() => {
+    products && console.log(products)
+  },[products])
+
   return (
     <div className="w-full overflow-x-hidden">
       {/* Hero Section */}
-      <motion.div 
+      <motion.div
         id="Home"
         ref={sectionRefs.home}
         initial={{ opacity: 0 }}
-        transition={{ type: 'spring', duration: 2, ease: "easeInOut"}}
+        transition={{ type: "spring", duration: 2, ease: "easeInOut" }}
         animate={inViews.home ? { opacity: 1, y: 0 } : {}}
-        style={{ backgroundImage: `url(${images[currentIndex]})`}}
-        className="h-[90vh] w-full flex flex-col justify-center text-white px-4 md:px-20 bg-cover bg-center z-10 space-y-2 transition ease-in-out"
+        style={{
+          backgroundImage: isMobile ? "none" : `url(${images[currentIndex]})`,
+        }}
+        className="relative h-screen w-full flex flex-col justify-center text-white px-4 md:px-20 bg-cover bg-center gap-y-2 transition ease-in-out"
       >
-        
-        <SlideTxt
-          text="Where Tradition Meets Precision"
-          enable={inViews.home ? true : false}
-          speed={5}
-          className="font-bold text-2xl md:text-4xl lg:text-6xl leading-tighter"
+        {/* Mobile video */}
+        <motion.video
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, ease: "easeInOut" }}
+          src="/barbering.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+          poster="/fallback.jpg"
+          className="absolute top-0 left-0 block md:hidden w-full h-full object-cover z-0"
         />
 
-        <SlideTxt 
-          text="Book an appointment now and experience the art of grooming"
-          enable={inViews.home ? true : false}
-          speed={5}
-          className="text-sm md:text-lg lg:text-2xl font-extralight leading-tighter mt-[-4px]"
-        />
-        <motion.button
-          initial={{ opacity: 0, x: -100 }}
-          animate={inViews.home ? { opacity: 1, x: 0 } : {}}
-          transition={{ duration: 1, ease: "easeInOut" }}
-          whileHover={{ scale: 1.03 }}
-          onClick={() => navigate('/appointment')}
-          className="inline-block w-[150px] lg:w-[200px] bg-white text-md lg:text-xl text-gray-900 px-4 py-2 shadow-md hover:bg-gray-900 hover:text-white transition-colors text-center"
-        >
-          BOOK
-        </motion.button>
-      </motion.div >
+        {/* Text content */}
+        <div className="relative z-20">
+          <SlideTxt
+            text="Where Tradition Meets Precision"
+            enable={inViews.home}
+            speed={5}
+            className="font-bold text-2xl md:text-4xl lg:text-6xl leading-tighter"
+          />
+          <SlideTxt
+            text="Book an appointment now and experience the art of grooming"
+            enable={inViews.home}
+            speed={5}
+            className="text-sm md:text-lg lg:text-2xl font-extralight leading-tighter mt-[-4px]"
+          />
+          <motion.button
+            initial={{ opacity: 0, x: -100 }}
+            animate={inViews.home ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 1, ease: "easeInOut" }}
+            whileHover={{ scale: 1.03 }}
+            onClick={() => navigate("/appointment")}
+            className="inline-block w-[150px] lg:w-[200px] bg-white text-md lg:text-xl text-gray-900 px-4 py-2 shadow-md hover:bg-gray-900 hover:text-white transition-colors text-center"
+          >
+            BOOK
+          </motion.button>
+        </div>
+      </motion.div>
+
 
       {/* About Us */}
       <div id="About Us" ref={sectionRefs.about} className="h-[90vh] w-full bg-white flex flex-col md:flex-row items-center justify-center px-4 md:px-10 py-10 gap-6">
@@ -158,12 +184,14 @@ export default function MainPage() {
 
       {/* Products */}
       <div id="Products" ref={sectionRefs.products} className="w-full flex flex-col items-center bg-gray-800 py-20 px-4">
-        <SlideTxt
-          text="PRODUCT CATALOG"
-          enable={inViews.products ? true : false}
-          speed={5}
+        <motion.h1 
+          initial={isMobile ? { opacity: 0, x: 0 } : { opacity: 0, x: -100 }}
+          transition={{ duration: 1, ease: "easeInOut"}}
+          animate={isMobile || inViews.products ? { opacity: 1, x: 0, y: 0 } : {}}
           className="text-white text-center font-extralight tracking-widest text-4xl md:text-5xl mb-10"
-        />
+        > 
+          PRODUCT CATALOG
+        </motion.h1>
     
         <div className="w-full flex flex-col md:flex-row justify-between items-center gap-4">
           {/* Left Arrow */}
@@ -179,9 +207,9 @@ export default function MainPage() {
             {visibleProducts?.map((product, index) => (
               <motion.div
                 key={product._id}
-                initial={{ opacity: 0, y: -20 }}
-                animate={inViews.products ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.3, ease: "easeInOut", delay: index * .2 }}
+                initial={isMobile ? { opacity: 0, x: 0 } : { opacity: 0, y: -20 }}
+                animate={isMobile || inViews.products ? { opacity: 1, x: 0, y: 0 } : {}}
+                transition={{ duration: 0.3, ease: "easeInOut", delay: index * 0.2 }}
                 className="bg-gray-700 h-[500px] w-full sm:w-[45%] md:w-[30%] lg:w-[250px] p-4 hover:scale-105 transition-transform rounded-lg shadow-md"
               >
                 <img

@@ -7,8 +7,10 @@ import { update_data } from '../../services/PutMethod';
 import AssignCustomer from "../../components/modal/AssigningCustomer";
 import NewWalkInCustomer from "../../components/modal/AddWalkInCustomer";
 import ServiceCompleteModal from "../../components/modal/ServiceCompleteModal";
+import { useAdminPageProtection } from "../../hooks/useUser";
 
 const Appointments = () => {
+    useAdminPageProtection();
     const baseUrl = import.meta.env.MODE === 'development' ? 'http://localhost:4001' : 'https://tototumbs.onrender.com';
     const frontDesk = JSON.parse(localStorage.getItem('admin'));
     const today = new Date();

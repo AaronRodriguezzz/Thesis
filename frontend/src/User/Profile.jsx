@@ -11,6 +11,7 @@ const ProfilePage = () => {
 
   const navigate = useNavigate();
   const user = useUser();
+  console.log(user);
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState({
     ...user,
@@ -70,23 +71,13 @@ const ProfilePage = () => {
 
         {/* Profile Form */}
         <div className="space-y-4">
-            <div className="flex gap-6">
-              <ProfileField
-                label="Last Name"
-                value={`${formData?.lastName},`}
-                editable={editMode}
-                name="lastName"
-                onChange={handleChange}
-              />
-
-              <ProfileField
-                label="First Name"
-                value={`${formData?.firstName}`}
-                editable={editMode}
-                name="firstName"
-                onChange={handleChange}
-              />
-            </div>
+            <ProfileField
+              label="Full Name"
+              value={formData?.fullName}
+              editable={editMode}
+              name="fullName"
+              onChange={handleChange}
+            />
             
             <ProfileField
               label="Email"

@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { FaUserPlus, FaSearch, FaEdit, FaTrash, FaClipboardList } from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
 import Pagination from "@mui/material/Pagination";
 import { get_data } from "../../services/GetMethod";
 import { update_data } from "../../services/PutMethod";
-import NewProduct from "../../components/modal/AddProductModal";
-import UpdateProduct from "../../components/modal/UpdateProductModal";
+import { useAdminPageProtection } from "../../hooks/useUser";
 
 const POS = () => {
+    useAdminPageProtection();
     const frontDesk = JSON.parse(localStorage.getItem('admin'));
     const baseUrl = import.meta.env.MODE === 'development' ? 'http://localhost:4001' : 'https://tototumbs.onrender.com';
     const [productList, setProductList] = useState([]);

@@ -1,6 +1,7 @@
 const Appointment = require('../../models/Appointment'); // Adjust the path if needed
 const Employee = require('../../models/EmployeeAccount');
 const WalkIn = require('../../models/WalkIn');
+const ServiceSales = require('../../models/ServiceSales');
 
 const assignCustomer = async (req, res) => {
     const customerType = req.params.type;
@@ -15,6 +16,7 @@ const assignCustomer = async (req, res) => {
         };
 
         const Model = modelMap[customerType];
+
         if (!Model) {
             return res.status(400).json({ message: 'Invalid customer type' });
         }
@@ -53,7 +55,7 @@ const assignCustomer = async (req, res) => {
 
 
 const completeAssignment = async (req, res) => {
-    const { paymentMethod, barberId } = req.body.newData;    
+    const { paymentMethod, barberId, recordedBy } = req.body.newData;    
     const customerType = req.params.type;
 
     if(!paymentMethod, !barberId, !customerType){
@@ -74,6 +76,23 @@ const completeAssignment = async (req, res) => {
 
         const csToFinish = await Model.findOne({ barber: barberId, status: 'Assigned' });
 
+        if(customerType === 'Appointment'){
+            csToFinish.populate('customer')
+        }
+
+        const sales = new ServiceSales({
+            service: csToFinish.service,
+            customer: csToFinish.customer.firstName || csToFinish.customerName || null,
+            barber: barberId,
+            branch: csToFinish.branch,
+            dateOfSale: new Date(),
+            price: csToFinish.totalAmount,
+            paymentMethod,
+            recordedBy
+        })
+
+        await sales.save();
+
         const [customer, barber] = await Promise.all([
             
             Model.findByIdAndUpdate(
@@ -92,6 +111,8 @@ const completeAssignment = async (req, res) => {
         if (!customer && !barber) {
             return res.status(404).json({ message: 'Completing Service Error' });
         }   
+
+        
 
         return res.status(200).json({ message: 'Service Completed Successfully', updatedInfo: customer });
         

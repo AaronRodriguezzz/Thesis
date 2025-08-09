@@ -3,9 +3,10 @@ import { FaSearch } from "react-icons/fa";
 import Pagination from "@mui/material/Pagination";
 import { get_data } from "../../services/GetMethod";
 import { time } from "../../data/TimeData";
+import { useAdminPageProtection } from "../../hooks/useUser";
 
 const Appointments = () => {
-    const frontDesk = JSON.parse(localStorage.getItem('admin'));
+    useAdminPageProtection();
     const [searchTerm, setSearchTerm] = useState("");
     const [page, setPage] = useState(1);
     const [paginationLimit, setPaginationLimit] = useState(1);

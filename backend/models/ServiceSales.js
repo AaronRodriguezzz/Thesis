@@ -1,15 +1,14 @@
 const mongoose = require('mongoose');
 
-const AppointmentSales = new mongoose.Schema({
+const ServiceSales = new mongoose.Schema({
   service: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Service',
     required: true
   },
   customer: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Customer',
-    required: false // Optional for walk-ins
+    type: String, 
+    required: true
   },
   barber: {
     type: mongoose.Schema.Types.ObjectId,
@@ -34,10 +33,6 @@ const AppointmentSales = new mongoose.Schema({
     enum: ['Cash', 'GCash'],
     default: 'Cash'
   },
-  remarks: {
-    type: String,
-    default: ''
-  },
   recordedBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Employee', // Usually the front desk who logs it
@@ -45,4 +40,4 @@ const AppointmentSales = new mongoose.Schema({
   }
 }, { timestamps: true });
 
-module.exports = mongoose.model('ServiceSales', AppointmentSales);
+module.exports = mongoose.model('ServiceSales', ServiceSales);
