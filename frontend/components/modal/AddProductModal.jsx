@@ -10,7 +10,7 @@ const NewProduct = ({ onCancel, route, setUpdatedData }) => {
         imagePath: '',
         price: '',
         stock: '',
-        branch: '',
+        branch: [],
         description: '',
         uploadType: 'products',
     };
@@ -18,12 +18,13 @@ const NewProduct = ({ onCancel, route, setUpdatedData }) => {
     const [branches, setBranches] = useState([]);
     const [newProduct, setNewProduct] = useState(defaultProduct);
     const [debouncedInput, setDebouncedInput] = useState(defaultProduct);
+    const [numberOfBranch, setNumberOfBranch] = useState('');
     const [displayedImage, setDisplayedImage] = useState('')
 
     const add_clicked = async (e) => {
         e.preventDefault();
 
-        if(newProduct.description   .length <= 100) {
+        if(newProduct.description.length <= 100 && newProduct.name.length <= 25) {
 
             const formData = new FormData();
 
@@ -80,6 +81,10 @@ const NewProduct = ({ onCancel, route, setUpdatedData }) => {
         get_branches();
     }, []);
 
+    useEffect(() => {
+        console.log(newProduct);
+    },[newProduct])
+
     return (
         <div className='h-screen w-screen flex items-center justify-center bg-transparent fixed top-0 left-0 z-50'>
             <form
@@ -88,7 +93,7 @@ const NewProduct = ({ onCancel, route, setUpdatedData }) => {
             >
                 <h1 className='text-2xl font-semibold mb-4 tracking-tight'>New Product</h1>
 
-                <div className='flex flex-col tracking-tighter'>
+                <div className='relative flex flex-col tracking-tighter'>
 
                     <div 
                         className='w-[150px] h-[170px]  mx-auto border-2 border-gray-200 rounded-lg flex items-center justify-center bg-center bg-cover bg-no-repeat'
@@ -109,11 +114,26 @@ const NewProduct = ({ onCancel, route, setUpdatedData }) => {
                             +
                         </h1>
                     </div>
+
+                    <h1 className='mt-2'>Number of Branch</h1>
+                    <select
+                        value={numberOfBranch}
+                        onChange={(e) => setNumberOfBranch(e.target.value)}
+                        className='border border-gray-200 px-3 py-1 rounded-md focus:border-gray-300'
+                    >
+                        <option value='' disabled>Select Number of Branch</option>
+                        {branches && branches.map((_,index) => (
+                            <option key={index} value={index + 1}>
+                                {index + 1}
+                            </option>
+                        ))}
+                    </select>
         
                     <h1 className='mt-2'>Product Name</h1>
                     <input
                         type='text'
                         value={newProduct.name}
+                        maxLength={25}
                         onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value.toUpperCase() })}
                         className='border border-gray-200 px-3 py-1 rounded-md focus:border-gray-300'
                     />
@@ -134,19 +154,39 @@ const NewProduct = ({ onCancel, route, setUpdatedData }) => {
                         className='border border-gray-200 px-3 py-1 rounded-md focus:border-gray-300'
                     />
 
-                    <h1 className='mt-2'>Branch</h1>
-                    <select
-                        value={newProduct.branch}
-                        onChange={(e) => setNewProduct({ ...newProduct, branch: e.target.value })}
-                        className='border border-gray-200 px-3 py-1 rounded-md focus:border-gray-300'
-                    >
-                        <option value='' disabled>Select Branch</option>
-                        {branches && branches.map(branch => (
-                            <option key={branch?._id} value={branch?._id}>
-                                {branch?.name}
-                            </option>
-                        ))}
-                    </select>
+                
+                    {Array.from({ length: numberOfBranch }).map((_, index) => (
+                        <div key={index}>
+                            <h1 className="mt-2">Branch {index + 1}</h1>
+                            <select
+                                value={newProduct?.branch[index] || ""}
+                                className="w-full border border-gray-200 px-3 py-1 rounded-md focus:border-gray-300"
+                                onChange={(e) =>
+                                    setNewProduct((prev) => {
+                                        const updatedBranches = [...prev.branch];
+                                        updatedBranches[index] = e.target.value;
+                                        return { ...prev, branch: updatedBranches };
+                                    })
+                                }
+                            >
+                            <option value="" disabled>Select Branch</option>
+                            {branches &&
+                                branches
+                                .filter(
+                                    (branch) =>
+                                    !newProduct.branch?.find(
+                                        (id, i) =>
+                                        i !== index && String(id) === String(branch._id)
+                                    )
+                                )
+                                .map((branch) => (
+                                    <option key={branch._id} value={branch._id}>
+                                    {branch.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    ))}
 
                     <h1 className='mt-2'>Description</h1>
                     <textarea

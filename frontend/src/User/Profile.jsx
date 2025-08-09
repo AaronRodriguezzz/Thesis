@@ -71,13 +71,25 @@ const ProfilePage = () => {
 
         {/* Profile Form */}
         <div className="space-y-4">
-            <ProfileField
-              label="Full Name"
-              value={formData?.fullName}
-              editable={editMode}
-              name="fullName"
-              onChange={handleChange}
-            />
+
+            <div className="flex gap-x-4">
+              <ProfileField
+                label="First Name"
+                value={formData?.firstName}
+                editable={editMode}
+                name="firstName"
+                onChange={handleChange}
+              />
+
+              <ProfileField
+                label="Last Name"
+                value={formData?.lastName}
+                editable={editMode}
+                name="lastName"
+                onChange={handleChange}
+              />
+            </div>
+
             
             <ProfileField
               label="Email"

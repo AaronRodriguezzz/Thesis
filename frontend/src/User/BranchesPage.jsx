@@ -48,7 +48,7 @@ export default function BranchesPage(){
               >
                   <img    
                       src={`${baseUrl}/${branch?.imagePath}`}
-                      alt={branch?.name}
+                      alt={branch.name}
                       className="h-60 w-full obj  ect-cover"
                   />
                   <div className="p-4">

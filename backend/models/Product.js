@@ -17,11 +17,11 @@ const ProductSchema = new mongoose.Schema({
         type: Number, 
         default: 0 
     },
-    branch: { 
+    branch: [{ 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Branch', 
         required: true 
-    },
+    }],
     description: { 
         type: String, 
         required: true 

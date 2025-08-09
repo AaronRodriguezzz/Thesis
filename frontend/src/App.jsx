@@ -12,7 +12,7 @@ import FeedbackForm from "./User/ReviewsForm";
 import ProfilePage from "./User/Profile";
 import AppointmentHistory from "./User/AppointmentHistory";
 import BranchesPage from "./User/BranchesPage";
-
+import ProductAvailability from "./User/ProductAvailability";
 // Admin Pages
 import Dashboard from "./Admin/Dashboard";
 import Appointments from "./Admin/Appointments";
@@ -51,6 +51,7 @@ function App() {
           <Route path="/queueing" element={<QueueingForm />} />
           <Route path="/faq" element={<Faq />} />
           <Route path="/branches" element={<BranchesPage />} />
+          <Route path="/availableProduct" element={<ProductAvailability />} />
           <Route path="/" element={<HomePage />} />
         </Route>
 

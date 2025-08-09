@@ -15,10 +15,10 @@ const images = ["/lower_bicutan.png", "/toto_studio.JPG", "/totobg.JPG"];
 
 export default function MainPage() {
   useUserProtection();
-  
-  const itemsPerPage = 5;  
 
   const isMobile = useIsMobile();
+  const itemsPerPage = isMobile ? 3 : 5;  
+
   const navigate = useNavigate();
   const { sectionRefs, inViews } = useSectionViews();
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -132,7 +132,7 @@ export default function MainPage() {
         />
 
         {/* Text content */}
-        <div className="relative z-20">
+        <div className="relative space-y-2 z-20">
           <SlideTxt
             text="Where Tradition Meets Precision"
             enable={inViews.home}
@@ -151,7 +151,7 @@ export default function MainPage() {
             transition={{ duration: 1, ease: "easeInOut" }}
             whileHover={{ scale: 1.03 }}
             onClick={() => navigate("/appointment")}
-            className="inline-block w-[150px] lg:w-[200px] bg-white text-md lg:text-xl text-gray-900 px-4 py-2 shadow-md hover:bg-gray-900 hover:text-white transition-colors text-center"
+            className="inline-block w-[100px] md:w-[150px] lg:w-[200px] bg-white text-sm md:text-md lg:text-xl text-gray-900 px-4 py-2 shadow-md hover:bg-gray-900 hover:text-white transition-colors text-center"
           >
             BOOK
           </motion.button>
@@ -183,23 +183,23 @@ export default function MainPage() {
       </div>
 
       {/* Products */}
-      <div id="Products" ref={sectionRefs.products} className="w-full flex flex-col items-center bg-gray-800 py-20 px-4">
+      <div id="Products" ref={sectionRefs.products} className="w-full flex flex-col items-center bg-gray-800 py-20 md:px-4">
         <motion.h1 
           initial={isMobile ? { opacity: 0, x: 0 } : { opacity: 0, x: -100 }}
           transition={{ duration: 1, ease: "easeInOut"}}
           animate={isMobile || inViews.products ? { opacity: 1, x: 0, y: 0 } : {}}
-          className="text-white text-center font-extralight tracking-widest text-4xl md:text-5xl mb-10"
+          className="text-white text-center font-extralight tracking-widest text-3xl md:text-5xl mb-10"
         > 
           PRODUCT CATALOG
         </motion.h1>
     
-        <div className="w-full flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="relative w-full flex flex-col md:flex-row justify-between items-center gap-4">
           {/* Left Arrow */}
           <button
             onClick={handlePrev}
-            className="hidden md:flex items-center justify-center p-2 hover:bg-gray-500 rounded-full"
+            className="absolute top-1/2 translate-y-1/2 left-0 md:static flex items-center justify-center md:p-2 hover:bg-gray-500 rounded-full"
           >
-            <FaChevronLeft className="text-white" size={40} />
+            <FaChevronLeft className="text-white" size={isMobile ? 20 : 40} />
           </button>
 
           {/* Product Cards Container */}
@@ -210,12 +210,12 @@ export default function MainPage() {
                 initial={isMobile ? { opacity: 0, x: 0 } : { opacity: 0, y: -20 }}
                 animate={isMobile || inViews.products ? { opacity: 1, x: 0, y: 0 } : {}}
                 transition={{ duration: 0.3, ease: "easeInOut", delay: index * 0.2 }}
-                className="bg-gray-700 h-[500px] w-full sm:w-[45%] md:w-[30%] lg:w-[250px] p-4 hover:scale-105 transition-transform rounded-lg shadow-md"
+                className="bg-gray-700 h-[500px] w-[85%] sm:w-[45%] md:w-[30%] lg:w-[250px] p-4 hover:scale-105 transition-transform rounded-lg shadow-md"
               >
                 <img
                   src={`${baseUrl}/${product.imagePath}`}
                   alt={product.name}
-                  className="w-full h-[70%] md:h-[40%] lg:h-[60%] object-cover rounded-md mb-4 shadow"
+                  className="w-full h-[60%] md:h-[40%] lg:h-[60%] object-cover rounded-md mb-4 shadow"
                 />
                 <div className="text-white tracking-tight space-y-1">
                   <h2 className="text-md md:text-lg font-bold">{product.name}</h2>
@@ -229,9 +229,9 @@ export default function MainPage() {
           {/* Right Arrow */}
           <button
             onClick={handleNext}
-            className="hidden md:flex items-center justify-center p-2 hover:bg-gray-500 rounded-full"
+            className="absolute top-1/2 translate-y-1/2 right-0 md:static flex items-center justify-center md:p-2 hover:bg-gray-500 rounded-full"
           >
-            <FaChevronRight className="text-white" size={40} />
+            <FaChevronRight className="text-white" size={isMobile ? 20 : 40} />
           </button>
         </div>
 

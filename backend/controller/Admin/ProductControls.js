@@ -99,7 +99,7 @@ const new_product = async (req, res) => {
             imagePath,
             stock,
             price,
-            branch,
+            branch: branch.map(b => b),
             description
         });
 
