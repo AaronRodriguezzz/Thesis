@@ -68,7 +68,7 @@ const AppointmentPage = () => {
 
   };
 
- useEffect(() => {
+  useEffect(() => {
     if (formData.service || formData.additionalService) {
       const service = services.find(s => s._id === formData?.service) || { price: 0 };
       const additionalService = services.find(s => s._id === formData?.additionalService) || { price: 0 };

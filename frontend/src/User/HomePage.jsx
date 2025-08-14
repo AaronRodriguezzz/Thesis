@@ -16,7 +16,7 @@ const images = ["/lower_bicutan.png", "/toto_studio.JPG", "/totobg.JPG"];
 export default function MainPage() {
   useUserProtection();
 
-  const isMobile = useIsMobile();
+  const isMobile = useIsMobile(); 
   const itemsPerPage = isMobile ? 3 : 5;  
 
   const navigate = useNavigate();
@@ -98,10 +98,6 @@ export default function MainPage() {
     return () => clearInterval(interval);
  
   }, []);
-
-  useEffect(() => {
-    products && console.log(products)
-  },[products])
 
   return (
     <div className="w-full overflow-x-hidden">

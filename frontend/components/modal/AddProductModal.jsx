@@ -19,7 +19,7 @@ const NewProduct = ({ onCancel, route, setUpdatedData }) => {
     const [newProduct, setNewProduct] = useState(defaultProduct);
     const [debouncedInput, setDebouncedInput] = useState(defaultProduct);
     const [numberOfBranch, setNumberOfBranch] = useState('');
-    const [displayedImage, setDisplayedImage] = useState('')
+    const [displayedImage, setDisplayedImage] = useState('');
 
     const add_clicked = async (e) => {
         e.preventDefault();

@@ -3,10 +3,12 @@ import TextField from "@mui/material/TextField";
 import { post_data } from '../../services/PostMethod';
 import { useNavigate } from "react-router-dom";
 import { useUserProtection } from "../../hooks/useUser";
-
+import { useAuth } from "../../contexts/UserContext";
 
 export default function Home() {
   useUserProtection();
+
+  const { setUser } = useAuth();
   const navigate = useNavigate();
   const [credentials, setCredentials] = useState({
     email: "",
@@ -20,8 +22,9 @@ export default function Home() {
       const response = await post_data(credentials, '/auth/user_login');
 
       if(response){
-        localStorage.setItem('user', JSON.stringify(response?.user));
+        setUser(response.user);
         navigate('/')
+        localStorage.setItem('user', JSON.stringify(response?.user));
       }
       
     }catch(err){
