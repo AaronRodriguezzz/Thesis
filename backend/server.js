@@ -8,7 +8,7 @@ mongoose.connect(process.env.DB_URI)
   .then(() => {
     console.log('Connected to the Database');
     app.listen(process.env.PORT || 4001, () => {
-      console.log(`Listening on port ${process.env.PORT || 4001}`);
+      console.log(`Listening on ${process.env.CLIENT_URL || 4001}`);
     });
   })
   .catch((err) => {

@@ -22,8 +22,6 @@ const appointment_creation = async (req, res) => {
         totalAmount
     } = req.body;
 
-    console.log(req.body);
-
     try {
 
         const uniqueCode = Math.floor(100000 + Math.random() * 900000).toString();
@@ -57,6 +55,13 @@ const appointment_creation = async (req, res) => {
         }
 
         await EmailService.send_appointment_details(customerData.email, uniqueCode, scheduledDate, scheduledTime )
+
+        
+        const populatedAppointment = await Appointment.findById(appointmentSaved._id)
+            .populate('customer', 'firstName email phone'); // select only needed fields
+
+        global.sendAppointmentNotification(populatedAppointment);
+
 
         return res.status(200).json({ message: 'Appointment saved', appointment: appointmentSaved });
 

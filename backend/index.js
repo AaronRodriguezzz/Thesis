@@ -4,6 +4,8 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const path = require('path');
 const jwt = require('jsonwebtoken');
+const http = require('http');
+const { Server } = require('socket.io');
 
 // Routes Import
 //Admin Routes
@@ -30,17 +32,30 @@ const Reviews = require('./routes/Customer/ReviewsRoutes');
 const Subscriber = require('./routes/Customer/SubscribeEmail');
 const ChatBotRoutes = require('./routes/Customer/ChatbotRoutes');
 
+//socket
+const notificationsHandler = require('./Services/NotificationService');
+const queueingHandler = require('./Services/QueueingServices');
+
 // Initialize Express app
 const app = express();
+
+const server = http.createServer(app);         
+const io = require("socket.io")(server, {
+  cors: {
+    origin: process.env.CLIENT_URL,
+    methods: ["GET", "POST"]
+  }
+});
 
 // Middleware
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ origin: 'http://localhost:5173', credentials: true}));
+app.use(cors({ origin: process.env.CLIENT_URL, credentials: true}));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use("/uploads/employees", express.static("uploads/employees"));
 app.use("/uploads/products", express.static("uploads/products"));
 app.use("/uploads/branches", express.static("uploads/branches"));
+
 
 app.use((req,res,next) => {
     console.log(req.path, req.method);
@@ -56,12 +71,14 @@ app.get('/api/protected', (req, res) => {
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        console.log('decoded', decoded);
         res.json({ message: 'Access granted', user: decoded.user || decoded.employee});
     } catch (err) {
         res.status(403).json({ message: err.message });
     }
 });
+
+notificationsHandler(io);
+queueingHandler(io);
 
 //use routes for admin
 app.use(AdminAuth);

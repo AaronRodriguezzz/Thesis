@@ -10,6 +10,14 @@ export default defineConfig({
       '/api': {
         target: 'http://localhost:4001', // your backend
         changeOrigin: true,
+      },
+      '/notifications': {
+        target: 'http://localhost:4001',
+        ws: true, // websocket support
+      },
+      '/queue': {
+        target: 'http://localhost:4001',
+        ws: true,
       }
     }
   }
