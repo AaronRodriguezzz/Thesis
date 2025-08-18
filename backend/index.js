@@ -4,8 +4,6 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const path = require('path');
 const jwt = require('jsonwebtoken');
-const http = require('http');
-const { Server } = require('socket.io');
 
 // Routes Import
 //Admin Routes
@@ -32,20 +30,8 @@ const Reviews = require('./routes/Customer/ReviewsRoutes');
 const Subscriber = require('./routes/Customer/SubscribeEmail');
 const ChatBotRoutes = require('./routes/Customer/ChatbotRoutes');
 
-//socket
-const notificationsHandler = require('./Services/NotificationService');
-const queueingHandler = require('./Services/QueueingServices');
-
 // Initialize Express app
 const app = express();
-
-const server = http.createServer(app);         
-const io = require("socket.io")(server, {
-  cors: {
-    origin: process.env.CLIENT_URL,
-    methods: ["GET", "POST"]
-  }
-});
 
 // Middleware
 app.use(express.json());
@@ -77,8 +63,7 @@ app.get('/api/protected', (req, res) => {
     }
 });
 
-notificationsHandler(io);
-queueingHandler(io);
+
 
 //use routes for admin
 app.use(AdminAuth);

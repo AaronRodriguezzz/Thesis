@@ -47,7 +47,7 @@ const Appointments = () => {
         <div className="flex min-h-screen">
 
             <NotificationBell
-                count={notifCount}
+                isOpen={notifOpen}
                 onClick={() => setNotifOpen(!notifOpen)}
             />
 
@@ -123,7 +123,7 @@ const Appointments = () => {
                                             <tr key={appointment._id}>
                                                 <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{appointment.customer?.lastName}, {appointment.customer?.firstName}</td>
                                                 <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{appointment.service?.name}</td>
-                                                <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight text-center">{appointment.additionalService?.name ? appointment.barber.fullName : "N/A"}</td>
+                                                <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight text-center">{appointment.additionalService?.name ? appointment.barber?.fullName : "N/A"}</td>
                                                 <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{appointment.branch?.name}</td>
                                                 <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{appointment.barber?.fullName?.trim() ? appointment.barber.fullName : "N/A"}</td>
                                                 <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{appointment?.scheduledDate?.split('T')[0]}</td>

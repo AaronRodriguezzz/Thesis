@@ -1,6 +1,6 @@
 
 const queueSocketHandler = (io) => {
-  const queueNamespace = io.of("/api/queue");
+  const queueNamespace = io.of("/queue");
 
   queueNamespace.on("connection", (socket) => {
     console.log("Client connected to queue");

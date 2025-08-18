@@ -8,6 +8,7 @@ import { motion } from 'framer-motion';
 import { AnimatedDropDown } from '../../components/animations/DropDownAnimaton';
 import { CustomAlert } from '../../components/modal/CustomAlert';
 import { useCustomerPageProtection, useUserProtection, useUser } from '../../hooks/useUser';
+import { notificationsSocket } from '../../services/SocketMethods';
 
 const AppointmentPage = () => {
   useUserProtection();
@@ -67,6 +68,27 @@ const AppointmentPage = () => {
     }
 
   };
+
+  useEffect(() => {
+
+        // When we connect
+        notificationsSocket.on("connect", () => {
+            console.log("Connected to notifications namespace");
+        });
+
+        // Listen for new appointments
+        notificationsSocket.on("newAppointment", (data) => {
+            setNotifications(prev => [data, ...prev]);
+            setNewCount(prev => prev + 1);
+        });
+
+        // Cleanup
+        return () => {
+            notificationsSocket.off("newAppointment");
+            notificationsSocket.off("connection");
+        };
+
+  }, []);
 
   useEffect(() => {
     if (formData.service || formData.additionalService) {

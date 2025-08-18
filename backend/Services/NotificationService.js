@@ -1,13 +1,17 @@
 const notificationsSocketHandler = (io) => {
+
   const notificationsNamespace = io.of("/notifications");
   
   notificationsNamespace.on("connection", (socket) => {
-    console.log("Client connected to notifications");
-
+    console.log("Client connected to notifications", socket.id);
+    
     socket.on("disconnect", () => { 
       console.log("Client disconnected from notifications");
     });
   });
+
+  
+  
   // Helper function for emitting notifications
   function sendAppointmentNotification(data) {
     notificationsNamespace.emit("newAppointment", data);
