@@ -6,6 +6,6 @@ export const notificationsSocket = io(`${baseUrl}/notifications`, {
   transports: ["websocket"], // Ensure WS for speed
 });
 
-export const queueSocket = io("/api/queue", {
+export const queueSocket = io(`${baseUrl}/queue`, {
   transports: ["websocket"],
 });

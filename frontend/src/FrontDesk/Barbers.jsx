@@ -8,9 +8,10 @@ import AssignCustomer from "../../components/modal/AssigningCustomer";
 import NewWalkInCustomer from "../../components/modal/AddWalkInCustomer";
 import ServiceCompleteModal from "../../components/modal/ServiceCompleteModal";
 import { useAdminPageProtection } from "../../hooks/useUser";
+import { queueSocket } from "../../services/SocketMethods";
 
 const Appointments = () => {
-    useAdminPageProtection();
+    // useAdminPageProtection();
     const baseUrl = import.meta.env.MODE === 'development' ? 'http://localhost:4001' : 'https://tototumbs.onrender.com';
     const frontDesk = JSON.parse(localStorage.getItem('admin'));
     const today = new Date();
@@ -44,34 +45,62 @@ const Appointments = () => {
         }
     }
 
-    useEffect(() => {
-        const getBarbersAndAppointments = async () => {
-            try {
-                const branchId = frontDesk?.branchAssigned;
+    // useEffect(() => {
+    //     const getBarbersAndAppointments = async () => {
+    //         try {
+    //             const branchId = frontDesk?.branchAssigned;
 
-                if(!branchId) return 
+    //             if(!branchId) return 
                 
-                setLoading(true);
-                const [barberRes, appointmentRes, walkInRes] = await Promise.all([
-                    get_data(`/barbers/${branchId}`),
-                    get_data(`/appointments/${branchId}`),
-                    get_data(`/walkIns/${branchId}`),
-                ]);
+    //             setLoading(true);
+    //             const [barberRes, appointmentRes, walkInRes] = await Promise.all([
+    //                 get_data(`/barbers/${branchId}`),
+    //                 get_data(`/appointments/${branchId}`),
+    //                 get_data(`/walkIns/${branchId}`),
+    //             ]);
 
-                console.log(walkInRes);
-                setBarberList(barberRes?.barbers || []);
-                setAppointmentsByHour(appointmentRes?.appointments || []);
-                setWalkInList(walkInRes || []);
+    //             const response = await get_data(`/initialBarberAssignment/${branchId}`)
+                                
+    //             setBarberList(barberRes?.barbers || []);
+    //             setAppointmentsByHour(appointmentRes?.appointments || []);
+    //             setWalkInList(walkInRes || []);
 
-                setLoading(false)
+    //             setLoading(false)
 
-            } catch (err) {
-                console.error("Failed to fetch barbers or appointments", err);
-            }
+    //         } catch (err) {
+    //             console.error("Failed to fetch barbers or appointments", err);
+    //         }
+    //     };
+
+    //     getBarbersAndAppointments();
+    // }, []);
+    
+
+    useEffect(() => {
+        // When we connect
+        queueSocket.on("connect", () => {
+            console.log("Connected to queueing namespace");
+        });
+
+        const branchId = frontDesk?.branchAssigned;
+        const fetchInitialData = async () => await get_data(`/initialBarberAssignment/${branchId}`)
+
+        fetchInitialData();
+    
+        // Listen for new appointments
+        queueSocket.on("queueUpdate", (data) => {
+            console.log('queueing data', data);
+            setBarberList(data?.barbers || []);
+            setAppointmentsByHour(data?.appointments || []);
+            setWalkInList(data.walkIn || []);
+        });
+
+        return () => {
+            queueSocket.off("connect");
+            queueSocket.off("queueUpdate");
         };
 
-        getBarbersAndAppointments();
-    }, []);
+    }, [frontDesk?.branchAssigned]);
 
     if (loading) return <div>Loading...</div>;
     

@@ -43,9 +43,10 @@ export const useCustomerPageProtection = () => {
 export const useAdminPageProtection = () => {
     const navigate = useNavigate();
     const { user } = useAuth();
+    console.log(user);
 
     useEffect(() => {   
-        if(user) return navigate(user?.role === 'Admin' ? '/admin/Dashboard' : '/front-desk/dashboard')
+        if(user) return navigate(user?.role === 'Admin' ? '/admin/dashboard' : '/front-desk/dashboard')
         else if(!user) navigate('/admin/login')
 
     }, [user, navigate]);

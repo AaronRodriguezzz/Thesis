@@ -6,7 +6,7 @@ import { update_data } from "../../services/PutMethod";
 import { useAdminPageProtection } from "../../hooks/useUser";
 
 const POS = () => {
-    useAdminPageProtection();
+    // useAdminPageProtection();
     const frontDesk = JSON.parse(localStorage.getItem('admin'));
     const baseUrl = import.meta.env.MODE === 'development' ? 'http://localhost:4001' : 'https://tototumbs.onrender.com';
     const [productList, setProductList] = useState([]);

@@ -42,6 +42,9 @@ app.use("/uploads/employees", express.static("uploads/employees"));
 app.use("/uploads/products", express.static("uploads/products"));
 app.use("/uploads/branches", express.static("uploads/branches"));
 
+//global state for the queue
+global.queueState = {};
+
 
 app.use((req,res,next) => {
     console.log(req.path, req.method);

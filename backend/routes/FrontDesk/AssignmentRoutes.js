@@ -4,5 +4,6 @@ const AssignmentControls = require('../../controller/FrontDesk/AssignmentControl
 
 router.put('/api/assign_customer/:type', AssignmentControls.assignCustomer);
 router.put('/api/complete_assignment/:type', AssignmentControls.completeAssignment);
+router.get('/api/initialBarberAssignment/:branchId', AssignmentControls.initializeBarberAssignments);
 
 module.exports = router;

@@ -12,7 +12,7 @@ const queueSocketHandler = (io) => {
 
   // Helper function for emitting queue updates
   function sendQueueUpdate(data) {
-    queueNamespace.emit("queueUpdate", data);
+    queueNamespace.emit("queueUpdate",data );
   }
 
   // Make emit function accessible to other files

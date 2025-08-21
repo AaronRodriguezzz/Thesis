@@ -1,30 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useCustomerPageProtection, useUserProtection} from "../../hooks/useUser";
+import { MdCalendarToday, MdDirectionsWalk } from "react-icons/md";
+import { queueSocket } from "../../services/SocketMethods";
+import { get_data } from "../../services/GetMethod";
 
 export default function BarberStatusPage() {
-  useCustomerPageProtection();
-  useUserProtection();
+  // useCustomerPageProtection();
+  // useUserProtection();
   
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
-
-  const barbers = [
-    {
-      name: "Aaron",
-      available: true,
-      status: "On-Going",
-    },
-    {
-      name: "Alvin",
-      available: true,
-      status: "Available",  
-    },
-    {
-      name: "Mark",
-      available: true,
-      status: "On-Going",
-    },
-  ];
+  const [barberList, setBarberList] = useState(null);
+  const [appointmentsByHour, setAppointmentsByHour] = useState(null);
+  const [walkInList, setWalkInList] = useState(null);
 
   const formatTime = (date) => {
     const hours = date.getHours();
@@ -35,6 +23,33 @@ export default function BarberStatusPage() {
 
     return `${formattedHours}:${minutes} ${ampm}`;
   };
+
+
+  useEffect(() => {
+          // When we connect
+    queueSocket.on("connect", () => {
+      console.log("Connected to queueing namespace");
+    });
+
+    // frontDesk?.branchAssigned
+    const branchId = '6862a4bed08d2b82975b2ac6';
+    const fetchInitialData = async () => await get_data(`/initialBarberAssignment/${branchId}`)
+  
+    fetchInitialData();
+          
+    // Listen for new appointments
+    queueSocket.on("queueUpdate", (data) => {
+      console.log('queueing data', data);
+      setBarberList(data?.barbers || []);
+      setAppointmentsByHour(data?.appointments || []);
+      setWalkInList(data.walkInRes || []);
+    });
+          
+    return () => {
+      queueSocket.off("connect");
+      queueSocket.off("queueUpdate");
+    };
+  }, []);
 
   useEffect(() => {
     const today = new Date();
@@ -58,8 +73,37 @@ export default function BarberStatusPage() {
           </h2>
         </div>
 
-        <div className="w-full h-auto md:h-[65%] flex flex-col md:flex-row items-center justify-center gap-4 px-4">
-          {barbers.map((barber, index) => (
+        <div className="w-[90%] md:w-[95%] lg:w-[75%] flex gap-x-2 items-center justify-between leading-3 mb-4">
+          <div className="w-[50%] flex items-center bg-white gap-8 p-4">
+            <MdCalendarToday className="text-[40px] text-gray-800" />
+        
+            <div>
+              <h1 className="text-s md:text-[20px] lg:text-[25px] tracking-tighter text-left my-2">
+                Appointment
+              </h1>
+              <p className="text-xs md:text-[20px] lg:text-[30px] font-extralight tracking-tighter text-left">
+                {appointmentsByHour && appointmentsByHour.filter(a => a.status === 'Booked').length}
+              </p>
+            </div>
+          </div>
+        
+          <div className="w-[50%] flex items-center justify-between bg-white gap-4 px-4 py-4">
+            <div className="flex">
+              <MdDirectionsWalk className="text-[50px] text-gray-800" />
+              <div>
+                <h2 className="text-s md:text-[20px] lg:text-[25px] tracking-tighter text-left my-2">
+                  Walk-In
+                </h2>
+                <h3 className="text-xs md:text-[20px] lg:text-[30px] font-extralight tracking-tighter text-left">
+                 {walkInList && walkInList.length || 0}  
+                </h3>
+              </div>
+            </div>
+          </div>                    
+        </div>  
+
+        <div className="w-full h-auto md:h-[60%] flex flex-col md:flex-row items-center justify-center gap-4 px-4">
+          {barberList && barberList.map((barber, index) => (
             <div
               className="h-full w-[90%] md:w-[35%] lg:w-[25%] flex-col bg-white rounded-lg shadow-md"
               key={index}
@@ -74,15 +118,11 @@ export default function BarberStatusPage() {
 
               <div>
                 <h1 className="text-[30px] font-semibold tracking-tight text-center">
-                  {barber.name}
+                  {barber.fullName}
                 </h1>
                 <span
-                  className={`block w-[80%] text-center text-sm font-medium px-2 py-1 mx-auto rounded-full 
-                  ${
-                    barber.status === "On-Going"
-                      ? "bg-red-100 text-red-600"
-                      : "bg-green-100 text-green-600"
-                  }`}
+                  className={`block w-[80%] text-center text-sm font-medium px-2 py-1 mx-auto rounded-full`}
+                  style={{color: barber?.status === 'Available' || barber?.status === 'Barbering' ?  'green': barber?.status === 'On-break' ? 'orange' : 'red'}}
                 >
                   {barber.status}
                 </span>

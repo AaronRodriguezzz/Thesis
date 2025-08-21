@@ -2,6 +2,64 @@ const Appointment = require('../../models/Appointment'); // Adjust the path if n
 const Employee = require('../../models/EmployeeAccount');
 const WalkIn = require('../../models/WalkIn');
 const ServiceSales = require('../../models/ServiceSales');
+const Employees = require('../../models/EmployeeAccount');
+
+const initializeBarberAssignments = async (req,res) => {
+    const branchId = req.params.branchId
+
+    console.log('hello');
+    try{
+
+        const currentHour = new Date().getHours();
+
+        const startOfToday = new Date();
+        startOfToday.setHours(0, 0, 0, 0);
+
+        const endOfToday = new Date();
+        endOfToday.setHours(23, 59, 59, 999); 
+
+        const [appointments, walkIns, barbers] = await Promise.all([
+            Appointment.find({ 
+                createdAt: { $gte: startOfToday, $lte: endOfToday }, 
+                scheduledTime: currentHour, 
+                branch: branchId
+            })
+                .populate('customer')
+                .populate('service')
+                .populate('additionalService')
+                .populate('branch')
+                .populate('barber'),
+
+            WalkIn.find({ 
+                branch: branchId, 
+                status: 'Waiting', 
+                createdAt: { $gte: startOfToday, $lte: endOfToday } 
+            })
+                .populate('service')
+                .populate('additionalService')
+                .populate('barber')
+                .populate('totalAmount')
+                .populate('recordedBy'),
+
+            Employees.find({ 
+                branchAssigned: branchId, 
+                role: 'Barber' 
+            })
+        ]);
+
+        if(!barbers){
+            return res.status(400).json({message: 'No Barber for this branch'})
+        }
+
+        global.queueState[branchId] = { appointments, walkIns, barbers };
+        
+        global.sendQueueUpdate({branchId, appointments, walkIns, barbers });
+        
+    }catch(err){
+        console.log(err);
+        return res.status(500).json({message: err.message});
+    }
+}
 
 const assignCustomer = async (req, res) => {
     const customerType = req.params.type;
@@ -33,6 +91,20 @@ const assignCustomer = async (req, res) => {
                 { new: true }
             )
         ]);
+
+        const branchId = updatedBarber.branchAssigned;
+
+        if (global.queueState[branchId]) {
+            const barbers = global.queueState[branchId].barbers.map(b =>
+                b._id === updatedBarber._id ? updatedBarber : b
+            );
+
+            global.queueState[branchId].barbers = barbers;
+
+            // Emit updated state
+            global.sendQueueUpdate({ branchId, ...global.queueState[branchId] });
+        }
+
 
         if (!updatedCustomer || !updatedBarber) {
             return res.status(404).json({ message: 'Assigning Customer Error' });
@@ -125,5 +197,6 @@ const completeAssignment = async (req, res) => {
 
 module.exports = {
     assignCustomer,
-    completeAssignment
+    completeAssignment,
+    initializeBarberAssignments
 }

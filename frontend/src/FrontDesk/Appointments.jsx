@@ -8,7 +8,7 @@ import { update_data } from "../../services/PutMethod";
 import { useAdminPageProtection} from "../../hooks/useUser";
 
 const Appointments = () => {
-    useAdminPageProtection();
+    // useAdminPageProtection();
     const frontDesk = JSON.parse(localStorage.getItem('admin'));
     const [searchTerm, setSearchTerm] = useState("");
     const [page, setPage] = useState(1);

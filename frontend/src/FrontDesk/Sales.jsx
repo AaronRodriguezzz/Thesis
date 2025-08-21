@@ -6,7 +6,7 @@ import { time } from "../../data/TimeData";
 import { useAdminPageProtection } from "../../hooks/useUser";
 
 const Appointments = () => {
-    useAdminPageProtection();
+    // useAdminPageProtection();
     const [searchTerm, setSearchTerm] = useState("");
     const [page, setPage] = useState(1);
     const [paginationLimit, setPaginationLimit] = useState(1);
