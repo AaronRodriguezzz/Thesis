@@ -13,6 +13,8 @@ import ProfilePage from "./User/Profile";
 import AppointmentHistory from "./User/AppointmentHistory";
 import BranchesPage from "./User/BranchesPage";
 import ProductAvailability from "./User/ProductAvailability";
+import TermsAndConditions from "./User/TermsAndConditions";
+
 // Admin Pages
 import Dashboard from "./Admin/Dashboard";
 import Appointments from "./Admin/Appointments";
@@ -52,6 +54,7 @@ function App() {
           <Route path="/faq" element={<Faq />} />
           <Route path="/branches" element={<BranchesPage />} />
           <Route path="/availableProduct" element={<ProductAvailability />} />
+          <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
           <Route path="/" element={<HomePage />} />
         </Route>
 

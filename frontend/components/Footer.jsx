@@ -18,7 +18,7 @@ export default function Footer() {
       {/* Center: Terms & Conditions */}
       <div className="text-center hidden md:block">
         <Link
-          to="/terms"
+          to="/terms-and-conditions"
           className="text-sm px-4 py-2 border border-gray-300 rounded-full hover:bg-gray-100 transition"
         >
           Terms & Conditions

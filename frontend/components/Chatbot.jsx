@@ -1,15 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Bot, User, MessageCircle, X } from 'lucide-react';
+import { motion } from 'motion/react';
 import axios from 'axios';
 
 const Chatbot = () => {
     const [open, setOpen] = useState(false);
+    const [waiting, setWaiting] = useState(false);
+    const [scrollIsMax, setScrollIsMax] = useState(false);
+    const messagesEndRef = useRef(null);
+    const [input, setInput] = useState('');
     const [messages, setMessages] = useState([
         { sender: 'bot', text: 'Hello! How can I help you today?' }
     ]);
-    const [input, setInput] = useState('');
-    const [waiting, setWaiting] = useState(false);
-    const messagesEndRef = useRef(null);
 
     const handleSend = async () => {
         if (!input.trim() || waiting) return;
@@ -48,11 +50,29 @@ const Chatbot = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
 
+    useEffect(() => {
+        const handleScroll = () => {
+            const atBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 2;
+            setScrollIsMax(atBottom);
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+
     return (
-        <div className="fixed bottom-5 right-2 z-50 flex flex-col items-end gap-2">
-        {/* Chat window */}
+        <motion.div
+            initial={{ opacity: 0, x: 0 }}
+            animate={{
+                y: scrollIsMax ? -70 : 0, // shift up when at bottom
+                opacity: 1
+            }}
+            transition={{ duration: 0.7, ease: "easeInOut" }}
+            className="fixed right-2 bottom-5 z-50 flex flex-col items-end gap-2"
+        >
+
         {open && (
-            <div className="w-[300px] h-[500px] bg-white shadow-xl rounded-xl flex flex-col overflow-hidden">
+            <div className="w-[300px] h-[500px] bg-white shadow-xl rounded-xl flex flex-col overflow-hidden z-20">
                 {/* Header */}
                 <div className="bg-gray-600 text-white p-3 font-bold text-lg flex items-center justify-between">
                     <span className='tracking-tighter font-light'>BarberBot</span>
@@ -113,7 +133,7 @@ const Chatbot = () => {
             >
                 <img src="./robot.png" alt="robot" />
             </button>
-        </div>
+        </motion.div>
     );
 };
 

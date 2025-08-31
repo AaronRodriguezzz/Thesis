@@ -10,6 +10,7 @@ const UserLayout = () => {
       <Navigation otherPage={true}/>
       <main className="overflow-x-hidden pt-20">
         <Outlet />
+        <Chatbot/>
       </main>
       <Footer />
     </div>

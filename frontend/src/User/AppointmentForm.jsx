@@ -9,6 +9,7 @@ import { AnimatedDropDown } from '../../components/animations/DropDownAnimaton';
 import { CustomAlert } from '../../components/modal/CustomAlert';
 import { useCustomerPageProtection, useUserProtection, useUser } from '../../hooks/useUser';
 import { notificationsSocket } from '../../services/SocketMethods';
+import TermsModal from '../../components/modal/TermsAndConditionModal';
 
 const AppointmentPage = () => {
   useUserProtection();
@@ -26,6 +27,8 @@ const AppointmentPage = () => {
   const [services, setServices] = useState(null);
   const [appointments, setAppointments] = useState(null); 
   const [barbers, setBarbers] = useState(null);
+  const [termsChecked, setTermsChecked] = useState(false);
+  const [viewTerms, setViewTerms] = useState(false)
   const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -46,7 +49,7 @@ const AppointmentPage = () => {
   const handle_Submit = async (e) => {
     e.preventDefault();
 
-    console.log('form', formData);
+    if(!termsChecked) return
 
     if(today.getHours() >= 21 &&  formData.scheduledDate === today.toISOString().split('T')[0]){
       CustomAlert('error', "You can't book an appointment after 9 PM today.");
@@ -322,14 +325,48 @@ const AppointmentPage = () => {
               )}
           </AnimatedDropDown>
 
+          <div className='flex gap-x-2 items-center'>
+            <motion.input
+              initial={{ opacity: 0, x: 200 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, ease: "easeInOut", delay: 1.5 }}
+              type="checkbox"
+              checked={termsChecked}
+              onChange={() => setTermsChecked(!termsChecked)}
+              className="w-5 h-5 accent-green-500 rounded"
+            />
+            <span 
+              className='space-x-1'
+            >
+              <motion.span
+                onClick={() => setViewTerms(true)}
+                initial={{ opacity: 0, x: 200}}
+                animate={{ opacity: 1, x: 0  }}
+                transition={{ duration: 0.5, ease: "easeInOut", delay: 1.5 }}
+              >
+                I agree to the
+              </motion.span>
+              <motion.a 
+                initial={{ opacity: 0, x: 200  }}
+                animate={{ opacity: 1, x: 0  }}
+                transition={{ duration: 0.5, ease: "easeInOut", delay: 1.5 }}
+                onClick={() => setViewTerms(true)} 
+                className='text-blue-500 hover:underline hover:cursor-pointer'
+              >
+                Terms And Conditions
+              </motion.a>
+
+            </span>
+          </div>
+          
           <motion.button
             initial={{ opacity: 0, x: 200 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, ease: "easeInOut", delay: 1.5 }}
             type="submit"
-            disabled={loading}
-            className={`py-2 my-4 rounded-md text-white text-lg text-center ${
-              loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-500'
+            disabled={loading || !termsChecked}
+            className={`py-2 my-4 rounded-md text-white text-lg text-center disabled:cursor-not-allowed disabled:bg-green-600/80 ${
+              loading ? 'bg-green-600/80 cursor-not-allowed' : 'bg-green-500'
             }`}
           >
             {loading ? 'Submitting...' : 'SUBMIT'}
@@ -337,6 +374,14 @@ const AppointmentPage = () => {
         </form>
       </main>
 
+      <TermsModal 
+        isOpen={viewTerms} 
+        onClose={() => setViewTerms(false)} 
+        onAccept={() => {
+          setTermsChecked(true);
+          setViewTerms(false);
+        }} 
+      />
     </div>
   );
 };
