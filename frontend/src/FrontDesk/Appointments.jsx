@@ -5,7 +5,7 @@ import { get_data } from "../../services/GetMethod";
 import { time } from "../../data/TimeData";
 import ThreeLayerModal from "../../components/modal/WalkinAppointment";
 import { update_data } from "../../services/PutMethod";
-import { useAdminPageProtection} from "../../hooks/useUser";
+import { useAdminPageProtection} from "../../hooks/userProtectionHooks";
 
 const Appointments = () => {
     // useAdminPageProtection();

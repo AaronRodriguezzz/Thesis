@@ -7,7 +7,7 @@ import { update_data } from '../../services/PutMethod';
 import AssignCustomer from "../../components/modal/AssigningCustomer";
 import NewWalkInCustomer from "../../components/modal/AddWalkInCustomer";
 import ServiceCompleteModal from "../../components/modal/ServiceCompleteModal";
-import { useAdminPageProtection } from "../../hooks/useUser";
+import { useAdminPageProtection } from "../../hooks/userProtectionHooks";
 import { queueSocket } from "../../services/SocketMethods";
 
 const Appointments = () => {
@@ -92,7 +92,7 @@ const Appointments = () => {
             console.log('queueing data', data);
             setBarberList(data?.barbers || []);
             setAppointmentsByHour(data?.appointments || []);
-            setWalkInList(data.walkIn || []);
+            setWalkInList(data.walkIns || []);
         });
 
         return () => {
@@ -129,7 +129,7 @@ const Appointments = () => {
                                     Appointment
                                 </h1>
                                 <p className="text-xs md:text-[20px] lg:text-[30px] font-extralight tracking-tighter text-left">
-                                    {appointmentsByHour && appointmentsByHour.filter(a => a.status === 'Booked').length}
+                                    {appointmentsByHour && appointmentsByHour.filter(a => a.status === 'Booked').length || 0}
                                 </p>
                             </div>
                         </div>

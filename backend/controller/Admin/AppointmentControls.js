@@ -1,5 +1,5 @@
 const Appointment = require('../../models/Appointment'); // Adjust the path if needed
-
+const cron = require('node-cron');
 
 /**
  * @desc Gets all the appointment
@@ -169,6 +169,26 @@ const update_appointment_status = async (req, res) => {
         return res.status(500).json({ message: 'Error fetching appointments', error: err.message });
     }
 };
+
+
+const updatePastAppointments = async () => {
+  try {
+    const now = new Date();
+
+    await Appointment.updateMany(
+      { status: "booked", scheduledDate: { $lt: now } },
+      { $set: { status: "No-Show" } }
+    );
+
+  } catch (err) {
+    console.error("Error updating past appointments:", err);
+  }
+};
+
+// Schedule task for every day at 9:00 PM
+cron.schedule("0 21 * * *", () => {
+  updatePastAppointments();
+});
 
 
 

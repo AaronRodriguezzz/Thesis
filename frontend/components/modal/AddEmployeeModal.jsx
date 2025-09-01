@@ -15,11 +15,12 @@ const NewEmployee = ({  onCancel, route, setUpdatedData}) => {
 
     const add_clicked = async (e) => {
         e.preventDefault();
-        const new_employee = await post_data(newEmployee, route)
+        const response = await post_data(newEmployee, route)
 
 
-        if(new_employee.added){
+        if(response.added){
             onCancel(false);
+            setUpdatedData(prev => [...prev, response.user]);
         }
     }
 
@@ -69,19 +70,6 @@ const NewEmployee = ({  onCancel, route, setUpdatedData}) => {
                         className='border-1 border-gray-200 px-3 py-2 rounded-md focus:border-gray-300'
                     />
 
-                    <h1 className='mt-2'>Branch Assigned</h1>
-                    {/* this should check if the barber length is already filled or not */}
-                    <select
-                        value={newEmployee.branchAssigned}
-                        onChange={(e) => setNewEmployee({ ...newEmployee, branchAssigned: e.target.value })}
-                        className='border-1 border-gray-200 px-3 py-2 rounded-md focus:border-gray-300'
-                    >
-                        <option value='' disabled>Select Branch</option>
-                        {branches && branches.map(branch => (
-                            <option key={branch?._id} value={branch?._id}>{branch?.name}</option>
-                        ))}
-                    </select>
-
                     <h1 className='mt-2'>Role</h1>
                     <select
                         value={newEmployee.role}
@@ -91,7 +79,27 @@ const NewEmployee = ({  onCancel, route, setUpdatedData}) => {
                         <option value='' disabled>Select Role</option>
                         <option value="Front Desk">Front Desk</option>
                         <option value="Barber">Barber</option>
+                        <option value="Admin">Admin</option>
                     </select>
+
+                    {newEmployee.role !== 'Admin' ? (
+                        <>
+                            <h1 className='mt-2'>Branch Assigned</h1>
+                            {/* this should check if the barber length is already filled or not */}
+                            <select
+                                value={newEmployee.branchAssigned}
+                                onChange={(e) => setNewEmployee({ ...newEmployee, branchAssigned: e.target.value })}
+                                className='border-1 border-gray-200 px-3 py-2 rounded-md focus:border-gray-300'
+                            >
+                                <option value='' disabled>Select Branch</option>
+                                {branches && branches.map(branch => (
+                                    <option key={branch?._id} value={branch?._id}>{branch?.name}</option>
+                                ))}
+                            </select>
+                        </>
+                    ) : ( <></> )}
+
+                    
                 </div>
 
                 <div className='flex justify-end gap-2 mt-4'>

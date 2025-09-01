@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useParams } from "react-router-dom";
 import { time } from '../../data/TimeData';
 import { get_data } from '../../services/GetMethod'; 
-import { post_data } from '../../services/PostMethod'; 
+import { post_data } from '../../services/PostMethod';
 import { motion } from 'framer-motion';
 import { AnimatedDropDown } from '../../components/animations/DropDownAnimaton';
 import { CustomAlert } from '../../components/modal/CustomAlert';
-import { useCustomerPageProtection, useUserProtection, useUser } from '../../hooks/useUser';
+import { useCustomerPageProtection, useUserProtection, useUser } from '../../hooks/userProtectionHooks';
 import { notificationsSocket } from '../../services/SocketMethods';
 import TermsModal from '../../components/modal/TermsAndConditionModal';
 

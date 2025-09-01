@@ -57,13 +57,25 @@ app.get('/api/protected', (req, res) => {
     if (!token) {
       return res.status(401).json({ message: 'No token found' });
     }
-
+    
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        res.json({ message: 'Access granted', user: decoded.user || decoded.employee});
+
+        console.log(decoded.user);
+        res.json({ message: 'Access granted', user: decoded.user });
     } catch (err) {
         res.status(403).json({ message: err.message });
     }
+});
+
+app.post("/api/logout", (req, res) => {
+  res.clearCookie("user", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+  });
+
+  return res.status(200).json({ message: "Logged out successfully" });
 });
 
 

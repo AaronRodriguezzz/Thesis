@@ -35,7 +35,7 @@ const admin_login = async (req, res) => {
 
         // Generate JWT
         const token = jwt.sign(
-            { employee },
+            { user: employee },
             process.env.JWT_SECRET,
             { expiresIn: '1d' }
         );

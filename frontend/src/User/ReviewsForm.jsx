@@ -5,7 +5,7 @@ import debounce from 'lodash.debounce';
 import Rating from '@mui/material/Rating';
 import Box from '@mui/material/Box';
 import { motion } from 'framer-motion';
-import { useCustomerPageProtection, useUserProtection } from '../../hooks/useUser';
+import { useCustomerPageProtection, useUserProtection } from '../../hooks/userProtectionHooks';
 
 const ReviewForm = () => {
   useCustomerPageProtection();

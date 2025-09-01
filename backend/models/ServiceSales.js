@@ -6,6 +6,10 @@ const ServiceSales = new mongoose.Schema({
     ref: 'Service',
     required: true
   },
+  additionalService: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Service',
+  },
   customer: {
     type: String, 
     required: true

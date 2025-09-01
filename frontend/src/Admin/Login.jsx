@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import { post_data } from '../../services/PostMethod';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; 
+import { useAuth } from "../../contexts/UserContext";
+import { useLoginDisabling } from "../../hooks/userProtectionHooks";
 
+export default function AdminLogin() {
+  useLoginDisabling();
 
-export default function Home() {
   const navigate = useNavigate();
+  const { setUser } = useAuth();
   const [credentials, setCredentials] = useState({
     email: "",
     password: "",
@@ -18,8 +22,8 @@ export default function Home() {
       const response = await post_data(credentials, '/auth/admin_login');
 
       if(response.employee){
-        localStorage.setItem('admin', JSON.stringify(response?.employee));
-        navigate('/front-desk/dashboard')
+        setUser(response.employee);
+        navigate(response.employee.role === 'Admin' ? '/admin/dashboard': '/front-desk/dashboard')
       }
       
     }catch(err){

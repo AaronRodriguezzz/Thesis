@@ -2,13 +2,19 @@ import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import { post_data } from '../../services/PostMethod';
 import { useNavigate } from "react-router-dom";
-import { useUserProtection } from "../../hooks/useUser";
+import { useUserProtection, useCustomerPageProtection, useLoginDisabling } from "../../hooks/userProtectionHooks";
 import { useAuth } from "../../contexts/UserContext";
+import { useLocation } from "react-router-dom";
 
-export default function Home() {
+export default function Login() {
   useUserProtection();
+  useCustomerPageProtection();
+  useLoginDisabling();
 
   const { setUser } = useAuth();
+  const location = useLocation();
+  const from = location.state?.from || "/";
+
   const navigate = useNavigate();
   const [credentials, setCredentials] = useState({
     email: "",
@@ -23,8 +29,7 @@ export default function Home() {
 
       if(response){
         setUser(response.user);
-        navigate('/')
-        localStorage.setItem('user', JSON.stringify(response?.user));
+        navigate(from, { replace: true });
       }
       
     }catch(err){

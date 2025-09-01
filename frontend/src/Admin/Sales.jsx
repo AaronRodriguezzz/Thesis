@@ -1,28 +1,28 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { FaUserPlus, FaSearch, FaEdit, FaTrash } from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
 import Pagination from "@mui/material/Pagination";
 import { get_data } from "../../services/GetMethod";
 import { delete_data } from "../../services/DeleteMethod";
-import NewService from "../../components/modal/AddServiceModal";
-import UpdateService from "../../components/modal/UpdateServiceModal";
 
 const Services = () => {
  
-    const [services, setServices] = useState([]);
+    const [serviceSales, setServiceSales] = useState([]);
     const [productSales, setProductSales] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
-    const [page, setPage] = useState(1);
-    const [paginationLimit, setPaginationLimit] = useState(1);
+    const [productSalesPage, setProductSalesPage] = useState(1);
+    const [serviceSalesPage, setServiceSalesPage] = useState(1);
+    const [psPageLimit, setPsPageLimit] = useState(1);
+    const [ssPageLimit, setSsPageLimit] = useState(1);
     const [filterValue, setFilterValue] = useState('');
 
-    const filteredEmployees = useMemo(() => {
-        return services && services.filter(service =>
-            service?.name.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
-            service?.duration.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
-            service?.price.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
-            service?.serviceType.toString().toLowerCase().includes(searchTerm.toLowerCase())
-        );
-    }, [services, searchTerm]);
+    // const filteredEmployees = useMemo(() => {
+    //     return serviceSales && serviceSales.filter(service =>
+    //         service?.name.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
+    //         service?.duration.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
+    //         service?.price.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
+    //         service?.serviceType.toString().toLowerCase().includes(searchTerm.toLowerCase())
+    //     );
+    // }, [serviceSales, searchTerm]);
 
 
     const handle_delete = async (id) => {
@@ -30,37 +30,40 @@ const Services = () => {
         const data = await delete_data(id, '/delete_service');
 
         if (data.deleted) {
-            setServices(prev => prev.filter(service => service._id !== id));
+            setServiceSales(prev => prev.filter(service => service._id !== id));
         }
     }
 
 
     useEffect(() => {
         const get_services = async () => {
-            const data = await get_data('/services', page);
+            const data = await get_data('/sales/services', serviceSalesPage);
         
             //exclude the barber's password
+            
             if (data) {
-                setServices(data.services);
-                setPaginationLimit(data.pageCount);
+                console.log('services', data.sales);
+                setServiceSales(data.sales);
+                setSsPageLimit(data.pageCount);
             }
         };
         get_services();
-    }, [page]);
+    }, [serviceSalesPage]);
 
     useEffect(() => {
         const getSales = async () => {
-            const data = await get_data(`/sales`, page);
+            const data = await get_data(`/sales/products`, productSalesPage);
     
                 //exclude the barber's password
             if (data) {
+                console.log('Product', data.sales);
                 setProductSales(data.sales);
-                setPaginationLimit(data.pageCount);
+                setPsPageLimit(data.pageCount);
             }
         };
         
         getSales();
-    }, [page]); 
+    }, [productSalesPage]); 
 
     return (
         <div className="flex min-h-screen">
@@ -86,7 +89,7 @@ const Services = () => {
                         </div>
 
                         <div className="w-full bg-white p-6 rounded-lg shadow">
-                            <h2 className="text-xl font-semibold mb-4 tracking-tight">Services Table</h2>
+                            <h2 className="text-xl font-semibold mb-4 tracking-tight">Sales Table</h2>
 
                             <div className="flex justify-between items-center my-4 text-sm">
                                 <div>
@@ -102,10 +105,13 @@ const Services = () => {
                                 </div>
 
                                 <Pagination
-                                    count={paginationLimit}
+                                    count={filterValue === 'Product' ? psPageLimit : ssPageLimit}
                                     size="small"
-                                    page={page}
-                                    onChange={(event, value) => setPage(value)}
+                                    page={filterValue === 'Product' ? productSalesPage : serviceSalesPage}
+                                    onChange={(event, value) => { 
+                                        if(filterValue === 'Product') setProductSalesPage(value)
+                                        else setServiceSalesPage(value)
+                                    }}
                                 />
                             </div>
 
@@ -115,23 +121,30 @@ const Services = () => {
                                         <thead className="bg-gray-50">
                                             <tr>
                                                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Service Name</th>
-                                                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Duration</th>
-                                                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Price</th>
-                                                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Service Type</th>
+                                                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Branch</th>
+                                                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Service</th>
+                                                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Amount</th>
+                                                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Method</th>
+                                                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Date of Sale</th>
+                                                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Recorded By</th>
                                             </tr>
                                         </thead>
                                         <tbody className="bg-white divide-y divide-gray-200">
-                                            {filteredEmployees.map((service) => (
+                                            {serviceSales && serviceSales.map((service) => (
                                                 <tr key={service._id}>
-                                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{service?.name}</td>
-                                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{service?.duration} minutes</td>
+                                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{service?.customer || 'N/A'}</td>
+                                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{service.branch?.name}</td>
+                                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{service.service?.name}</td>
                                                     <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight text-left">₱ {service?.price}.00</td>
                                                     <td 
-                                                        className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight" 
-                                                        style={service?.role === 'Package Service' ? { color: 'green' } : { color: 'blue' } }
+                                                        className={`px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight 
+                                                            ${service?.paymentMethod === 'Cash' ? 'text-green-500' : 'text-blue-500'}
+                                                        `}
                                                     >
-                                                        {service?.serviceType}
+                                                        {service?.paymentMethod}
                                                     </td>
+                                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{service?.dateOfSale.toString().split('T')[0]}</td>
+                                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{service.recordedBy?.fullName}</td>
                                                 </tr>
                                             ))}
                                         </tbody>
@@ -146,7 +159,6 @@ const Services = () => {
                                                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Products/Qty</th>
                                                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Branch</th>
                                                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Total Price</th>
-                                                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody className="bg-white divide-y divide-gray-200">
@@ -161,7 +173,7 @@ const Services = () => {
                                                         })}
                                                     </td>
                                                     <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{sales.branch?.name}</td>
-                                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{sales?.totalPrice}</td>
+                                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">₱ {sales?.totalPrice}.00</td>
                                                     <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{sales?.service?.name}</td>
                                                 </tr>
                                             ))}

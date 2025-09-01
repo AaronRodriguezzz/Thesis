@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import { FaChevronLeft,  FaChevronRight} from 'react-icons/fa';
 import { get_data } from "../../services/GetMethod";
 import { motion } from "framer-motion";
-import { useUserProtection } from "../../hooks/useUser";
+import { useUserProtection } from "../../hooks/userProtectionHooks";
 import { useIsMobile } from "../../hooks/useIsInMobile";
 
 export default function ProductAvailability(){

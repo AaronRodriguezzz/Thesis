@@ -128,7 +128,7 @@ const Employees = () => {
                                         <tr key={employee._id}>
                                             <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{employee?.fullName}</td>
                                             <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{employee?.email}</td>
-                                            <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight text-left">{employee?.branchAssigned}</td>
+                                            <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight text-left">{employee?.branchAssigned || 'N/A'}</td>
                                             <td 
                                                 className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight" 
                                                 style={employee?.role === 'Barber' ? { color: 'green' } : { color: 'blue' } }

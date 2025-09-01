@@ -1,8 +1,11 @@
     import React from "react";
     import FrontDeskSideBar from "../components/FrontDeskSideBar";
     import { Outlet } from "react-router-dom";
+    import { useAdminPageProtection } from "../hooks/userProtectionHooks";
 
     const FrontDeskLayout = () => {
+      useAdminPageProtection();
+      
       return (
         <div className="flex">
           <FrontDeskSideBar />

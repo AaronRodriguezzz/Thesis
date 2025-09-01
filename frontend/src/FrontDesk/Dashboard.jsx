@@ -18,7 +18,7 @@ import {
     BarChart,
     Bar,
 } from "recharts";
-import { useAdminPageProtection } from "../../hooks/useUser";
+import { useAdminPageProtection } from "../../hooks/userProtectionHooks";
 
 const DashboardStats = () => {
     useAdminPageProtection();

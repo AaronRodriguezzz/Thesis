@@ -47,8 +47,6 @@ const AssignCustomer = ({
         }
     };
 
-    console.log(walkIn);
-
     return (
         <div className='h-screen w-screen flex items-center justify-center bg-transparent fixed top-0 left-0 z-50'>
             <div className='w-[50%] max-w-[600px] bg-white rounded-lg shadow-md p-5 shadow-gray-200'>
@@ -108,7 +106,7 @@ const AssignCustomer = ({
                                                 </h1>
                                                 <p>Service: {walkIn.service?.name} (P{walkIn.service?.price})</p>
                                                 <p>
-                                                    Additional: {walkIn?.additionalService || 'N/A'} 
+                                                    Additional: {walkIn?.additionalService?.name || 'N/A'} 
                                                     {walkIn.additionalService ? `(P${walkIn.additionalService?.price})` : ''}
                                                 </p>
                                                 <p>Total Payment: {walkIn.totalAmount}</p>

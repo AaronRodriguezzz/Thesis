@@ -81,7 +81,7 @@ const new_admin = async (req, res) => {
     const { email,password, fullName, role, branchAssigned } = req.body;
 
     // Basic input validation
-    if (!email || !fullName || !role || !password || !branchAssigned) {
+    if (!email || !fullName || !role || !password ) {
         return res.status(400).json({ message: 'All fields are required' });
     }
 
@@ -102,18 +102,18 @@ const new_admin = async (req, res) => {
         const newAdmin = new EmployeeAccount({
             fullName,
             role,
-            branchAssigned,
+            branchAssigned: branchAssigned?.trim() ? branchAssigned : undefined,
             email,
             password: encryptedPassword,
         });
 
-        const adminSave = await newAdmin.save();
+        const adminSaved = await newAdmin.save();
 
-        if (!adminSave) {
+        if (!adminSaved) {
             return res.status(500).json({ message: 'Adding user unsuccessful' });
         }
 
-        return res.status(200).json({ message: 'New user added', added: true });
+        return res.status(200).json({ message: 'New user added', added: true, user: adminSaved });
     } catch (err) {
         console.error(err);
         return res.status(500).json({ message: err });

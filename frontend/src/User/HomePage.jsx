@@ -7,7 +7,7 @@ import { post_data } from "../../services/PostMethod";
 import { motion } from "motion/react"
 import { SlideTxt } from "../../components/animations/TextAnimation";
 import { useSectionViews } from "../../hooks/HomeRef";
-import { useUserProtection } from "../../hooks/useUser";
+import { useUserProtection } from "../../hooks/userProtectionHooks";
 import { useIsMobile } from "../../hooks/useIsInMobile";
 
 const baseUrl = import.meta.env.MODE === 'development' ? 'http://localhost:4001' : 'https://tototumbs.onrender.com';

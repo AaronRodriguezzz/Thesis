@@ -98,31 +98,19 @@ const DashboardStats = () => {
         />
       </div>
 
-      {/* Main charts layout */}
-      <div className="flex flex-col lg:flex-row gap-6 w-full h-[700px]">
-        {/* Left: Line Chart (Big) */}
-        <div className="flex-1 bg-white rounded-lg p-4 shadow-md">
-          <h2 className="text-lg font-semibold mb-2">Monthly Sales</h2>
-          {/* <ResponsiveContainer width="100%" height="90%">
-            <LineChart data={graphData.monthlySales} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line type="monotone" dataKey="lastYear" stroke="#1F2937" />
-            </LineChart>
-          </ResponsiveContainer> */}
-
+      <div className="flex flex-col gap-6 w-full h-[700px]">
+        {/* Top: Big Graph (Full width) */}
+        <div className="bg-white rounded-lg p-4 shadow-md flex-1">
+          <h2 className="text-2xl font-semibold mb-4">Monthly Sales</h2>
           <ResponsiveContainer width="100%" height="90%">
             <AreaChart
-              width={500}
-              height={200}
+              width={800}
+              height={400}
               data={data}
               syncId="anyId"
               margin={{ top: 5, right: 20, left: -10, bottom: 5 }}
             >
-              <CartesianGrid strokeDasharray="3 3" />
+              <CartesianGrid />
               <XAxis dataKey="date" />
               <YAxis />
               <Tooltip />
@@ -131,10 +119,13 @@ const DashboardStats = () => {
           </ResponsiveContainer>
         </div>
 
-        {/* Right: Pie + Bar Charts stacked vertically */}
-        <div className="flex flex-col gap-6 w-full lg:w-[40%]">
-          {/* Bar Chart - Appointment Status (Moved to Top) */}
-          <div className="bg-white rounded-lg p-4 shadow-md h-[48%]">
+        {/* Bottom: Two Graphs side by side */}
+        
+      </div>
+
+      <div className="flex flex-row gap-6 w-full h-[400px]">
+          {/* Bar Chart - Appointment Status */}
+          <div className="bg-white rounded-lg p-4 shadow-md w-1/2">
             <h2 className="text-lg font-semibold mb-2">Appointment Status</h2>
             <ResponsiveContainer width="100%" height="90%">
               <BarChart data={graphData.appointmentByStatus}>
@@ -147,8 +138,8 @@ const DashboardStats = () => {
             </ResponsiveContainer>
           </div>
 
-          {/* Pie Chart - Branch Revenue (Moved to Bottom) */}
-          <div className="bg-white rounded-lg p-4 shadow-md h-[48%]">
+          {/* Pie Chart - Branch Revenue */}
+          <div className="bg-white rounded-lg p-4 shadow-md w-1/2">
             <h2 className="text-lg font-semibold mb-2">Branch Revenue</h2>
             <ResponsiveContainer width="100%" height="90%">
               <PieChart>
@@ -166,7 +157,6 @@ const DashboardStats = () => {
               </PieChart>
             </ResponsiveContainer>
           </div>
-        </div>
       </div>
     </div>
   );

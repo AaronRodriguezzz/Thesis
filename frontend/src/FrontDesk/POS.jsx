@@ -3,7 +3,7 @@ import { FaSearch } from "react-icons/fa";
 import Pagination from "@mui/material/Pagination";
 import { get_data } from "../../services/GetMethod";
 import { update_data } from "../../services/PutMethod";
-import { useAdminPageProtection } from "../../hooks/useUser";
+import { useAdminPageProtection } from "../../hooks/userProtectionHooks";
 
 const POS = () => {
     // useAdminPageProtection();

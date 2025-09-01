@@ -1,5 +1,6 @@
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/UserContext";
 import {
   MdDashboard,
   MdCalendarToday,
@@ -12,6 +13,7 @@ import {
 
 const FrontDeskSideBar = () => {
   const navigate = useNavigate();
+  const { logout, loading } = useAuth();
 
   const menuItems = [
     { name: "Dashboard", icon: <MdDashboard />, path: "/front-desk/dashboard" },
@@ -21,11 +23,7 @@ const FrontDeskSideBar = () => {
     { name: "Products", icon: <MdInventory />, path: "/front-desk/products" },
     { name: "Sales", icon: <MdShoppingCart />, path: "/front-desk/sales" },
   ];
-  
-  const handleLogout = () => {
-    // Clear token or session logic here
-    navigate("/"); // Redirect to login or landing
-  };
+
 
   return (
     <div className="w-48 h-screen bg-gray-900 text-white flex flex-col justify-between fixed">
@@ -52,11 +50,13 @@ const FrontDeskSideBar = () => {
 
       <div className="p-4">
         <button
-          onClick={handleLogout}
-          className="flex items-center w-full px-4 py-2 bg-red-600 hover:bg-red-700 rounded"
+          onClick={logout}
+          className="flex items-center w-full px-4 py-2 bg-red-600 hover:bg-red-700 rounded disabled:cursor-not-allowed"
+          disabled={loading}
+
         >
           <MdOutlineLogout className="text-xl mr-2" />
-          Logout
+          {loading ? 'Logging out...' : 'Logout'}
         </button>
       </div>
     </div>

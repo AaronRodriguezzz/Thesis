@@ -11,11 +11,14 @@ export const AuthProvider = ({children}) => {
     useEffect(() => {
         const checkAuth = async () => {
             try {
-                const res = await get_data('/protected');
-                setUser(res.user);
+                setLoading(true)
+                const res = await axios.get('/api/protected');
+                setUser(res.data.user);
 
             } catch (err) {
                 setUser(null);
+            } finally {
+                setLoading(false);
             }
         };
         checkAuth();
@@ -23,8 +26,11 @@ export const AuthProvider = ({children}) => {
     
 
     const logout = async () => {
-        await axios.post('/api/logout', {}, { withCredentials: true });
-        setUser(null);
+        const response = await axios.post('/api/logout', {}, { withCredentials: true });
+        
+        if(response.status === 200){
+            setUser(null);
+        }
     };
 
     return (

@@ -130,9 +130,11 @@ const completeAssignment = async (req, res) => {
     const { paymentMethod, barberId, recordedBy } = req.body.newData;    
     const customerType = req.params.type;
 
-    if(!paymentMethod, !barberId, !customerType){
+    if(!paymentMethod || !barberId || !customerType || !recordedBy){
         return res.status(400).json({ message: 'Invalid Payload'})
     }
+
+    console.log(req.body.newData);
 
     try {
 
@@ -152,9 +154,12 @@ const completeAssignment = async (req, res) => {
             csToFinish.populate('customer')
         }
 
+        console.log(csToFinish);
+
         const sales = new ServiceSales({
             service: csToFinish.service,
-            customer: csToFinish.customer.firstName || csToFinish.customerName || null,
+            additionalService: csToFinish?.additionalService.trim() ? csToFinish.additionalService : undefined,
+            customer: csToFinish.customer?.firstName || csToFinish.customerName || null,
             barber: barberId,
             branch: csToFinish.branch,
             dateOfSale: new Date(),

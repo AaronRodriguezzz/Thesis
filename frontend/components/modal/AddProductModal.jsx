@@ -43,6 +43,7 @@ const NewProduct = ({ onCancel, route, setUpdatedData }) => {
 
             if (result?.added) {
                 onCancel(false);
+                setUpdatedData(prev => [...prev, result.product])
             }
         }
     };
@@ -81,9 +82,6 @@ const NewProduct = ({ onCancel, route, setUpdatedData }) => {
         get_branches();
     }, []);
 
-    useEffect(() => {
-        console.log(newProduct);
-    },[newProduct])
 
     return (
         <div className='h-screen w-screen flex items-center justify-center bg-transparent fixed top-0 left-0 z-50'>

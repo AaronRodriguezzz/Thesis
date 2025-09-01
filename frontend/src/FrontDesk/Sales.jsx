@@ -3,7 +3,7 @@ import { FaSearch } from "react-icons/fa";
 import Pagination from "@mui/material/Pagination";
 import { get_data } from "../../services/GetMethod";
 import { time } from "../../data/TimeData";
-import { useAdminPageProtection } from "../../hooks/useUser";
+import { useAdminPageProtection } from "../../hooks/userProtectionHooks";
 
 const Appointments = () => {
     // useAdminPageProtection();

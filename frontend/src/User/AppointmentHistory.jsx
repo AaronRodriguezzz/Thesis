@@ -2,38 +2,13 @@ import React, { useState, useEffect } from "react";
 import Navigation from "../../components/NavBar";
 import { get_data } from "../../services/GetMethod";
 import { HistoryCard } from "../../components/UserHistoryCard";
-import { useCustomerPageProtection, useUserProtection } from '../../hooks/useUser';
+import { useCustomerPageProtection, useUserProtection } from '../../hooks/userProtectionHooks';
 
 const AppointmentHistory = () => {
   useCustomerPageProtection();
   useUserProtection();
 
-  const [appointments, setAppointments] = useState([
-    {
-      id: 1,
-      service: "Haircut + Beard Trim",
-      date: "2025-06-15 3:00 PM",
-      status: "Completed",
-    },
-    {
-      id: 2,
-      service: "Haircut Only",
-      date: "2025-06-10 1:00 PM",
-      status: "Cancelled",
-    },
-    {
-      id: 3,
-      service: "Beard Trim",
-      date: "2025-06-01 5:00 PM",
-      status: "Completed",
-    },
-    {
-      id: 4,
-      service: "Haircut + Beard Trim",
-      date: "2025-06-20 2:00 PM",
-      status: "Pending",
-    },
-  ]);
+  const [appointments, setAppointments] = useState([]);
 
   useEffect(() => {
     const initializeData = async () => {
@@ -41,6 +16,7 @@ const AppointmentHistory = () => {
         const response = await get_data('/get_data/appointments');
 
         if(response){
+          console.log(response);
           setAppointments(response)
         }
       }catch(err){
@@ -60,8 +36,8 @@ const AppointmentHistory = () => {
         {appointments && appointments.map((appointment) => (
           <HistoryCard 
             id={appointment.id}
-            service={appointment.service}
-            date={appointment.date}
+            service={appointment.service.name}
+            date={appointment.scheduledDate.toString().split('T')[0]}
             status={appointment.status}
           />
         ))}

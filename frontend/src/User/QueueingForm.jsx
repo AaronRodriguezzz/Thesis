@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useCustomerPageProtection, useUserProtection} from "../../hooks/useUser";
+import { useCustomerPageProtection, useUserProtection} from "../../hooks/userProtectionHooks";
 import { MdCalendarToday, MdDirectionsWalk } from "react-icons/md";
 import { queueSocket } from "../../services/SocketMethods";
 import { get_data } from "../../services/GetMethod";

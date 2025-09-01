@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import { post_data } from "../../services/PostMethod"; // Adjust this path as needed
-import { useUserProtection } from "../../hooks/useUser";
+import { useUserProtection } from "../../hooks/userProtectionHooks";
 
 export default function RegisterPage() {
   useUserProtection();

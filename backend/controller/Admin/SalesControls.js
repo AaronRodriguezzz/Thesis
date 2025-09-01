@@ -1,18 +1,18 @@
-const Sales = require('../../models/SalesRecord');
- 
+const ProductSales = require('../../models/SalesRecord');
+const ServicesSales = require('../../models/ServiceSales');
 /**
  * @desc Get paginated list of products
  * @route GET /api/products?page=1
  */
 
-const get_sales = async (req, res) => {
+const productSales = async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
-        const limit = 20;
+        const limit = 12;
         const skip = (page - 1) * limit;
 
-        const totalCount = await Sales.countDocuments();
-        const sales = await Sales.find()
+        const totalCount = await ProductSales.countDocuments();
+        const sales = await ProductSales.find()
             .populate('products.product')  
             .populate('soldBy')       
             .populate('branch')
@@ -29,7 +29,33 @@ const get_sales = async (req, res) => {
     }
 };
 
+const serviceSales = async (req,res) => {
+    try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = 12;
+        const skip = (page - 1) * limit;
+
+        const totalCount = await ServicesSales.countDocuments();
+        const sales = await ServicesSales.find()
+            .populate('service')       
+            .populate('barber')
+            .populate('branch')
+            .populate('recordedBy')
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
+
+        const pageCount = Math.ceil(totalCount / limit);
+
+        return res.status(200).json({ sales, pageCount });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: 'Internal server error.' });
+    }
+}
+
 
 module.exports = {
-    get_sales,
+    productSales,
+    serviceSales
 };

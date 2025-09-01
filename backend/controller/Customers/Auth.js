@@ -146,6 +146,40 @@ const update_account = async (req, res) => {
     }
 };
 
+const updatePassword = async (req,res) => {
+    const { id, currentPassword, newPassword } = req.body.newData;
+
+    if(!currentPassword || !newPassword) {
+        return res.status(400).json({ message: 'Illegal Payload'})
+    }
+
+    try{
+
+        const user = await UserAccount.findById(id).select('password');
+
+        if(!user){
+            return res.status(404).json({message: 'User does not exist'})
+        }
+
+
+        const passwordMatch = await bcrypt.compare(currentPassword, user.password);
+
+        if(!passwordMatch){
+            return res.status(400).json({message: 'User does not exist'})
+        }
+
+        const encryptedPassword = await bcrypt.hash(newPassword, 10);
+        user.password = encryptedPassword;  
+        await user.save();
+
+        return res.status(200).json({ updated: true, message: 'Password Updated Successfully'})
+
+    }catch(err){
+        console.log(err);
+        return res.status(500).json({ message: err?.message || 'Internal server error'})
+    }
+}
+
 /**
  * @desc Verifies user's login session
  * @route GET /api/auth/user_check
@@ -159,5 +193,6 @@ module.exports = {
     user_logout,
     account_registration,
     checkAuth,
-    update_account
+    update_account,
+    updatePassword
 };

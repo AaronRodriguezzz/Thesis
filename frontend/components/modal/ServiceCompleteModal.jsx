@@ -1,7 +1,7 @@
 import React from 'react';
 import { FaMoneyBillWave, FaMobileAlt } from 'react-icons/fa'; // cash and mobile icons
 import { update_data } from '../../services/PutMethod';
-import { useUser } from '../../hooks/useUser';
+import { useUser } from '../../hooks/userProtectionHooks';
 
 const ServiceCompleteModal = ({ 
         onCancel, 
@@ -19,7 +19,7 @@ const ServiceCompleteModal = ({
             const response = await update_data(`/complete_assignment/${barber.customerTypeAssigned}`, {
                 paymentMethod,
                 barberId: barber._id,
-                recordBy: user?._id
+                recordedBy: user?._id
             });
     
             if(response.updatedInfo) {
