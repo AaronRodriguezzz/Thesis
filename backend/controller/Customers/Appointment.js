@@ -105,19 +105,30 @@ const appointment_initial_data = async (req, res) => {
  */
 const appointment_cancellation = async (req, res) => {
     const { id } = req.params;
+    const reason = req.body.newData;
 
+    console.log(req.body);
     try {
-        const appointment = await Appointment.findById(id);
+        const appointment = await Appointment.findById(id)
+            .populate('service')
+            .populate('branch');
 
         if (!appointment) {
             return res.status(404).json({ message: 'Appointment does not exist' });
         }
 
-        const deletedAppointment = await Appointment.findByIdAndDelete(id);
+        console.log(appointment);
+
+        appointment.status = 'Cancelled';
+        appointment.cancellationReason = reason;
+
+        const saved = await appointment.save();
+
+        console.log(saved);
 
         return res.status(200).json({
             message: 'Appointment cancelled successfully',
-            appointment: deletedAppointment,
+            appointment: saved,
         });
 
     } catch (err) {

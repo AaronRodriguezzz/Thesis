@@ -51,6 +51,9 @@ const AppointmentSchema = new mongoose.Schema({
     uniqueCode: {
         type: String, 
         required: true
+    },
+    cancellationReason: {
+        type: String, 
     }
 },{ timestamps: true });
 

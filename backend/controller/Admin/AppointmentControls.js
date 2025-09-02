@@ -176,17 +176,17 @@ const updatePastAppointments = async () => {
     const now = new Date();
 
     await Appointment.updateMany(
-      { status: "booked", scheduledDate: { $lt: now } },
+      { status: "Booked", scheduledDate: { $lt: now } },
       { $set: { status: "No-Show" } }
     );
 
-  } catch (err) {
+  } catch (err) {   
     console.error("Error updating past appointments:", err);
   }
 };
 
 // Schedule task for every day at 9:00 PM
-cron.schedule("0 21 * * *", () => {
+cron.schedule("0 22 * * *", () => {
   updatePastAppointments();
 });
 

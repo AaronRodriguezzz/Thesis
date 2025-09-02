@@ -38,10 +38,6 @@ export default function ProductAvailability(){
       }
       getProductByBranch();
     },[])
-    
-    useEffect(() => {
-        console.log(branchIndex);
-    },[branchIndex])
 
     return (
         <div id='Branches' className="min-h-screen bg-gray-100 p-6">
@@ -76,18 +72,18 @@ export default function ProductAvailability(){
                                 initial={{ opacity: 0, y: -20 }}
                                 animate={{ opacity: 1, x: 0, y: 0 }}
                                 transition={{ duration: 0.3, ease: "easeInOut", delay: index * 0.2 }}
-                                className="bg-white h-[520px] w-[85%] sm:w-[45%] md:w-[30%] lg:w-[250px] p-4 hover:scale-105 transition-transform rounded-lg shadow-md"
+                                className="bg-white h-[350px] lg:h-[400px] w-[80%] sm:w-[45%] md:w-[30%] lg:w-[250px] p-2 hover:scale-105 transition-transform rounded-lg shadow-md"
                             >
                                 <img
                                     src={`${baseUrl}/${product.imagePath}`}
                                     alt={product.name}
-                                    className="w-full h-[60%] md:h-[40%] lg:h-[60%] object-cover rounded-md mb-4 shadow"
+                                    className="w-full h-[55%] object-cover rounded-md mb-4 shadow"
                                 />
 
-                                <div className="text-black tracking-tight space-y-1">
-                                    <h2 className="text-md md:text-lg font-bold">{product.name}</h2>
+                                <div className="w-full text-black tracking-tight space-y-1">
+                                    <h2 className="text-sm lg:text-lg font-bold">{product.name}</h2>
                                     <p className="text-base font-semibold">₱{product.price}</p>
-                                    <p className="text-md">{product.description}</p>
+                                    <p className="text-sm">{product.description}</p>
                                 </div>
                             </motion.div>
                         ))}
