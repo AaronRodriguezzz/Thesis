@@ -60,33 +60,46 @@ export default function ProductAvailability(){
                         <button onClick={handlePrev}>
                             <FaChevronLeft className="text-gray-500" size={30} />
                         </button>
-                        <h1 className="text-2xl font-semibold tracking-tighter">{branches && branches[branchIndex]?.name}</h1>
+                        <h1 className="text-2xl font-semibold tracking-tighter text-center">{branches && branches[branchIndex]?.name}</h1>
                         <button onClick={handleNext}>
                             <FaChevronRight className="text-gray-500" size={30} />
                         </button>
                     </div>
                     <div className="w-full flex flex-wrap justify-center gap-6">
-                        {products && products?.map((product, index) => (
-                            <motion.div
-                                key={product._id}
-                                initial={{ opacity: 0, y: -20 }}
-                                animate={{ opacity: 1, x: 0, y: 0 }}
-                                transition={{ duration: 0.3, ease: "easeInOut", delay: index * 0.2 }}
-                                className="bg-white h-[350px] lg:h-[400px] w-[80%] sm:w-[45%] md:w-[30%] lg:w-[250px] p-2 hover:scale-105 transition-transform rounded-lg shadow-md"
-                            >
-                                <img
-                                    src={`${baseUrl}/${product.imagePath}`}
-                                    alt={product.name}
-                                    className="w-full h-[55%] object-cover rounded-md mb-4 shadow"
-                                />
+                        {products && products?.
+                            map((product, index) => {
+                           
+                                const productExist = product.branch.find(
+                                    (branchId) => branchId === branches[branchIndex]._id
+                                );                 
+                                
+                                return productExist ? (
+                                    <motion.div
+                                        key={product._id}
+                                        initial={{ opacity: 0, y: -20 }}
+                                        animate={{ opacity: 1, x: 0, y: 0 }}
+                                        transition={{ duration: 0.2, ease: "easeInOut", delay: index * 0.1 }}
+                                        className="bg-white h-[350px] lg:h-[400px] w-[80%] sm:w-[45%] md:w-[30%] lg:w-[250px] p-2 hover:scale-105 transition-transform rounded-lg shadow-md"
+                                    >
+                                        <img
+                                            src={`${baseUrl}/${product.imagePath}`}
+                                            alt={product.name}
+                                            className="w-full h-[55%] object-cover rounded-md mb-4 shadow"
+                                        />
 
-                                <div className="w-full text-black tracking-tight space-y-1">
-                                    <h2 className="text-sm lg:text-lg font-bold">{product.name}</h2>
-                                    <p className="text-base font-semibold">₱{product.price}</p>
-                                    <p className="text-sm">{product.description}</p>
-                                </div>
-                            </motion.div>
-                        ))}
+                                        <div className="w-full text-black tracking-tight space-y-1">
+                                            <h2 className="text-sm lg:text-lg font-bold">{product.name}</h2>
+                                            <p className="text-base font-semibold">₱{product.price}</p>
+                                            <p className="text-sm">{product.description}</p>
+                                        </div>
+
+                                        <p className="mt-4 text-sm opacity-80">Stock: {product.branch.map((b, index) => b === branches[branchIndex]._id ? product.stock[index] : null)}</p>
+                                    </motion.div>
+                                ) : (
+                                    null 
+                                )
+                            })
+                        }
                     </div>
                 </div>
             </div>

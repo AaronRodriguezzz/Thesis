@@ -235,7 +235,7 @@ export default function MainPage() {
           initial={{ opacity: 0, y: 100}}
           animate={inViews.products ? { opacity: 1, y:0} : {}}
           transition={{ duration: 2, ease: "easeInOut" }}
-          onClick={() => navigate('/products')}
+          onClick={() => navigate('/available-products')}
           className="mt-10 bg-white text-gray-800 py-3 px-8 rounded-sm hover:bg-green-500 tracking-tight transition-colors"
         >
           BRANCH AVAILABILITY

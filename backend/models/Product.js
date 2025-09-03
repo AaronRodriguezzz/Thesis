@@ -13,10 +13,10 @@ const ProductSchema = new mongoose.Schema({
         type: Number, 
         required: true 
     },
-    stock: { 
+    stock: [{ 
         type: Number, 
         default: 0 
-    },
+    }],
     branch: [{ 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Branch', 

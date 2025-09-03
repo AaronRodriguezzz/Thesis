@@ -5,7 +5,7 @@ const path = require('path');
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const uploadType = req.body.uploadType; 
-        const folder = uploadType === "employee" ? "uploads/employees/" :  uploadType === "employee" ? "uploads/products/" : "uploads/branches/";
+        const folder = uploadType === "employee" ? "uploads/employees/" :  uploadType === "products" ? "uploads/products/" : "uploads/branches/";
 
         console.log("🧾 DESTINATION FOLDER:", folder); // log for debugging
 
@@ -16,12 +16,11 @@ const storage = multer.diskStorage({
         console.error("❌ Failed to create folder:", err);
     }
 
-
         // Ensure the folder exists
         cb(null, folder);
     },
     filename: (req, file, cb) => {
-        const uniqueName = `${Date.now()}-${file.originalname}`;
+        const uniqueName = `${Date.now()}-${file.originalname.replace(/\s+/g, "_").toLowerCase()}`;
         cb(null, uniqueName);
     }
 });

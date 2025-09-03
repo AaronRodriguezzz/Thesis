@@ -29,11 +29,20 @@ const createReview = async (req, res) => {
 const getReviews = async (req, res) => {
 
   try {
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = page * 5;
+    const totalCount = await Reviews.countDocuments();
+    const maxPage = Math.ceil(totalCount / 5);
+
     const reviews = await Reviews.find()
-      .populate('customer', 'fullName') // Adjust fields as needed
+      .populate('customer') 
+      .limit(limit)
       .sort({ createdAt: -1 });
 
-    return res.status(200).json({ reviews });
+      console.log(reviews);
+
+    return res.status(200).json({ reviews, maxPage });
 
   } catch (err) {
     console.error(err);

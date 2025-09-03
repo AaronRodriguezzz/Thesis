@@ -3,8 +3,7 @@ import { FaUserPlus, FaSearch, FaEdit, FaTrash, FaClipboardList } from "react-ic
 import Pagination from "@mui/material/Pagination";
 import { get_data } from "../../services/GetMethod";
 import { delete_data } from "../../services/DeleteMethod";
-import NewProduct from "../../components/modal/AddProductModal";
-import UpdateProduct from "../../components/modal/UpdateProductModal";
+import ProductModal from "../../components/modal/AddProductModal";
 
 const Products = () => {
     const baseUrl = import.meta.env.MODE === 'development' ? 'http://localhost:4001' : 'https://tototumbs.onrender.com';
@@ -25,15 +24,17 @@ const Products = () => {
     }, [productList, searchTerm]);  
 
 
-    const handle_delete = async (id) => {
+    const handle_delete = async (e, id) => {
+        e.preventDefault();
+
         const data = await delete_data(id, '/delete_product');
 
         if (data.deleted) {
-            setProductList(prev => prev.filter(customer => customer._id !== id));
+            setProductList(prev => prev.filter(product => product._id !== id));
         }
     }
 
-    const handle_update = async (data) => {
+    const handle_update = (data) => {
         setOnUpdate(true);
         setUpdatingData(data);
     }
@@ -51,6 +52,9 @@ const Products = () => {
         };
         get_products();
     }, [page]);
+
+
+    console.log(addingProduct)
 
     return (
         <div className="flex min-h-screen">
@@ -75,10 +79,9 @@ const Products = () => {
                             </div>
 
                             <button 
-                                className="flex items-center gap-2 bg-gray-700 py-2 px-4 text-white rounded-full tracking-tighter text-sm"
+                                className="relative flex items-center gap-2 bg-gray-700 py-2 px-6 text-white rounded-full tracking-tighter text-sm"
                                 onClick={() => setAddingProduct(true)}
-                            > 
-                                <FaUserPlus /> 
+                            >                          
                                 Add Product 
                             </button>
                         </div>
@@ -113,7 +116,7 @@ const Products = () => {
                                                     <FaEdit size={22} />
                                                 </button>
                                                 <button
-                                                    onClick={() => handle_delete(product._id)}
+                                                    onClick={(e) => handle_delete(e, product._id)}
                                                     className="text-gray-500 hover:text-gray-800"
                                                 >
                                                     <FaTrash size={22} />
@@ -136,20 +139,21 @@ const Products = () => {
                 </div>
             </main>
 
-            {onUpdate && updatingData && 
-                <UpdateProduct 
-                    currentData={updatingData} 
-                    onCancel={setOnUpdate} 
-                    setUpdatedData={setProductList}
-                    route={'/update_product'}
-                />
-            }
-
             {addingProduct && 
-                <NewProduct 
+                <ProductModal 
                     setUpdatedData={setProductList}
                     onCancel={setAddingProduct} 
                     route={'/new_product'}
+                    dataToUpdate={null} 
+                />
+            }
+
+            {onUpdate && updatingData &&
+                <ProductModal 
+                    dataToUpdate={updatingData} 
+                    setUpdatedData={setProductList}
+                    onCancel={setOnUpdate} 
+                    route={'/update_product'}
                 />
             }
         </div>

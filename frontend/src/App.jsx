@@ -14,6 +14,7 @@ import AppointmentHistory from "./User/AppointmentHistory";
 import BranchesPage from "./User/BranchesPage";
 import ProductAvailability from "./User/ProductAvailability";
 import TermsAndConditions from "./User/TermsAndConditions";
+import Reviews from "./User/FeedbackPage";
 
 // Admin Pages
 import Dashboard from "./Admin/Dashboard";
@@ -53,7 +54,8 @@ function App() {
           <Route path="/queueing" element={<QueueingForm />} />
           <Route path="/faq" element={<Faq />} />
           <Route path="/branches" element={<BranchesPage />} />
-          <Route path="/availableProduct" element={<ProductAvailability />} />
+          <Route path="/reviews" element={<Reviews />} />
+          <Route path="/available-products" element={<ProductAvailability />} />
           <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
           <Route path="/" element={<HomePage />} />
         </Route>

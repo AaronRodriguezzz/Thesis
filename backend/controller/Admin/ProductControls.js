@@ -66,6 +66,8 @@ const new_product = async (req, res) => {
         description
     } = req.body;
 
+    console.log(req.body);
+
     try {
         // Get the image path from req.file
         const imagePath = req.file
@@ -97,9 +99,9 @@ const new_product = async (req, res) => {
         const newProduct = new Product({
             name,
             imagePath,
-            stock,
+            stock: stock.split(',').map(s => s),
             price,
-            branch: branch.map(b => b),
+            branch: branch.split(',').map(b => b),
             description
         });
 
@@ -127,18 +129,18 @@ const new_product = async (req, res) => {
  * @route PUT /api/update_products
  */
 const update_product = async (req, res) => {
-    const { id, name, price, stock, description, branch, imagePath} = req.body.newData;
+    const { id } = req.body.newData;
 
-    const updatedData = {
-        name, 
-        price, 
-        stock, 
-        description, 
-        branch, 
-        imagePath
+    console.log(req.body);
+
+    if(!id) {
+        return res.status(400).json({ message: 'Product Id Missing'})
     }
 
     try {
+
+        delete req.body.newData.id;
+
         const updatedProduct = await Product.findByIdAndUpdate(
             id,
             updatedData,
@@ -179,7 +181,7 @@ const delete_product = async (req, res) => {
             return res.status(404).json({ message: 'Product not found or already deleted.' });
         }
 
-        return res.status(200).json({ message: 'Product deleted successfully.' });
+        return res.status(200).json({ deleted: true, message: 'Product deleted successfully.' });
 
     } catch (err) {
         console.error(err);
