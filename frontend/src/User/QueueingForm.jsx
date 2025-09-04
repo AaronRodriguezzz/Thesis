@@ -3,6 +3,7 @@ import { useCustomerPageProtection, useUserProtection} from "../../hooks/userPro
 import { MdCalendarToday, MdDirectionsWalk } from "react-icons/md";
 import { queueSocket } from "../../services/SocketMethods";
 import { get_data } from "../../services/GetMethod";
+import { FaUserCircle } from 'react-icons/fa';
 
 export default function BarberStatusPage() {
   // useCustomerPageProtection();
@@ -39,7 +40,6 @@ export default function BarberStatusPage() {
           
     // Listen for new appointments
     queueSocket.on("queueUpdate", (data) => {
-      console.log('queueing data', data);
       setBarberList(data?.barbers || []);
       setAppointmentsByHour(data?.appointments || []);
       setWalkInList(data.walkInRes || []);
@@ -74,7 +74,7 @@ export default function BarberStatusPage() {
         </div>
 
         <div className="w-[90%] md:w-[95%] lg:w-[75%] flex gap-x-2 items-center justify-between leading-3 mb-4">
-          <div className="w-[50%] flex items-center bg-white gap-8 p-4">
+          <div className="w-[50%] flex items-center bg-white gap-8 p-4 shadow-md">
             <MdCalendarToday className="text-[40px] text-gray-800" />
         
             <div>
@@ -82,12 +82,12 @@ export default function BarberStatusPage() {
                 Appointment
               </h1>
               <p className="text-xs md:text-[20px] lg:text-[30px] font-extralight tracking-tighter text-left">
-                {appointmentsByHour && appointmentsByHour.filter(a => a.status === 'Booked').length}
+                {appointmentsByHour && appointmentsByHour.filter(a => a.status === 'Booked').length || 0}
               </p>
             </div>
           </div>
         
-          <div className="w-[50%] flex items-center justify-between bg-white gap-4 px-4 py-4">
+          <div className="w-[50%] flex items-center justify-between bg-white gap-4 px-4 py-4 shadow-md">
             <div className="flex">
               <MdDirectionsWalk className="text-[50px] text-gray-800" />
               <div>
@@ -103,54 +103,42 @@ export default function BarberStatusPage() {
         </div>  
 
         <div className="w-full h-auto md:h-[60%] flex flex-col md:flex-row items-center justify-center gap-4 px-4">
-          {barberList && barberList.map((barber, index) => (
-            <div
-              className="h-full w-[90%] md:w-[35%] lg:w-[25%] flex-col bg-white rounded-lg shadow-md"
-              key={index}
-            >
-              <img
-                src="/barber.jpg"
-                alt={`${barber.name}`}
-                width={150}
-                height={150}
-                className="rounded-full mx-auto my-2"
-              />
+          {barberList && barberList.map((barber, index) => {
+            // Decide badge color
+            let statusColor = "text-red-600"; // default
+            if (barber?.status === "Available" || barber?.status === "Barbering") {
+              statusColor = "text-green-600";
+            } else if (barber?.status === "On-break") {
+              statusColor = "text-orange-500";
+            }
 
-              <div>
+            return (
+              <div
+                key={index}
+                className="h-full w-[90%] md:w-[35%] lg:w-[25%] flex flex-col items-center justify-center bg-white rounded-lg shadow-md p-4"
+              >
+                {barber?.imagePath ? (
+                  <img
+                    src={`${baseUrl}/${barber.imagePath}`}
+                    alt={`${barber.fullName} profile`}
+                    className="w-20 h-20 rounded-full object-cover mb-3"
+                  />
+                ) : (
+                  <FaUserCircle className="text-[120px] text-gray-800 mb-3" />
+                )}
+
                 <h1 className="text-[30px] font-semibold tracking-tight text-center">
                   {barber.fullName}
                 </h1>
+
                 <span
-                  className={`block w-[80%] text-center text-sm font-medium px-2 py-1 mx-auto rounded-full`}
-                  style={{color: barber?.status === 'Available' || barber?.status === 'Barbering' ?  'green': barber?.status === 'On-break' ? 'orange' : 'red'}}
+                  className={`block w-[80%] text-center text-lg font-medium px-2 py-1 mx-auto rounded-full ${statusColor}`}
                 >
                   {barber.status}
                 </span>
               </div>
-
-              <div className="p-4">
-                <h1 className="text-xl tracking-tighter font-semibold">
-                  APPOINTMENTS LISTS
-                </h1>
-                <div className="flex justify-between text-lg px-2">
-                  <h2>TIME</h2>
-                  <h3>CUSTOMERS</h3>
-                </div>
-
-                <div className="h-[230px] lg:h-[170px] overflow-auto custom-scrollbar">
-                  {Array.from({ length: 10 }).map((_, i) => (
-                    <div
-                      key={i}
-                      className="flex justify-between border-b border-gray-300 py-2 px-4"
-                    >
-                      <h2>10:00 AM</h2>
-                      <h3>{i + 1}</h3>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </main>
     </div>

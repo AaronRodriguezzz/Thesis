@@ -24,6 +24,7 @@ const Appointments = () => {
     const [isCompleting, setIsCompleting] = useState(false);
     const [barberToUpdate, setBarberToUpdate] = useState(null);
     const [isAddingWalkIn, setIsAddingWalkIn] = useState(false);
+    const [currentHour, setCurrentHour] = useState(null);
     const [loading, setLoading] = useState(false);
 
     const update_barberStatus = async (barber, newStatus) => {
@@ -74,6 +75,19 @@ const Appointments = () => {
 
     //     getBarbersAndAppointments();
     // }, []);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            const hourNow = new Date().getHours();
+
+            if (hourNow !== currentHour) {
+                setCurrentHour(hourNow);
+            }
+            
+        }, 5 * 60 * 1000);
+
+        return () => clearInterval(interval); 
+    }, [currentHour]);
     
 
     useEffect(() => {
