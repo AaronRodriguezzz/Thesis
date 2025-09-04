@@ -1,141 +1,175 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
-    FaUsers,
-    FaCalendarCheck,
-    FaMoneyBillWave,
-    FaBoxOpen,
-} from "react-icons/fa";
-import { StatCard } from "../../components/DashboardCards";
-import {
-    ResponsiveContainer,
-    YAxis,
-    XAxis,
-    Tooltip,
-    Legend,
-    CartesianGrid,
-    LineChart,
-    Line,
-    BarChart,
-    Bar,
+  BarChart,
+  Bar,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
 } from "recharts";
-import { useAdminPageProtection } from "../../hooks/userProtectionHooks";
+import { StatCard } from "../../components/DashboardCards";
+import { FaMoneyBillWave, FaCut, FaUserPlus, FaCalendarAlt } from "react-icons/fa";
 
-const DashboardStats = () => {
-    useAdminPageProtection();
-    const dailySalesData = [
-            { date: 1, sales: 1200 },
-            { date: 2, sales: 950 },
-            { date: 3, sales: 1300 },
-            { date: 4, sales: 1250 },
-            { date: 5, sales: 1400 },
-            { date: 6, sales: 1100 },
-            { date: 7, sales: 1350 },
-            { date: 8, sales: 1500 },
-            { date: 9, sales: 1600 },
-            { date: 10, sales: 1450 },
-            { date: 11, sales: 1550 },
-            { date: 12, sales: 1400 },
-            { date: 13, sales: 1350 },
-            { date: 14, sales: 1600 },
-            { date: 15, sales: 1700 },
-            { date: 16, sales: 1650 },
-            { date: 17, sales: 1550 },
-            { date: 18, sales: 1500 },
-            { date: 19, sales: 1600 },
-            { date: 20, sales: 1750 },
-            { date: 21, sales: 1800 },
-            { date: 22, sales: 1700 },
-            { date: 23, sales: 1650 },
-            { date: 24, sales: 1720 },
-            { date: 25, sales: 1600 },
-            { date: 26, sales: 1500 },
-            { date: 27, sales: 1400 },
-            { date: 28, sales: 1300 },
-            { date: 29, sales: 1450 },
-            { date: 30, sales: 1550 },
-            { date: 31, sales: 1600 }
-        ];
+// Dummy data for charts
+const salesData = [
+  { month: "Jan", services: 1200, products: 800 },
+  { month: "Feb", services: 1600, products: 950 },
+  { month: "Mar", services: 1400, products: 1100 },
+  { month: "Apr", services: 2000, products: 1200 },
+  { month: "May", services: 1800, products: 1500 },
+];
 
-        const hourlySalesData = [
-            { hour: '8 AM', sales: 200 },
-            { hour: '9 AM', sales: 300 },
-            { hour: '10 AM', sales: 450 },
-            { hour: '11 AM', sales: 500 },
-            { hour: '12 PM', sales: 600 },
-            { hour: '1 PM', sales: 800 },
-            { hour: '2 PM', sales: 700 },
-            { hour: '3 PM', sales: 750 },
-            { hour: '4 PM', sales: 850 },
-            { hour: '5 PM', sales: 900 },
-            { hour: '6 PM', sales: 650 },
-            { hour: '7 PM', sales: 500 },
-            { hour: '8 PM', sales: 400 }
-        ];
+// Dummy customer per hour data
+const customerPerHour = [
+  { hour: "9 AM", customers: 5 },
+  { hour: "10 AM", customers: 12 },
+  { hour: "11 AM", customers: 15 },
+  { hour: "12 PM", customers: 18 },
+  { hour: "1 PM", customers: 14 },
+  { hour: "2 PM", customers: 20 },
+  { hour: "3 PM", customers: 25 },
+  { hour: "4 PM", customers: 22 },
+  { hour: "5 PM", customers: 30 },
+  { hour: "6 PM", customers: 28 },
+  { hour: "7 PM", customers: 18 },
+  { hour: "8 PM", customers: 12 },
+  { hour: "9 PM", customers: 8 },
+];
+
+const Dashboard = () => {
+    const [salesList, setSalesList] = useState([]);
+    const [pageCount, setPageLimit] = useState([]);
+    
+    useEffect(() => {
+        const get_services = async () => {
+            const data = await get_data('/sales/services', serviceSalesPage);
+            
+            if (data) {
+                setSalesList(data.sales);
+                setPageLimit(data.pageCount);
+            }
+        };
+        get_services();
+    }, [pageCount]);
 
     return (
-        <div className="h-full px-4 py-6 space-y-8">
-        {/* Stat cards */}
-            <div className="flex flex-wrap gap-4 w-full">
-                <StatCard
-                    title="Customers"
-                    value="15"
-                    icon={<FaUsers className="text-white" />}
-                    iconBg="bg-blue-500"
-                />
-                <StatCard
-                    title="Appointments Today"
-                    value="10"
-                    icon={<FaCalendarCheck className="text-white" />}
-                    iconBg="bg-green-500"
-                />
-                <StatCard
-                    title="Weekly Revenue"
-                    value="₱ 56,030.00"
-                    icon={<FaMoneyBillWave className="text-white" />}
-                    iconBg="bg-yellow-500"
-                />
-                <StatCard
-                    title="Products Sold"
-                    value="56"
-                    icon={<FaBoxOpen className="text-white" />}
-                    iconBg="bg-purple-500"
-                />
+        <div className="p-6 space-y-8">
+        {/* 🔝 Top StatCards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <StatCard
+            title="Total Sales"
+            value="₱120,000"
+            icon={FaMoneyBillWave}
+            color="green"
+            />
+            <StatCard
+            title="Services Completed"
+            value="540"
+            icon={FaCut}
+            color="orange"
+            />
+            <StatCard
+            title="New Customers"
+            value="120"
+            icon={FaUserPlus}
+            color="blue"
+            />
+            <StatCard
+            title="Appointments Today"
+            value="45"
+            icon={FaCalendarAlt}
+            color="purple"
+            />
+        </div>
+
+        {/* 📊 Charts Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Bar Chart */}
+            <div className="bg-white rounded-2xl shadow-md p-4">
+            <h2 className="text-lg font-semibold mb-4">Monthly Sales (Bar)</h2>
+            <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={salesData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="month" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="services" fill="#1e3a8a" radius={[10, 10, 0, 0]} /> {/* Dark Blue */}
+                <Bar dataKey="products" fill="#b91c1c" radius={[10, 10, 0, 0]} /> {/* Dark Red */}
+                </BarChart>
+            </ResponsiveContainer>
             </div>
 
-            {/* Main charts layout */}
-            <div className="flex flex-col lg:flex-row gap-6 w-full h-[700px]">
-            {/* Left: Line Chart (Big) */}
-                <div className="flex-2 bg-white rounded-lg p-4 shadow-md">
-                    <h2 className="text-lg font-semibold mb-2">Daily Sales</h2>
-                    <ResponsiveContainer width="100%" height="95%">
-                        <LineChart data={dailySalesData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="date" />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend />
-                        <Line type="monotone" dataKey="sales" stroke="black" />
-                        </LineChart>
-                    </ResponsiveContainer>
-                </div>
-
-                {/* Right: Bar Chart for Peak Hours */}
-                <div className="flex-1 bg-white rounded-lg p-4 shadow-md">
-                    <h2 className="text-lg font-semibold mb-2">Peak Hours</h2>
-                    <ResponsiveContainer width="100%" height="95%">
-                        <BarChart data={hourlySalesData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="hour" />
-                        <YAxis />
-                        <Tooltip />
-                        <Bar dataKey="sales" fill="black" />
-                        </BarChart>
-                    </ResponsiveContainer>
-                </div>
+            {/* Line Chart */}
+            <div className="bg-white rounded-2xl shadow-md p-4">
+            <h2 className="text-lg font-semibold mb-4">Revenue Trend (Line)</h2>
+            <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={salesData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="month" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line type="monotone" dataKey="services" stroke="#1e3a8a" strokeWidth={3} /> {/* Dark Blue */}
+                <Line type="monotone" dataKey="products" stroke="#b91c1c" strokeWidth={3} /> {/* Dark Red */}
+                </LineChart>
+            </ResponsiveContainer>
             </div>
+        </div>
+
+        {/* 👥 Customers Per Hour Chart */}
+        <div className="bg-white rounded-2xl shadow-md p-4">
+            <h2 className="text-lg font-semibold mb-4">Customers Per Hour (9 AM - 9 PM)</h2>
+            <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={customerPerHour}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="hour" />
+                <YAxis allowDecimals={false} />
+                <Tooltip />
+                <Line type="monotone" dataKey="customers" stroke="#1e3a8a" strokeWidth={3} dot /> {/* Dark Blue */}
+            </LineChart>
+            </ResponsiveContainer>
+        </div>
+
+        {/* 📋 Sales Table */}
+        <div className="bg-white rounded-2xl shadow-md p-6">
+            <h2 className="text-lg font-semibold mb-4">Service Sales</h2>
+                <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                        <tr>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Sales Date</th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Sold By</th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Products/Qty</th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Branch</th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Total Price</th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                        {salesList && salesList.map((sales, index) => (
+                            <tr key={index}>
+                            <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{sales?.createdAt.split('T')[0]}</td>
+                            <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{sales.soldBy?.fullName}</td>
+                            <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">
+                                {sales.products.map((prod) => {
+                                    let productList = '';
+                                    return productList += `${prod.product?.name} (${prod?.quantity}), `
+                                })}
+                            </td>
+                            <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{sales.branch?.name}</td>
+                            <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{sales?.totalPrice}</td>
+                            <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{sales?.service?.name}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
         </div>
     );
 };
 
-export default DashboardStats;
-    
+export default Dashboard;

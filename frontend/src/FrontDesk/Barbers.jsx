@@ -76,7 +76,7 @@ const Appointments = () => {
             console.log('queueing data', data);
             setBarberList(data?.barbers || []);
             setAppointmentsByHour(data?.appointments || []);
-            setWalkInList(data.walkIns || []);
+            setWalkInList(data?.walkIns || []);
         });
 
         return () => {
@@ -84,7 +84,7 @@ const Appointments = () => {
             queueSocket.off("queueUpdate");
         };
 
-    }, [frontDesk?.branchAssigned, currentHour]);
+    }, [frontDesk?.branchAssigned]);
 
     if (loading) return <div>Loading...</div>;
     

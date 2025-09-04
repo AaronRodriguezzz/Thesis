@@ -20,8 +20,9 @@ const newWalkIn = async (req, res) => {
 
         const branchId = req.body?.branch;
 
+        console.log(global.queueState[branchId])
         if (global.queueState[branchId]) {
-            global.queueState[branchId].walkIn = [...global.queueState[branchId].walkIn, walkIn]
+            global.queueState[branchId].walkIns = [...global.queueState[branchId].walkIns, walkIn]
         }   
 
         global.sendQueueUpdate(global.queueState);

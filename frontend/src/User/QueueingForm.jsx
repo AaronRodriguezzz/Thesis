@@ -11,8 +11,9 @@ export default function BarberStatusPage() {
   
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
+  const [currentHour, setCurrentHour] = useState(0);
   const [barberList, setBarberList] = useState(null);
-  const [appointmentsByHour, setAppointmentsByHour] = useState(null);
+  const [appointments, setAppointments] = useState(null);
   const [walkInList, setWalkInList] = useState(null);
 
   const formatTime = (date) => {
@@ -24,6 +25,19 @@ export default function BarberStatusPage() {
 
     return `${formattedHours}:${minutes} ${ampm}`;
   };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const hourNow = new Date().getHours();
+  
+      if (hourNow !== currentHour) {
+        setCurrentHour(hourNow);
+      }
+              
+    }, 5 * 60 * 1000);
+  
+    return () => clearInterval(interval); 
+  }, [currentHour]);
 
 
   useEffect(() => {
@@ -38,11 +52,11 @@ export default function BarberStatusPage() {
   
     fetchInitialData();
           
-    // Listen for new appointments
+    // Listen for new appointments    
     queueSocket.on("queueUpdate", (data) => {
       setBarberList(data?.barbers || []);
-      setAppointmentsByHour(data?.appointments || []);
-      setWalkInList(data.walkInRes || []);
+      setAppointments(data?.appointments || []);
+      setWalkInList(data.walkIns || []);
     });
           
     return () => {
@@ -82,7 +96,7 @@ export default function BarberStatusPage() {
                 Appointment
               </h1>
               <p className="text-xs md:text-[20px] lg:text-[30px] font-extralight tracking-tighter text-left">
-                {appointmentsByHour && appointmentsByHour.filter(a => a.status === 'Booked').length || 0}
+                {appointments && appointments.filter(a => a.status === 'Booked' && a.scheduledTime === currentHour).length || 0}
               </p>
             </div>
           </div>

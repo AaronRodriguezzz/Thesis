@@ -9,8 +9,6 @@ const initializeBarberAssignments = async (req,res) => {
 
     try{
 
-        const currentHour = new Date().getHours();
-
         const startOfToday = new Date();
         startOfToday.setHours(0, 0, 0, 0);
 
@@ -20,7 +18,6 @@ const initializeBarberAssignments = async (req,res) => {
         const [appointments, walkIns, barbers] = await Promise.all([
             Appointment.find({ 
                 createdAt: { $gte: startOfToday, $lte: endOfToday }, 
-                scheduledTime: currentHour, 
                 branch: branchId
             })
                 .populate('customer')
@@ -64,8 +61,6 @@ const assignCustomer = async (req, res) => {
     const customerType = req.params.type;
     const customer = req.body.newData;
 
-    console.log('Assigning customer:', customerType, customer);
-
     try {
         const modelMap = { 
             'Walk-In': WalkIn,
@@ -100,12 +95,14 @@ const assignCustomer = async (req, res) => {
 
             global.queueState[branchId].barbers = barbers;
 
+            console.log(global.queueState[branchId].walkIns);
+
             if(customerType === 'Walk-In'){
-                const walkIn = global.queueState[branchId].walkIn.filter(w => 
+                const walkIn = global.queueState[branchId].walkIns?.filter(w => 
                     w._id !== updatedCustomer._id
                 );  
 
-                global.queueState[branchId].walkIn = walkIn
+                global.queueState[branchId].walkIns = walkIn
             }
             
             // Emit updated state
@@ -137,6 +134,8 @@ const completeAssignment = async (req, res) => {
     const { paymentMethod, barberId, recordedBy } = req.body.newData;    
     const customerType = req.params.type;
 
+    console.log(req.body.newData, customerType)
+
     if(!paymentMethod || !barberId || !customerType || !recordedBy){
         return res.status(400).json({ message: 'Invalid Payload'})
     }
@@ -165,7 +164,7 @@ const completeAssignment = async (req, res) => {
 
         const sales = new ServiceSales({
             service: csToFinish.service,
-            additionalService: csToFinish?.additionalService.trim() ? csToFinish.additionalService : undefined,
+            additionalService: csToFinish?.additionalService ? csToFinish.additionalService : undefined,
             customer: csToFinish.customer?.firstName || csToFinish.customerName || null,
             barber: barberId,
             branch: csToFinish.branch,
