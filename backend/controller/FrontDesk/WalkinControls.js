@@ -18,6 +18,14 @@ const newWalkIn = async (req, res) => {
             return res.status(400).json({message: 'New Walk In Adding Failed'})
         }
 
+        const branchId = req.body?.branch;
+
+        if (global.queueState[branchId]) {
+            global.queueState[branchId].walkIn = [...global.queueState[branchId].walkIn, walkIn]
+        }   
+
+        global.sendQueueUpdate(global.queueState);
+
         return res.status(200).json({message: 'New Walk In Added Successfully', walkIn})
     }catch(err){
         console.log(err);

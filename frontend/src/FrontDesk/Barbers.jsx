@@ -46,36 +46,6 @@ const Appointments = () => {
         }
     }
 
-    // useEffect(() => {
-    //     const getBarbersAndAppointments = async () => {
-    //         try {
-    //             const branchId = frontDesk?.branchAssigned;
-
-    //             if(!branchId) return 
-                
-    //             setLoading(true);
-    //             const [barberRes, appointmentRes, walkInRes] = await Promise.all([
-    //                 get_data(`/barbers/${branchId}`),
-    //                 get_data(`/appointments/${branchId}`),
-    //                 get_data(`/walkIns/${branchId}`),
-    //             ]);
-
-    //             const response = await get_data(`/initialBarberAssignment/${branchId}`)
-                                
-    //             setBarberList(barberRes?.barbers || []);
-    //             setAppointmentsByHour(appointmentRes?.appointments || []);
-    //             setWalkInList(walkInRes || []);
-
-    //             setLoading(false)
-
-    //         } catch (err) {
-    //             console.error("Failed to fetch barbers or appointments", err);
-    //         }
-    //     };
-
-    //     getBarbersAndAppointments();
-    // }, []);
-
     useEffect(() => {
         const interval = setInterval(() => {
             const hourNow = new Date().getHours();
@@ -114,7 +84,7 @@ const Appointments = () => {
             queueSocket.off("queueUpdate");
         };
 
-    }, [frontDesk?.branchAssigned]);
+    }, [frontDesk?.branchAssigned, currentHour]);
 
     if (loading) return <div>Loading...</div>;
     

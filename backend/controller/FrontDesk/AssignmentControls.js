@@ -7,7 +7,6 @@ const Employees = require('../../models/EmployeeAccount');
 const initializeBarberAssignments = async (req,res) => {
     const branchId = req.params.branchId
 
-    console.log('hello');
     try{
 
         const currentHour = new Date().getHours();
@@ -101,6 +100,14 @@ const assignCustomer = async (req, res) => {
 
             global.queueState[branchId].barbers = barbers;
 
+            if(customerType === 'Walk-In'){
+                const walkIn = global.queueState[branchId].walkIn.filter(w => 
+                    w._id !== updatedCustomer._id
+                );  
+
+                global.queueState[branchId].walkIn = walkIn
+            }
+            
             // Emit updated state
             global.sendQueueUpdate({ branchId, ...global.queueState[branchId] });
         }
