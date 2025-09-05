@@ -3,11 +3,10 @@ import { FaSearch } from "react-icons/fa";
 import Pagination from "@mui/material/Pagination";
 import { get_data } from "../../services/GetMethod";
 import { update_data } from "../../services/PutMethod";
-import { useAdminPageProtection } from "../../hooks/userProtectionHooks";
+import { useUser } from "../../hooks/userProtectionHooks";
 
 const POS = () => {
-    // useAdminPageProtection();
-    const frontDesk = JSON.parse(localStorage.getItem('admin'));
+    const user = useUser();
     const baseUrl = import.meta.env.MODE === 'development' ? 'http://localhost:4001' : 'https://tototumbs.onrender.com';
     const [productList, setProductList] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
@@ -57,9 +56,9 @@ const POS = () => {
 
         const checkOutPayload = {
             product: [...checkOutList],
-            soldBy: frontDesk?._id,
+            soldBy: user?._id,
             totalPrice: totalSummary,
-            branch: frontDesk?.branchAssigned
+            branch: user?.branchAssigned
         };
 
         try{

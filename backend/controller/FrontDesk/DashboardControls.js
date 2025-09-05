@@ -18,19 +18,41 @@ const cardDataControls = async (req, res) => {
 
         const endOfToday = new Date();
         endOfToday.setHours(23, 59, 59, 999); 
+
+        const page = parseInt(req.query.page) || 1;
+        const limit = 10;
+        const skip = (page - 1) * limit;
         
-        const productsSales = await ProductSales.find();
-        const serviceSales = await ServiceSales.find();
         const totalCustomers = await CustomersAccounts.countDocuments();
+        const productsSales = await ProductSales.find()
+            .populate('products.product')  
+            .populate('soldBy')       
+            .populate('branch')
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);;
+        const serviceSales = await ServiceSales.find()
+            .populate('service')       
+            .populate('barber')
+            .populate('branch')
+            .populate('recordedBy')
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
         const appointmentsToday = await Appointment.find({ 
             createdAt: { $gte: startOfToday, $lte: endOfToday }, 
             branch: branchId
         }).countDocuments();
 
         const totalProductSales = productsSales?.reduce((sum, s) => sum + s.totalPrice, 0) || 0; 
-        const totalServiceSales = serviceSales?.reduce((sum, s) => sum + s.price, 0) || 0
+        const totalServiceSales = serviceSales?.reduce((sum, s) => sum + 1, 0) || 0
+
+        console.log('totalProductsSales', totalCustomers)
+        
 
         return res.status(200).json({ 
+            productsSales, 
+            serviceSales,
             totalProductSales,
             totalServiceSales,
             totalCustomers,
@@ -49,7 +71,6 @@ const chartsDataControls = async (req,res) => {
         const productsSales = await ProductSales.find();
         const serviceSales = await ServiceSales.find();     
 
-        console.log(serviceSales);
         const productSalesAggregated = productsSales.reduce((acc, curr) => {
             const existing = acc.find(item => item.month === monthNumberToWord(new Date(curr.createdAt).getMonth()))
 
@@ -113,7 +134,7 @@ const chartsDataControls = async (req,res) => {
                 existing.customer += 1;
             }
         });
-        
+
 
         res.status(200).json({ salesChart: mergedAggregated, peakHours })
         // console.log(productSalesAggregated, serviceSalesAggregated);

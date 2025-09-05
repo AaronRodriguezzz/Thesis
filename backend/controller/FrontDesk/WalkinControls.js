@@ -4,7 +4,7 @@ const WalkIn = require('../../models/WalkIn');
 const newWalkIn = async (req, res) => {
 
     const { barber, additionalService } = req.body;
-
+    
     try{
         const walkIn = new WalkIn({
             ...req.body, 
@@ -24,6 +24,8 @@ const newWalkIn = async (req, res) => {
         if (global.queueState[branchId]) {
             global.queueState[branchId].walkIns = [...global.queueState[branchId].walkIns, walkIn]
         }   
+
+        console.log('global', global.queueState)
 
         global.sendQueueUpdate(global.queueState);
 

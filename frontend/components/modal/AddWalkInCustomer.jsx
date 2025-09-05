@@ -149,7 +149,7 @@ const NewWalkInCustomer = ({  onCancel, setUpdatedData, barbers }) => {
                     >
                         <option value="" disabled>Select Payment Method</option>
                         <option value="Cash">Cash</option>
-                        <option value="Gcash">Gcash</option>
+                        <option value="GCash">Gcash</option>
                     </select>
 
                     <p>Total Payment: ₱{totalPayment}.00 </p>

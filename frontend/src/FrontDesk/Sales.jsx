@@ -5,7 +5,7 @@ import { get_data } from "../../services/GetMethod";
 import { time } from "../../data/TimeData";
 import { useAdminPageProtection } from "../../hooks/userProtectionHooks";
 
-const Appointments = () => {
+const Sales = ({ isViewing }) => {
     // useAdminPageProtection();
     const [searchTerm, setSearchTerm] = useState("");
     const [page, setPage] = useState(1);
@@ -51,7 +51,7 @@ const Appointments = () => {
 
                 <div className="flex flex-col gap-6">
                     <div className="space-y-4">
-                        <div className="w-full bg-white p-4 rounded-lg shadow flex flex-col sm:flex-row justify-between items-center gap-4">
+                        {!isViewing && <div className="w-full bg-white p-4 rounded-lg shadow flex flex-col sm:flex-row justify-between items-center gap-4">
                             
                             <div className="relative w-full sm:w-auto flex-grow">
                                 <input 
@@ -63,7 +63,7 @@ const Appointments = () => {
                                 />
                                     <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                             </div>
-                        </div>
+                        </div>}
 
                         <div className="w-full bg-white p-6 rounded-lg shadow">
 
@@ -131,4 +131,4 @@ const Appointments = () => {
     );
 };
 
-export default Appointments;
+export default Sales;
