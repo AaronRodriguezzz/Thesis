@@ -15,46 +15,51 @@ import { StatCard } from "../../components/DashboardCards";
 import { FaMoneyBillWave, FaCut, FaUserPlus, FaCalendarAlt } from "react-icons/fa";
 import { get_data } from "../../services/GetMethod";
 import { useUser } from "../../hooks/userProtectionHooks";
-import Sales from "./Sales";
+import Sales from "../Admin/Sales";
 
 const Dashboard = () => {
     const user = useUser();
-    const [productSales, setProductSales] = useState([]);
+    const [productsSales, setProductSales] = useState([]);
+    const [serviceSales, setServiceSales] = useState([]);
     const [cardData, setCardData] = useState(null);
     const [salesData, setSalesData] = useState([]);
     const [peakHours, setPeakHours] = useState([]);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        const get_services = async () => {
+        const getData = async () => {
+            if (!user) return; // wait for user to exist
+
             try{
                 setLoading(true);
 
                 const [cards, chart] = await Promise.all([
-                    get_data(`/card-data/${user._id}`),
+                    get_data(`/card-data/${user.branchAssigned}`),
                     get_data('/chart-data')
                 ])
-                
+
                 if (cards && chart) {
+                    console.log(cards, chart);
                     setProductSales(cards.productsSales)
+                    setServiceSales(cards.serviceSales)
                     setSalesData(chart.salesChart)
                     setPeakHours(chart.peakHours);
                     setCardData({
-                        totalProductsSales: cards.totalProductSales,
-                        totalServiceSales: cards.totalServiceSales,
+                        totalProductSales: cards.totalProductSales,
+                        servicesCompleted: cards.servicesCompleted,
                         totalCustomers: cards.totalCustomers,
-                        appointmentsToday: cards.appointmentsToday
+                        appointmentsToday: cards.appointmentsToday.length
                     })
                 }
             }catch(err){
-                console.log(err);
+                console.log(err.message);
             }finally{
                 setLoading(false);
             }
-            
         };
-        get_services();
-    }, []);
+
+        getData();
+    }, [user]);
 
     if(loading || !user){
         return <div>Loading...</div>
@@ -65,14 +70,14 @@ const Dashboard = () => {
             {/* 🔝 Top StatCards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <StatCard
-                    title="Total Service Sales"
+                    title="Total Product Sales"
                     value={`₱${cardData?.totalProductSales || 0}`}
                     icon={FaMoneyBillWave}
                     color="green"
                 />
                 <StatCard
                     title="Services Completed"
-                    value={cardData?.totalServiceSales || 0}
+                    value={cardData?.servicesCompleted || 0}
                     icon={FaCut}
                     color="orange"
                 />
@@ -139,7 +144,7 @@ const Dashboard = () => {
                 </ResponsiveContainer>
             </div>
 
-            <Sales isViewing={true} />
+            {!loading && <Sales isExtended={true}  pSales={productsSales} sSales={serviceSales}/>}
         </div>
     );
 };

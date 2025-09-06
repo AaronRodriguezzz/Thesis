@@ -24,14 +24,15 @@ const cardDataControls = async (req, res) => {
         const skip = (page - 1) * limit;
         
         const totalCustomers = await CustomersAccounts.countDocuments();
-        const productsSales = await ProductSales.find()
+        const productsSales = await ProductSales.find({branch: branchId})
             .populate('products.product')  
             .populate('soldBy')       
             .populate('branch')
             .sort({ createdAt: -1 })
             .skip(skip)
-            .limit(limit);;
-        const serviceSales = await ServiceSales.find()
+            .limit(limit);
+
+        const serviceSales = await ServiceSales.find({branch: branchId})
             .populate('service')       
             .populate('barber')
             .populate('branch')
@@ -39,22 +40,21 @@ const cardDataControls = async (req, res) => {
             .sort({ createdAt: -1 })
             .skip(skip)
             .limit(limit);
-        const appointmentsToday = await Appointment.find({ 
+            
+        const appointmentsToday = await Appointment.countDocuments({ 
             createdAt: { $gte: startOfToday, $lte: endOfToday }, 
             branch: branchId
-        }).countDocuments();
+        });
 
         const totalProductSales = productsSales?.reduce((sum, s) => sum + s.totalPrice, 0) || 0; 
-        const totalServiceSales = serviceSales?.reduce((sum, s) => sum + 1, 0) || 0
-
-        console.log('totalProductsSales', totalCustomers)
+        const servicesCompleted = serviceSales?.reduce((sum, s) => sum + 1, 0) || 0
         
 
         return res.status(200).json({ 
             productsSales, 
             serviceSales,
             totalProductSales,
-            totalServiceSales,
+            servicesCompleted,
             totalCustomers,
             appointmentsToday
         })
@@ -137,27 +137,6 @@ const chartsDataControls = async (req,res) => {
 
 
         res.status(200).json({ salesChart: mergedAggregated, peakHours })
-        // console.log(productSalesAggregated, serviceSalesAggregated);
-
-        // const aggregatedByMonth = salesData.reduce((acc, curr) => {
-        //     const existing = acc.find(item => item.month === curr.month);
-
-        //     if (existing) {
-        //         existing.services += curr.services;
-        //         existing.products += curr.products;
-        //         existing.total += curr.services + curr.products;
-        //     } else {
-        //         acc.push({
-        //         month: curr.month,
-        //         services: curr.services,
-        //         products: curr.products,
-        //         total: curr.services + curr.products,
-        //         });
-        //     }
-
-        //     return acc;
-        // }, []);
-
 
     }catch(err){
         console.log(err)

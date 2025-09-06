@@ -8,7 +8,7 @@ import {
   MdOutlineLogout,
   MdShoppingCart,
   MdInventory,
-  MdDirectionsWalk
+  MdPerson
 } from "react-icons/md";
 
 const FrontDeskSideBar = () => {
@@ -22,6 +22,7 @@ const FrontDeskSideBar = () => {
     { name: "Customers", icon: <MdPeople />, path: "/front-desk/customers" },
     { name: "Products", icon: <MdInventory />, path: "/front-desk/products" },
     { name: "Sales", icon: <MdShoppingCart />, path: "/front-desk/sales" },
+    { name: "Account", icon: <MdPerson />, path: "/front-desk/account" },
   ];
 
 

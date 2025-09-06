@@ -5,9 +5,11 @@ import { get_data } from "../../services/GetMethod";
 import { delete_data } from "../../services/DeleteMethod";
 import NotificationBell from "../../components/NotificationBell";
 import NotificationBar from "../../components/NotificationBar";
+import { useUser } from "../../hooks/userProtectionHooks";
 
 const Appointments = () => {
- 
+    const user = useUser();
+    console.log(user);
     const [searchTerm, setSearchTerm] = useState("");
     const [page, setPage] = useState(1);
     const [paginationLimit, setPaginationLimit] = useState(1);

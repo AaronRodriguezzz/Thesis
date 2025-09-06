@@ -119,20 +119,24 @@ const update_customer = async (req, res) => {
  * @route DELETE /api/delete_customer
  * @access Admin or Private
  */
-const delete_customer = async (req, res) => {
+const disable_customer = async (req, res) => {
     const { id } = req.params 
 
     try {
         
-        const deleted_customer = await Customer.findByIdAndDelete(id);
+        const disabled = await Customer.findByIdAndUpdate(
+            id, 
+            {status: 'Inactive'}, 
+            { new: true}
+        );
 
-        if(!deleted_customer){
+        if(!disabled){
             return res.status(400).json({ message: 'Deletion problem' });
         }
         
         return res.status(200).json({
             message: 'Customer Deleted successfully',
-            deleted: true
+            customer: disabled
         });
 
     } catch (error) {
@@ -145,5 +149,5 @@ module.exports = {
     get_customers,
     get_specific_customer,
     update_customer,
-    delete_customer
+    disable_customer
 };

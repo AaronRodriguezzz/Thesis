@@ -14,7 +14,9 @@ const ServiceCompleteModal = ({
     const user = useUser();
 
     const handleComplete = async (paymentMethod) => {
-        console.log(barber)
+
+        if(!user) return 
+        
         try{
             const response = await update_data(`/complete_assignment/${barber.customerTypeAssigned}`, {
                 paymentMethod,

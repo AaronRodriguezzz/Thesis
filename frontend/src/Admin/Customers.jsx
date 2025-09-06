@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { FaUsers, FaUserPlus, FaSearch, FaEdit, FaTrash } from "react-icons/fa";
+import { FaUsers, FaUserPlus, FaSearch, FaEdit, FaBan  } from "react-icons/fa";
 import Pagination from "@mui/material/Pagination";
 import { get_data } from "../../services/GetMethod";
 import { delete_data } from "../../services/DeleteMethod";
 import CustomerUpdateModal from "../../components/modal/UpdateCustomerModal";
+import { update_data } from "../../services/PutMethod";
 
 const Customers = () => {
  
@@ -26,11 +27,13 @@ const Customers = () => {
     }, [customersList, searchTerm]);
 
 
-    const handle_delete = async (id) => {
-        const data = await delete_data(id, '/delete_customer');
+    const handle_disable = async (id) => {
+        if(!window.confirm("Are you sure you want to disable this customer?")) return 
 
-        if (data.deleted) {
-            setCustomersList(prev => prev.filter(customer => customer._id !== id));
+        const data = await update_data(`/disable_customer/${id}`);
+
+        if (data.customer) {
+            setCustomersList(prev => prev.map(customer => customer._id === id ? data.customer : customer ));
         }
     }
 
@@ -78,23 +81,10 @@ const Customers = () => {
                         </div>
 
                         <div className="w-full bg-white p-6 rounded-lg shadow">
-                        <h2 className="text-xl font-semibold mb-4 tracking-tight">Customer Table</h2>
 
                         <div className="flex justify-between items-center my-4 text-sm">
-                            <div>
-                            <select 
-                                name="filter" 
-                                value={filterValue} 
-                                className="p-2 w-[200px] bg-gray-200 rounded-md outline-0 tracking-tight text-xs"
-                                onChange={(e) => setFilterValue(e.target.value)}
-                            >
-                                <option value="" disabled>Sort by</option>
-                                <option value="Date">Date</option>
-                                <option value="Status">Status</option>
-                                <option value="Service">Service</option>
-                                <option value="Branch">Branch</option>
-                            </select>
-                            </div>
+                            <h2 className="text-xl font-semibold mb-4 tracking-tight">Customer Table</h2>
+
                             <Pagination
                             count={paginationLimit}
                             size="small"
@@ -131,8 +121,8 @@ const Customers = () => {
                                                     <button className="text-gray-600 hover:text-gray-800" onClick={() => handle_update(customer)}>
                                                         <FaEdit size={17} />
                                                     </button>
-                                                    <button className="text-gray-600 hover:text-gray-800" onClick={() => handle_delete(customer?._id)}>
-                                                        <FaTrash size={17} />
+                                                    <button className="text-gray-600 hover:text-gray-800" onClick={() => handle_disable(customer?._id)}>
+                                                        <FaBan size={17} />
                                                     </button>
                                                 </div>
                                             </td>

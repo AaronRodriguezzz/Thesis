@@ -5,11 +5,11 @@ import { get_data } from "../../services/GetMethod";
 import { time } from "../../data/TimeData";
 import ThreeLayerModal from "../../components/modal/WalkinAppointment";
 import { update_data } from "../../services/PutMethod";
-import { useAdminPageProtection} from "../../hooks/userProtectionHooks";
+import { useAdminPageProtection, useUser} from "../../hooks/userProtectionHooks";
 
 const Appointments = () => {
     // useAdminPageProtection();
-    const frontDesk = JSON.parse(localStorage.getItem('admin'));
+    const user = useUser();
     const [searchTerm, setSearchTerm] = useState("");
     const [page, setPage] = useState(1);
     const [paginationLimit, setPaginationLimit] = useState(1);
@@ -19,16 +19,29 @@ const Appointments = () => {
     const [newStatus, setNewStatus] = useState('');
     const [currentlyUpdatingId, setCurrentlyUpdatingId] = useState('');
 
+    const sortOrder = {
+        'Booked': 1, 
+        'Assigned': 2, 
+        'Completed': 3, 
+        'Cancelled': 4, 
+        'No-Show': 5,
+    }
+
     const filteredAppointments = useMemo(() => {
-        return appointmentList && appointmentList.filter(appointment =>
-            appointment.customer?.lastName?.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
-            appointment.customer?.firstName?.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
-            appointment.service?.name?.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
-            appointment.additionalService?.name?.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
-            appointment.branch?.name?.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
-            appointment.barber?.fullName?.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
-            appointment.scheduledDate?.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
-            appointment.scheduledTime?.toString().toLowerCase().includes(searchTerm.toLowerCase())
+        if (!appointmentList) return [];
+
+        return [...appointmentList] // <-- make a copy
+            .sort((a, b) => sortOrder[a.status] - sortOrder[b.status])
+            .filter((appointment) =>
+            appointment.customer?.lastName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            appointment.customer?.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            appointment.service?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            appointment.additionalService?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            appointment.branch?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            appointment.barber?.fullName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            appointment.scheduledDate?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            appointment.scheduledTime?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            appointment.status?.toLowerCase().includes(searchTerm.toLowerCase())
         );
     }, [appointmentList, searchTerm]);
 
@@ -61,7 +74,7 @@ const Appointments = () => {
 
     useEffect(() => {
         const get_employees = async () => {
-            const data = await get_data(`/branch_appointments/${frontDesk?.branchAssigned}`, page);
+            const data = await get_data(`/branch_appointments/${user?.branchAssigned}`, page);
 
             //exclude the barber's password
             if (data) {
@@ -106,22 +119,8 @@ const Appointments = () => {
 
                         <div className="w-full bg-white p-6 rounded-lg shadow">
 
-                            <h2 className="text-xl font-semibold mb-4 tracking-tight">Appointment Table</h2>
                             <div className="flex justify-between items-center my-4 text-sm">
-                                <div>
-                                    <select 
-                                        name="filter" 
-                                        value={filterValue} 
-                                        className="p-2 w-[200px] bg-gray-200 rounded-md outline-0 tracking-tight text-xs"
-                                        onChange={(e) => setFilterValue(e.target.value)}
-                                    >
-                                        <option value="" disabled>Sort by</option>
-                                        <option value="Date">Date</option>
-                                        <option value="Status">Status</option>
-                                        <option value="Service">Service</option>
-                                        <option value="Branch">Branch</option>
-                                    </select>
-                                </div>
+                                <h2 className="text-xl font-semibold mb-4 tracking-tight">Appointment Table</h2>
 
                                 <Pagination
                                 count={paginationLimit}
@@ -131,7 +130,7 @@ const Appointments = () => {
                                 />
                             </div>
 
-                            <div className="overflow-x-auto min-h-[400px] max-h-[600px] w-full">
+                            <div className="overflow-x-auto h-[500px] w-full">
                                 <table className="min-w-full divide-y divide-gray-200">
                                     <thead className="bg-gray-50">
                                         <tr>
@@ -148,7 +147,7 @@ const Appointments = () => {
                                     </thead>
                                     <tbody className="bg-white divide-y divide-gray-200">
                                         {filteredAppointments.map((appointment) => (
-                                            <tr key={appointment._id}>
+                                            <tr key={appointment._id} className={`${appointment.status === 'No-Show' || appointment.status === 'Cancelled' ? 'opacity-50' : 'opacity-100'}`}>
                                                 <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{appointment?.scheduledDate?.split('T')[0]}</td>
                                                 <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{time.find(t => t.value === appointment?.scheduledTime)?.timeTxt || "—"}</td>
                                                 <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{appointment?.uniqueCode}</td>

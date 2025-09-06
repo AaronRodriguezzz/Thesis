@@ -1,13 +1,12 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import Pagination from "@mui/material/Pagination";
 import { get_data } from "../../services/GetMethod";
-import { delete_data } from "../../services/DeleteMethod";
 
-const Services = () => {
+const Sales = ({ isExtended = false, sSales = [], pSales = [] }) => {
  
-    const [serviceSales, setServiceSales] = useState([]);
-    const [productSales, setProductSales] = useState(null);
+    const [serviceSales, setServiceSales] = useState(sSales);
+    const [productSales, setProductSales] = useState(pSales);
     const [searchTerm, setSearchTerm] = useState("");
     const [productSalesPage, setProductSalesPage] = useState(1);
     const [serviceSalesPage, setServiceSalesPage] = useState(1);
@@ -25,22 +24,14 @@ const Services = () => {
     // }, [serviceSales, searchTerm]);
 
 
-    const handle_delete = async (id) => {
-        console.log('delete id', id);
-        const data = await delete_data(id, '/delete_service');
-
-        if (data.deleted) {
-            setServiceSales(prev => prev.filter(service => service._id !== id));
-        }
-    }
-
 
     useEffect(() => {
+
+        if(isExtended) return
+
         const get_services = async () => {
             const data = await get_data('/sales/services', serviceSalesPage);
-        
-            //exclude the barber's password
-            
+                    
             if (data) {
                 console.log('services', data.sales);
                 setServiceSales(data.sales);
@@ -51,6 +42,9 @@ const Services = () => {
     }, [serviceSalesPage]);
 
     useEffect(() => {
+
+        if(isExtended) return
+
         const getSales = async () => {
             const data = await get_data(`/sales/products`, productSalesPage);
     
@@ -64,6 +58,8 @@ const Services = () => {
         
         getSales();
     }, [productSalesPage]); 
+
+    
 
     return (
         <div className="flex min-h-screen">
@@ -104,7 +100,7 @@ const Services = () => {
                                     </select>
                                 </div>
 
-                                <Pagination
+                                {!isExtended && <Pagination
                                     count={filterValue === 'Product' ? psPageLimit : ssPageLimit}
                                     size="small"
                                     page={filterValue === 'Product' ? productSalesPage : serviceSalesPage}
@@ -112,7 +108,7 @@ const Services = () => {
                                         if(filterValue === 'Product') setProductSalesPage(value)
                                         else setServiceSalesPage(value)
                                     }}
-                                />
+                                />}
                             </div>
 
                             <div className="overflow-x-auto min-h-[400px] max-h-[600px] w-full">
@@ -137,9 +133,8 @@ const Services = () => {
                                                     <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{service.service?.name}</td>
                                                     <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight text-left">₱ {service?.price}.00</td>
                                                     <td 
-                                                        className={`px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight 
-                                                            ${service?.paymentMethod === 'Cash' ? 'text-green-500' : 'text-blue-500'}
-                                                        `}
+                                                        className='px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight'
+                                                        style={{ color: service?.paymentMethod === 'Cash' ? '#22c55e' : '#3b82f6'}}
                                                     >
                                                         {service?.paymentMethod}
                                                     </td>
@@ -189,4 +184,4 @@ const Services = () => {
     );
 };
 
-export default Services;
+export default Sales;
