@@ -8,7 +8,7 @@ const checkOutProducts = async (req, res) => {
     try{
         console.log(payload);
 
-        if(!payload.product){
+        if(!payload.product || payload.product.length === 0){
             return res.status(400).json({message: 'Empty Product Checkout'})
         }
 
@@ -16,7 +16,7 @@ const checkOutProducts = async (req, res) => {
             payload.product.map(product => 
                 Product.findByIdAndUpdate(
                     product._id,
-                    { stock: product.stock - product.checkOutQuantity},
+                    { stock: product?.stock[product.branch.findIndex(b => b === payload.branch)] - product.checkOutQuantity},
                     { new: true }
                 ),
             )
@@ -32,7 +32,6 @@ const checkOutProducts = async (req, res) => {
                 product: p._id,
                 quantity: p.checkOutQuantity
             })),
-            quantity: payload.product.map(p => p.checkOutQuantity),
             totalPrice: payload.totalPrice,
             soldBy: payload.soldBy,
             branch: payload.branch
@@ -43,9 +42,6 @@ const checkOutProducts = async (req, res) => {
         }
 
         await sales.save();
-
-        console.log(product);
-
 
         return res.status(200).json({ message: 'Check out Successful', updatedData: product})
 

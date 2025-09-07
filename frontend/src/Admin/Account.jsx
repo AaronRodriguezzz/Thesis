@@ -1,20 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { isFormValid } from "../../utils/objectValidation";
 import { update_data } from "../../services/PutMethod";
-import {
-  useCustomerPageProtection,
-  useUserProtection,
-} from "../../hooks/userProtectionHooks";
 import { useAuth } from "../../contexts/UserContext";
+import { isFormValid } from "../../utils/objectValidation";
 import { CustomAlert } from "../../components/modal/CustomAlert";
 
-const ProfilePage = () => {
-  useCustomerPageProtection();
-  useUserProtection();
-
-  const navigate = useNavigate();
+const AdminProfilePage = () => {
   const { user, setUser, logout } = useAuth();
+  console.log(user);
   const [editMode, setEditMode] = useState(false);
   const [changingPassMode, setChangingPassMode] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -35,7 +27,7 @@ const ProfilePage = () => {
     e.preventDefault();
 
     if (!isFormValid(formData, ["address"])) {
-      alert("Please fill in all required fields.");
+      CustomAlert("error", "Please fill in all required fields.");
       return;
     }
 
@@ -46,6 +38,7 @@ const ProfilePage = () => {
       if (response.updatedInfo) {
         setUser(response.updatedInfo);
         setEditMode(false);
+        CustomAlert("success", "Profile updated successfully.");
       }
     } catch (err) {
       console.log(err);
@@ -69,10 +62,7 @@ const ProfilePage = () => {
 
     try {
       setLoading(true);
-      const response = await update_data(
-        "/auth/update_user_password",
-        payload
-      );
+      const response = await update_data("/auth/update_user_password", payload);
 
       if (response.updated) {
         setChangingPassMode(false);
@@ -81,6 +71,7 @@ const ProfilePage = () => {
           newPassword: "",
           confirmPassword: "",
         });
+        CustomAlert("success", "Password updated successfully.");
       }
     } catch (err) {
       console.log(err);
@@ -99,27 +90,21 @@ const ProfilePage = () => {
   }, [user]);
 
   return (
-    <div className="min-h-screen w-full bg-[url('/login.png')] bg-cover bg-center flex items-center justify-center p-4">
-      <div className="w-full max-w-3xl p-8 bg-white rounded-xl shadow-lg">
-        {/* Title */}
-        <h1 className="font-bold text-4xl text-center mb-6 tracking-tight">
-          Profile
+    <div className="min-h-screen w-screen bg-gray-100 flex items-center justify-center p-6">
+      <div className="w-full max-w-3xl p-10 bg-white rounded-2xl shadow-xl">
+        {/* Header */}
+        <h1 className="font-bold text-4xl text-center text-orange-500 mb-10 tracking-tight">
+          Admin Profile
         </h1>
 
-        {/* Quick Action Buttons */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
-          <button
-            onClick={() => navigate("/my-appointments")}
-            className="bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold p-2 rounded transition"
-          >
-            My Appointments
-          </button>
+        {/* Action Buttons */}
+        <div className="flex flex-col md:flex-row justify-center gap-4 mb-10">
           <button
             onClick={() => {
               setEditMode((prev) => !prev);
               setChangingPassMode(false);
             }}
-            className="bg-gray-600 hover:bg-gray-700 text-white text-sm font-semibold p-2 rounded transition"
+            className="flex-1 bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold py-3 rounded-lg transition"
           >
             {editMode ? "Cancel Edit" : "Manage Profile"}
           </button>
@@ -128,38 +113,26 @@ const ProfilePage = () => {
               setChangingPassMode((prev) => !prev);
               setEditMode(false);
             }}
-            className="bg-orange-600 hover:bg-orange-700 text-white text-sm font-semibold p-2 rounded transition"
+            className="flex-1 bg-gray-600 hover:bg-gray-700 text-white text-sm font-semibold py-3 rounded-lg transition"
           >
             {changingPassMode ? "Cancel Edit" : "Change Password"}
-          </button>
-          <button
-            onClick={() => navigate("/appointment")}
-            className="bg-green-500 hover:bg-green-600 text-white text-sm font-semibold p-2 rounded transition"
-          >
-            Book Appointment
           </button>
         </div>
 
         {/* Profile Form */}
         {!changingPassMode ? (
-          <form className="space-y-4" onSubmit={handleSave}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <ProfileField
-                label="First Name"
-                value={formData?.firstName}
-                editable={editMode}
-                name="firstName"
-                onChange={handleChange}
-              />
-              <ProfileField
-                label="Last Name"
-                value={formData?.lastName}
-                editable={editMode}
-                name="lastName"
-                onChange={handleChange}
-              />
-            </div>
+          <form className="space-y-6" onSubmit={handleSave}>
+            {/* Row 1 */}
+            <ProfileField
+              label="Full Name"
+              value={formData?.fullName}
+              editable={editMode}
+              name="fullName"
+              onChange={handleChange}
+            />
+              
 
+            {/* Row 2 */}
             <ProfileField
               label="Email"
               value={formData?.email}
@@ -167,26 +140,21 @@ const ProfilePage = () => {
               name="email"
               onChange={handleChange}
             />
+
+            {/* Row 3 */}
             <ProfileField
-              label="Phone"
-              value={formData?.phone}
+              label="Role"
+              value={formData?.role}
               editable={editMode}
-              name="phone"
-              onChange={handleChange}
-            />
-            <ProfileField
-              label="Address"
-              value={formData?.address || "N/A"}
-              editable={editMode}
-              name="address"
+              name="role"
               onChange={handleChange}
             />
 
             {editMode && (
-              <div className="flex justify-end mt-6">
+              <div className="flex justify-end">
                 <button
                   type="submit"
-                  className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded transition"
+                  className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg shadow"
                   disabled={loading}
                 >
                   {loading ? "Saving Changes.." : "Save Changes"}
@@ -195,25 +163,22 @@ const ProfilePage = () => {
             )}
           </form>
         ) : (
-          <form className="space-y-4" onSubmit={handleSavePass}>
-            <PasswordField
+          <form className="space-y-6" onSubmit={handleSavePass}>
+            <ProfilePasswordField
               label="Current Password"
               value={passwordData.currentPassword}
               onChange={(val) =>
-                setPasswordData((prev) => ({
-                  ...prev,
-                  currentPassword: val,
-                }))
+                setPasswordData((prev) => ({ ...prev, currentPassword: val }))
               }
             />
-            <PasswordField
+            <ProfilePasswordField
               label="New Password"
               value={passwordData.newPassword}
               onChange={(val) =>
                 setPasswordData((prev) => ({ ...prev, newPassword: val }))
               }
             />
-            <PasswordField
+            <ProfilePasswordField
               label="Confirm New Password"
               value={passwordData.confirmPassword}
               onChange={(val) =>
@@ -224,10 +189,10 @@ const ProfilePage = () => {
               }
             />
 
-            <div className="flex justify-end mt-6">
+            <div className="flex justify-end">
               <button
                 type="submit"
-                className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded transition"
+                className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg shadow"
                 disabled={loading}
               >
                 {loading ? "Saving Changes.." : "Save Changes"}
@@ -236,11 +201,11 @@ const ProfilePage = () => {
           </form>
         )}
 
-        {/* Logout */}
+        {/* Logout Button */}
         {!changingPassMode && !editMode && (
-          <div className="flex justify-center mt-8">
+          <div className="flex justify-center mt-10">
             <button
-              className="bg-red-500 hover:bg-red-600 text-white text-lg font-semibold py-2 px-8 rounded-full transition"
+              className="bg-red-500 text-lg tracking-tight text-white py-3 px-10 rounded-full hover:bg-red-600 transition"
               onClick={logout}
             >
               LOG OUT
@@ -253,32 +218,36 @@ const ProfilePage = () => {
 };
 
 const ProfileField = ({ label, value, editable, name, onChange }) => (
-  <div>
-    <label className="font-semibold text-sm block mb-1">{label}</label>
+  <div className="flex-1">
+    <label className="font-semibold text-sm block mb-1 text-gray-600">
+      {label}
+    </label>
     {editable ? (
       <input
         type="text"
         name={name}
         value={value}
         onChange={onChange}
-        className="bg-gray-100 shadow-sm p-2 w-full text-base rounded-md focus:ring-2 focus:ring-blue-400 outline-none"
+        className="bg-gray-100 shadow-sm p-2 w-full text-base rounded-md focus:ring-2 focus:ring-orange-400 outline-none"
       />
     ) : (
-      <p className="text-gray-800 text-base">{value}</p>
+      <p className="text-gray-800 text-base tracking-tight">{value}</p>
     )}
   </div>
 );
 
-const PasswordField = ({ label, value, onChange }) => (
+const ProfilePasswordField = ({ label, value, onChange }) => (
   <div>
-    <label className="font-semibold text-sm block mb-1">{label}</label>
+    <label className="font-semibold text-sm block mb-1 text-gray-600">
+      {label}
+    </label>
     <input
       type="password"
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="bg-gray-100 shadow-sm p-2 w-full text-base rounded-md focus:ring-2 focus:ring-blue-400 outline-none"
+      className="bg-gray-100 shadow-sm p-2 w-full text-base rounded-md focus:ring-2 focus:ring-orange-400 outline-none"
     />
   </div>
 );
 
-export default ProfilePage;
+export default AdminProfilePage;

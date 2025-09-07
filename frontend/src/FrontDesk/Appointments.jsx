@@ -5,19 +5,25 @@ import { get_data } from "../../services/GetMethod";
 import { time } from "../../data/TimeData";
 import ThreeLayerModal from "../../components/modal/WalkinAppointment";
 import { update_data } from "../../services/PutMethod";
-import { useAdminPageProtection, useUser} from "../../hooks/userProtectionHooks";
+import { useUser} from "../../hooks/userProtectionHooks";
+import { useFetch } from "../../hooks/useFetch";
+import TableLoading from "../../components/animations/TableLoading";
 
 const Appointments = () => {
-    // useAdminPageProtection();
     const user = useUser();
     const [searchTerm, setSearchTerm] = useState("");
     const [page, setPage] = useState(1);
-    const [paginationLimit, setPaginationLimit] = useState(1);
-    const [appointmentList, setAppointmentList] = useState([]);
-    const [filterValue, setFilterValue] = useState('');
     const [addingAppointment, setAddingAppointment] = useState(false);
     const [newStatus, setNewStatus] = useState('');
     const [currentlyUpdatingId, setCurrentlyUpdatingId] = useState('');
+
+    const { data, loading, error, setData } = useFetch(
+        user ? `/branch_appointments/${user?.branchAssigned}` : null, page
+        [page, user]
+    );
+
+    const appointmentList = data?.appointments || [];
+    const paginationLimit = data?.pageCount || 1;
 
     const sortOrder = {
         'Booked': 1, 
@@ -57,7 +63,7 @@ const Appointments = () => {
             const response = await update_data('/update_appointment', payload);
 
             if (response?.appointmentUpdate) {
-                setAppointmentList((prevList) =>
+                setData((prevList) =>
                     prevList.map((item) =>
                         item._id === currentlyUpdatingId ? { ...item, status: newStatus } : item
                     )
@@ -72,18 +78,8 @@ const Appointments = () => {
     };
 
 
-    useEffect(() => {
-        const get_employees = async () => {
-            const data = await get_data(`/branch_appointments/${user?.branchAssigned}`, page);
-
-            //exclude the barber's password
-            if (data) {
-                setAppointmentList(data.appointments);
-                setPaginationLimit(data.pageCount);
-            }
-        };
-        get_employees();
-    }, [page]); 
+    if (loading) return <TableLoading />;
+    if (error) return <p className="p-4 text-red-500">Error loading data</p>;
 
     return (
         <div className="flex min-h-screen">
@@ -147,7 +143,7 @@ const Appointments = () => {
                                     </thead>
                                     <tbody className="bg-white divide-y divide-gray-200">
                                         {filteredAppointments.map((appointment) => (
-                                            <tr key={appointment._id} className={`${appointment.status === 'No-Show' || appointment.status === 'Cancelled' ? 'opacity-50' : 'opacity-100'}`}>
+                                            <tr key={appointment._id}>
                                                 <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{appointment?.scheduledDate?.split('T')[0]}</td>
                                                 <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{time.find(t => t.value === appointment?.scheduledTime)?.timeTxt || "—"}</td>
                                                 <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{appointment?.uniqueCode}</td>
@@ -171,9 +167,9 @@ const Appointments = () => {
                                                             <span
                                                                 style={{
                                                                 color:
-                                                                    appointment.status === 'booked'
+                                                                    appointment.status === 'Booked'
                                                                     ? 'green'
-                                                                    : appointment.status === 'cancelled' || appointment.status === 'no show'
+                                                                    : appointment.status === 'Cancelled' || appointment.status === 'No-Show'
                                                                     ? 'red'
                                                                     : 'black',
                                                                 }}
@@ -223,7 +219,7 @@ const Appointments = () => {
             {addingAppointment && 
                 <ThreeLayerModal 
                     onClose={setAddingAppointment} 
-                    setNewData={setAppointmentList}
+                    setNewData={setData}
                 />
             }
         </div>

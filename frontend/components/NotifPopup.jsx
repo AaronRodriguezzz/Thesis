@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { useSocket } from "../../contexts/SocketContext" 
-import { appointmentTimeFormat } from "../../utils/formatDate";
+import { useSocket } from "../contexts/SocketContext" 
+import { appointmentTimeFormat } from "../utils/formatDate";
 
 const NotificationContent = ({filter, index, notification}) => {
     

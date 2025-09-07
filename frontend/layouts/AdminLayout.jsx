@@ -1,6 +1,6 @@
 import React from "react";
 import AdminSidebar from "../components/AdminSideBar";
-import PopUpNotification from "../components/modal/NotifPopup";
+import PopUpNotification from "../components/NotifPopup";
 import { Outlet } from "react-router-dom";
 import { useUserProtection, useAdminPageProtection} from "../hooks/userProtectionHooks";
 

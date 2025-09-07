@@ -32,20 +32,24 @@ const get_product = async (req, res) => {
  * @route GET /api/products?page=1
  */
 const get_branchProduct = async (req, res) => {
-    const branch = req.params.branch;
+    const branchId = req.params.branchId;
 
-    if(!branch){
+    if(!branchId){
         return res.status(400).json({message: 'Branch Name Empty'})
     }
 
     try {
+        const products = await Product.find({ branch: branchId });
 
-        const products = await Product.find({
-            branch: branch,
-            stock: { $gt: 0 }
+        const filtered = products.filter(p => {
+            const index = p.branch.findIndex(b => b.toString() === branchId);
+            return index !== -1 && p.stock[index] > 0;
         });    
 
-        return res.status(200).json({ products });
+
+        console.log(filtered);
+
+        return res.status(200).json({ products: filtered });
     } catch (err) {
         console.error(err);
         return res.status(500).json({ message: 'Internal server error.' });

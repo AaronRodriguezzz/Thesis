@@ -1,166 +1,153 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  FaUsers,
-  FaCalendarCheck,
-  FaMoneyBillWave,
-  FaBoxOpen,
-} from "react-icons/fa";
-import { StatCard } from "../../components/DashboardCards";
-import {
-  ResponsiveContainer,
-  YAxis,
-  XAxis,
-  Tooltip,
-  Legend,
-  CartesianGrid,
-  LineChart,
-  Line,
-  PieChart,
-  Pie,
   BarChart,
   Bar,
-  Area,
-  AreaChart
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
 } from "recharts";
+import { StatCard } from "../../components/DashboardCards";
+import { FaMoneyBillWave, FaCut, FaUserPlus, FaCalendarAlt } from "react-icons/fa";
 import { get_data } from "../../services/GetMethod";
+import { useUser } from "../../hooks/userProtectionHooks";
+import Sales from "./Sales";
+import DashboardLoading from "../../components/animations/DashboardLoading";
 
-const DashboardStats = () => {
+const Dashboard = () => {
+    const user = useUser();
+    const [productsSales, setProductSales] = useState([]);
+    const [serviceSales, setServiceSales] = useState([]);
+    const [cardData, setCardData] = useState(null);
+    const [salesData, setSalesData] = useState([]);
+    const [peakHours, setPeakHours] = useState([]);
+    const [loading, setLoading] = useState(false);
 
-  const [cardsData, setCardsData] = useState(null);
-  const [graphData, setGraphData] = useState({
-    monthlySales: [],
-    appointmentByStatus: [],
-    revenueByBranch: [],
-  });
+    useEffect(() => {
+        const getData = async () => {
+            if (!user) return; // wait for user to exist
 
-  const data = [
-    { totalRevenue: 1600, date: '2025-07-29' },
-    { totalRevenue: 400, date: '2025-08-05' },
-    { totalRevenue: 4000, date: '2025-09-05' },
-    { totalRevenue: 10000, date: '2025-10-05' },
-    { totalRevenue: 9000, date: '2025-11-05' },
-    { totalRevenue: 1220, date: '2025-12-05' }
-  ]
-  
-  useEffect(() => {
-    const initializeData = async () => {
-      try{
-        const [cardData, graphData] = await Promise.all([
-          get_data('/card-data'),
-          get_data('/graph-data')
-        ])
+            try{
+                setLoading(true);
 
-        if(cardData && graphData){
-          setGraphData({
-            monthlySales: graphData?.totalRevenue,
-            appointmentByStatus: graphData?.appointmentByStatus,
-            revenueByBranch: graphData?.revenueByBranch,
-          })
-          setCardsData(cardData)
-        }
+                const [cards, chart] = await Promise.all([
+                    get_data(`/card-data/${user.branchAssigned}`),
+                    get_data('/chart-data')
+                ])
 
-      }catch(err){
-        console.log(err);
-      }
+                if (cards && chart) {
+                    console.log(cards, chart);
+                    setProductSales(cards.productsSales)
+                    setServiceSales(cards.serviceSales)
+                    setSalesData(chart.salesChart)
+                    setPeakHours(chart.peakHours);
+                    setCardData({
+                        totalProductSales: cards.totalProductSales,
+                        servicesCompleted: cards.servicesCompleted,
+                        totalCustomers: cards.totalCustomers,
+                        appointmentsToday: cards.appointmentsToday.length
+                    })
+                }
+            }catch(err){
+                console.log(err.message);
+            }finally{
+                setLoading(false);
+            }
+        };
+
+        getData();
+    }, [user]);
+
+    if(loading || !user){
+        return <DashboardLoading />
     }
 
-    initializeData();
-  },[])
-
-
-  return (
-    <div className="h-full px-4 py-6 space-y-8">
-      {/* Stat cards */}
-      <div className="flex flex-wrap gap-4 w-full">
-        <StatCard
-          title="Customers"
-          value={cardsData?.customers}
-          icon={<FaUsers className="text-white" />}
-          iconBg="bg-blue-500"
-        />
-        <StatCard
-          title="Appointments this Month"
-          value={cardsData?.appointmentsThisMonth}
-          icon={<FaCalendarCheck className="text-white" />}
-          iconBg="bg-green-500"
-        />
-        <StatCard
-          title="Monthly Service Revenue"
-          value={`₱ ${cardsData?.monthlyRevenue}.00`}
-          icon={<FaMoneyBillWave className="text-white" />}
-          iconBg="bg-yellow-500"
-        />
-        <StatCard
-          title="Products Revenue"
-          value={`₱ ${cardsData?.productRevenue}.00`}
-          icon={<FaBoxOpen className="text-white" />}
-          iconBg="bg-purple-500"
-        />
-      </div>
-
-      <div className="flex flex-col gap-6 w-full h-[700px]">
-        {/* Top: Big Graph (Full width) */}
-        <div className="bg-white rounded-lg p-4 shadow-md flex-1">
-          <h2 className="text-2xl font-semibold mb-4">Monthly Sales</h2>
-          <ResponsiveContainer width="100%" height="90%">
-            <AreaChart
-              width={800}
-              height={400}
-              data={data}
-              syncId="anyId"
-              margin={{ top: 5, right: 20, left: -10, bottom: 5 }}
-            >
-              <CartesianGrid />
-              <XAxis dataKey="date" />
-              <YAxis />
-              <Tooltip />
-              <Area type="monotone" dataKey="totalRevenue" fill="#1F2937" />
-            </AreaChart>
-          </ResponsiveContainer>
-        </div>
-
-        {/* Bottom: Two Graphs side by side */}
-        
-      </div>
-
-      <div className="flex flex-row gap-6 w-full h-[400px]">
-          {/* Bar Chart - Appointment Status */}
-          <div className="bg-white rounded-lg p-4 shadow-md w-1/2">
-            <h2 className="text-lg font-semibold mb-2">Appointment Status</h2>
-            <ResponsiveContainer width="100%" height="90%">
-              <BarChart data={graphData.appointmentByStatus}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="status" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="total" fill="#1F2937" />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-
-          {/* Pie Chart - Branch Revenue */}
-          <div className="bg-white rounded-lg p-4 shadow-md w-1/2">
-            <h2 className="text-lg font-semibold mb-2">Branch Revenue</h2>
-            <ResponsiveContainer width="100%" height="90%">
-              <PieChart>
-                <Pie
-                  data={graphData.revenueByBranch}
-                  dataKey="totalRevenue"
-                  nameKey="branch"
-                  outerRadius={80}
-                  fill="#1F2937"
-                  label={({ name, percent }) =>
-                    `${name} (${(percent * 100).toFixed(0)}%)`
-                  }
+    return (
+        <div className="p-6 space-y-8">
+            {/* 🔝 Top StatCards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <StatCard
+                    title="Total Product Sales"
+                    value={`₱${cardData?.totalProductSales || 0}`}
+                    icon={FaMoneyBillWave}
+                    color="green"
                 />
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-      </div>
-    </div>
-  );
+                <StatCard
+                    title="Services Completed"
+                    value={cardData?.servicesCompleted || 0}
+                    icon={FaCut}
+                    color="orange"
+                />
+                <StatCard
+                    title="Customers Accounts"
+                    value={cardData?.totalCustomers || 0}
+                    icon={FaUserPlus}
+                    color="blue"
+                />
+                <StatCard
+                    title="Appointments Today"
+                    value={cardData?.appointmentsToday || 0}
+                    icon={FaCalendarAlt}
+                    color="purple"
+                />
+            </div>
+
+            {/* 📊 Charts Section */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Bar Chart */}
+                <div className="bg-white rounded-2xl shadow-md p-4">
+                <h2 className="text-lg font-semibold mb-4">Monthly Sales (Bar)</h2>
+                <ResponsiveContainer width="100%" height={300}>
+                    <BarChart data={salesData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="month" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="service" fill="#1e3a8a" radius={[10, 10, 0, 0]} /> {/* Dark Blue */}
+                    <Bar dataKey="product" fill="#b91c1c" radius={[10, 10, 0, 0]} /> {/* Dark Red */}
+                    </BarChart>
+                </ResponsiveContainer>
+                </div>
+
+                {/* Line Chart */}
+                <div className="bg-white rounded-2xl shadow-md p-4">
+                <h2 className="text-lg font-semibold mb-4">Revenue Trend (Line)</h2>
+                <ResponsiveContainer width="100%" height={300}>
+                    <LineChart data={salesData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="month" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Line type="monotone" dataKey="service" stroke="#1e3a8a" strokeWidth={3} /> {/* Dark Blue */}
+                    <Line type="monotone" dataKey="product" stroke="#b91c1c" strokeWidth={3} /> {/* Dark Red */}
+                    </LineChart>
+                </ResponsiveContainer>
+                </div>
+            </div>
+
+            {/* 👥 Customers Per Hour Chart */}
+            <div className="bg-white rounded-2xl shadow-md p-4">
+                <h2 className="text-lg font-semibold mb-4">Customers Per Hour (9 AM - 9 PM)</h2>
+                <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={peakHours}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="hour" />
+                    <YAxis allowDecimals={false} />
+                    <Tooltip />
+                    <Line type="monotone" dataKey="customer" stroke="#1e3a8a" strokeWidth={3} dot /> {/* Dark Blue */}
+                </LineChart>
+                </ResponsiveContainer>
+            </div>
+
+            {!loading && <Sales isExtended={true}  pSales={productsSales} sSales={serviceSales}/>}
+        </div>
+    );
 };
 
-export default DashboardStats;
-  
+export default Dashboard;

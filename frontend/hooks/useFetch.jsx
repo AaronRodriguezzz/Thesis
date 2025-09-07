@@ -1,26 +1,32 @@
-import { useEffect, useState } from 'react';
-import { get_data } from '../services/GetMethod'; // adjust this path if needed
+// src/hooks/useFetch.js
+import { useEffect, useState } from "react";
+import { get_data } from "../services/GetMethod";
 
-const useFetch = (url) => {
-  const [loading, setLoading] = useState(true);
-  const [data, setData] = useState([]);
+export const useFetch = (url, page = null, deps = []) => {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchIt = async () => {
+    let isMounted = true;
+
+    const fetchData = async () => {
       try {
-        const res = await get_data(url);
-        setData(res);
-      } catch (e) {
-        setError(e);
+        setLoading(true);
+        const result = await get_data(url, page);
+        if (isMounted) setData(result);
+      } catch (err) {
+        if (isMounted) setError(err.message || "Failed to fetch");
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     };
-    fetchIt();
-  }, [url]);
 
-  return { loading, data, error };
-}
+    fetchData();
+    return () => {
+      isMounted = false; // cleanup
+    };
+  }, [...deps]);
 
-export default useFetch;
+  return { data, loading, error, setData };
+};

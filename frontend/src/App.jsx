@@ -27,13 +27,13 @@ import Products from "./Admin/Products";
 import Sales from "./Admin/Sales";
 import Services from "./Admin/Services";
 import AdminLogin from "./Admin/Login";
+import AccountPage from "./Admin/Account";
+
 
 //FrontDesk Pages
-import FdDashboard from "./FrontDesk/Dashboard";
-import FdAppointment from "./FrontDesk/Appointments";
+import FDAppointment from "./FrontDesk/Appointments";
 import POS from "./FrontDesk/POS";
 import Barbers from "./FrontDesk/Barbers";
-import AccountPage from "./FrontDesk/Account";
 
 // Layouts
 import UserLayout from "../layouts/UserLayout";
@@ -73,12 +73,13 @@ function App() {
           <Route path="products" element={<Products />} />
           <Route path="sales" element={<Sales />} />
           <Route path="services" element={<Services />} />
+          <Route path="account" element={<AccountPage />} />
         </Route>
 
 
         <Route path="/front-desk" element={<FrontDeskLayout />}>          
-          <Route path="dashboard" element={<FdDashboard />} />
-          <Route path="appointments" element={<FdAppointment />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="appointments" element={<FDAppointment />} />
           <Route path="customers" element={<Customers />} />
           <Route path="products" element={<POS />} />
           <Route path="barbers" element={<Barbers />} />

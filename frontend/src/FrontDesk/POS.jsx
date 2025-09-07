@@ -1,34 +1,55 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { FaSearch } from "react-icons/fa";
-import Pagination from "@mui/material/Pagination";
-import { get_data } from "../../services/GetMethod";
 import { update_data } from "../../services/PutMethod";
 import { useUser } from "../../hooks/userProtectionHooks";
+import { useFetch } from "../../hooks/useFetch";
+import POSLoading from "../../components/animations/POSLoading";
 
 const POS = () => {
     const user = useUser();
     const baseUrl = import.meta.env.MODE === 'development' ? 'http://localhost:4001' : 'https://tototumbs.onrender.com';
-    const [productList, setProductList] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
-    const [page, setPage] = useState(1);
     const [checkOutList, setCheckOutList] = useState([]);
     const [totalSummary, setTotalSummary] = useState(0)
 
+    const { data, loading, error, setData } = useFetch(
+        user ? `/products/${user.branchAssigned}` : null, 
+        [user?.branchAssigned]
+    );
+
+    const productList = data?.products || [];
+
     const filteredProducts = useMemo(() => {
-        return productList && productList.filter(product =>
-            product?.name.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
-            product?.price.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
-            product?.description.toString().toLowerCase().includes(searchTerm.toLowerCase())
-        );  
-    }, [productList, searchTerm]);  
+        return productList
+        ? productList.filter(product =>
+            product?.name?.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
+            product?.price?.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
+            product?.description?.toString().toLowerCase().includes(searchTerm.toLowerCase())
+        )
+        : [];
+    }, [productList, searchTerm]);
+
+    useEffect(() => {
+        console.log(productList);
+    },[productList])
+ 
 
 
     const addTo_checkOutList = (item) => {
-        const newItem = {
-            ...item,
-            checkOutQuantity: 1,
+
+        const exist = checkOutList.find(p => p._id === item._id)
+
+        if(exist){
+            setCheckOutList(prevList => prevList.map(p => p._id === item._id ? { ...p, checkOutQuantity: p.checkOutQuantity + 1 } : p));
+        }else{
+            const newItem = {
+                ...item,
+                checkOutQuantity: 1,
+            }
+
+            setCheckOutList(prevList => [...prevList, newItem]);
         }
-        setCheckOutList(prevList => [...prevList, newItem]);
+
     }
 
     const removeItem = (id) => {
@@ -67,43 +88,32 @@ const POS = () => {
             if (response.updatedData) {
                 setCheckOutList([]);
 
-                setProductList(prev =>
-                    prev.map(p => {
+                setData(prev => ({
+                    ...prev,
+                    products: prev.products.map(p => {
                         const updated = response.updatedData.find(prod => prod._id === p._id);
                         return updated ? updated : p;
-                    })
-                );
+                    }),
+                }));
             }
 
         }catch(err){
             console.log(err);
         }
     }
-
-    
+  
     useEffect(() => {
         let totalAmount = 0;
-
+        console.log(checkOutList);
         checkOutList.forEach(product => {
             totalAmount += product.price * product.checkOutQuantity;
         });
 
-        console.log(checkOutList);
-
         setTotalSummary(totalAmount);
     },[checkOutList])
-    
-    useEffect(() => {
-        const get_products = async () => {
-            const data = await get_data('/products', page);
-        
-            //exclude the barber's password
-            if (data) {
-                setProductList(data.products);
-            }
-        };
-        get_products();
-    }, [page]);
+
+    if(loading) return <POSLoading />;
+    if (error) return <p className="p-4 text-red-500">Error loading data</p>;
 
     return (
         <div className="flex min-h-screen">
@@ -134,20 +144,21 @@ const POS = () => {
                                 <h2 className="text-2xl font-semibold mb-4 tracking-tight">Product Catalog</h2>
                             </div>
 
-                            <div className="h-[560px] w-full flex flex-row flex-wrap items-center justify-center gap-4 overflow-x-auto">
+                            <div className="h-[600px] w-full flex flex-row flex-wrap items-center justify-center gap-4 overflow-x-auto">
                                 {filteredProducts.map((product) => (
-                                    <div className="flex flex-col bg-gray-100 items-start p-4 w-[220px] shadow-md rounded-lg" key={product._id}>
-                                        <img src={`${baseUrl}/${product.imagePath}`} alt="" className="w-[180px] h-[200px] rounded-lg mb-3 shadow-md"/>
+                                    <div className="flex flex-col bg-gray-100 items-start p-4 w-[200px] shadow-md rounded-lg" key={product._id}>
+                                        <img src={`${baseUrl}/${product.imagePath}`} alt="" className="w-[180px] h-[180px] rounded-lg mb-3 shadow-md"/>
 
                                         <div className="tracking-tighter" key={product._id}>
                                             <h1 className="text-sm font-bold">{product.name}</h1>
                                             <h3 className="text-sm font-semibold">₱ {product.price}</h3>
-                                            <p className="text-sm font-semibold">On stock: {product?.stock}</p>
-
+                                            <p className="text-sm font-semibold">
+                                                On stock: {product?.stock[product.branch.findIndex(b => b === user.branchAssigned)] || 0}
+                                            </p>
                                             <button 
                                                 className="bg-green-500 rounded-full text-white px-2 text-md my-2 font-semibold disabled:opacity-50"
                                                 onClick={() => addTo_checkOutList(product)}
-                                                disabled={checkOutList.find(p => p._id === product?._id) || product?.stock === 0}
+                                                disabled={product?.stock[product.branch.findIndex(b => b === user.branchAssigned)] === checkOutList[checkOutList.findIndex(c => c._id === product._id)]?.checkOutQuantity }
                                             >
                                                 + Add
                                             </button>
@@ -162,7 +173,7 @@ const POS = () => {
                     <div className="flex-1 bg-white space-y-5 rounded-md p-4">
                         <h1 className="font-semibold text-2xl tracking-tight py-2">Check Out Summary</h1>
 
-                        <div className="min-h-[550px] max-h-[70%] overflow-y-auto space-y-4">
+                        <div className="h-[600px] overflow-y-auto space-y-4">
                             {checkOutList &&  checkOutList.map((product) => (
                                 <div
                                     className="relative w-full flex gap-4 bg-gray-100 p-3 shadow-md rounded-lg items-start"
@@ -199,7 +210,7 @@ const POS = () => {
                                                 <button 
                                                     className="bg-white px-2 text-lg" 
                                                     onClick={() => quantityChange(product._id, 1)}
-                                                    disabled={product.stock === product.checkOutQuantity}
+                                                    disabled={product?.stock[product.branch.findIndex(b => b === user.branchAssigned)] === product.checkOutQuantity}
                                                 >
                                                     +
                                                 </button>
@@ -223,7 +234,7 @@ const POS = () => {
                         </div>
                         
                         <button 
-                            disabled={!checkOutList}
+                            disabled={checkOutList.length === 0}
                             className="w-full bg-green-400 text-white py-2 rounded-lg tracking-wide hover:bg-green-700 transition ease-in-out"
                             onClick={handle_finish}
                         >
