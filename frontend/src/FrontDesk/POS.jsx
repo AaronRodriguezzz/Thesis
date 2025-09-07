@@ -29,12 +29,6 @@ const POS = () => {
         : [];
     }, [productList, searchTerm]);
 
-    useEffect(() => {
-        console.log(productList);
-    },[productList])
- 
-
-
     const addTo_checkOutList = (item) => {
 
         const exist = checkOutList.find(p => p._id === item._id)
@@ -104,7 +98,7 @@ const POS = () => {
   
     useEffect(() => {
         let totalAmount = 0;
-        console.log(checkOutList);
+        
         checkOutList.forEach(product => {
             totalAmount += product.price * product.checkOutQuantity;
         });
