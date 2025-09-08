@@ -58,10 +58,6 @@ const Services = () => {
     return (
         <div className="flex min-h-screen">
             <main className="p-4 w-full">
-                <header className="mb-6">
-                    <h1 className="text-2xl font-semibold tracking-tighter text-gray-800">Service Management</h1>
-                    <p className="text-xs text-gray-500">Handle barbershop's services efficiently.</p>
-                </header>
 
                 <div className="flex flex-col gap-6">
                     <div className="space-y-4">

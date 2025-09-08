@@ -59,11 +59,6 @@ const Products = () => {
     return (
         <div className="flex min-h-screen">
             <main className="p-4 w-full">
-                <header className="mb-6">
-                    <h1 className="text-2xl font-semibold tracking-tighter text-gray-800">Product Management</h1>
-                    <p className="text-xs text-gray-500">Manage your product's stocks and prices.</p>
-                </header>
-
                 <div className="flex flex-col gap-6">
                     <div className="space-y-4">
                         <div className="w-full bg-white p-4 rounded-lg shadow flex flex-col sm:flex-row justify-between items-center gap-4">

@@ -81,8 +81,8 @@ function App() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="appointments" element={<FDAppointment />} />
           <Route path="customers" element={<Customers />} />
-          <Route path="products" element={<POS />} />
-          <Route path="barbers" element={<Barbers />} />
+          <Route path="POS" element={<POS />} />
+          <Route path="queueing" element={<Barbers />} />
           <Route path="sales" element={<Sales />} />
           <Route path="account" element={<AccountPage />} />
         </Route>  

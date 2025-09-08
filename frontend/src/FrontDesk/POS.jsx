@@ -112,10 +112,6 @@ const POS = () => {
     return (
         <div className="flex min-h-screen">
             <main className="p-4 w-full">
-                <header className="mb-6">
-                    <h1 className="text-2xl font-semibold tracking-tighter text-gray-800">Product Management</h1>
-                    <p className="text-xs text-gray-500">Manage your product's stocks and prices.</p>
-                </header>
 
                 <div className="h-[80vh] flex flex-row gap-6">
                     <div className="flex-3 flex-col space-y-4">
