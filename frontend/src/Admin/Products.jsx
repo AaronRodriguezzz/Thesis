@@ -53,9 +53,6 @@ const Products = () => {
         get_products();
     }, [page]);
 
-
-    console.log(addingProduct)
-
     return (
         <div className="flex min-h-screen">
             <main className="p-4 w-full">

@@ -118,194 +118,194 @@ const Appointments = () => {
 
     return (
         <div className="flex min-h-screen">
-        <main className="flex flex-col justify-center items-center p-4 w-full">
-            {/* Header */}
-            <div className="w-[90%] md:w-[95%] lg:w-[80%] flex justify-between items-center leading-3 bg-gray-800 text-white p-4 my-2 shadow rounded">
-                <div>
-                    <h1 className="text-s md:text-[20px] lg:text-[30px] tracking-tighter text-left my-4">
-                    TOTO TUMBS STUDIO
-                    </h1>
-                    <p className="text-xs md:text-[20px]">
-                    119 Ballecer South Signal Taguig City
-                    </p>
-                </div>
-                <h2 className="text-xs md:text-[20px] lg:text-[30px] font-extralight tracking-tighter text-center my-4">
-                    {today.toISOString().split("T")[0]} {time}
-                </h2>
-            </div>
-
-            {/* Stats */}
-            <div className="w-[90%] md:w-[95%] lg:w-[80%] flex gap-x-2 items-center justify-between leading-3 mb-4">
-                <div className="w-[50%] flex items-center bg-white gap-8 p-4">
-                    <MdCalendarToday className="text-[40px] text-gray-800" />
+            <main className="flex flex-col justify-center items-center p-4 w-full">
+                {/* Header */}
+                <div className="w-[90%] md:w-[95%] lg:w-[80%] flex justify-between items-center leading-3 bg-gray-800 text-white p-4 my-2 shadow rounded">
                     <div>
-                    <h1 className="text-s md:text-[20px] lg:text-[25px] tracking-tighter text-left my-2">
-                        Appointment
-                    </h1>
-                    <p className="text-xs md:text-[20px] lg:text-[30px] font-extralight tracking-tighter text-left">
-                        {appointmentsByHour.filter((a) => a.status === "Booked").length}
-                    </p>
-                    </div>
-                </div>
-
-                <div className="w-[50%] flex items-center justify-between bg-white gap-4 px-4 py-4">
-                    <div className="flex">
-                    <MdDirectionsWalk className="text-[50px] text-gray-800" />
-                    <div>
-                        <h1 className="text-s md:text-[20px] lg:text-[25px] tracking-tighter text-left my-2">
-                        Walk-In
+                        <h1 className="text-s md:text-[20px] lg:text-[30px] tracking-tighter text-left my-4">
+                            TOTO TUMBS STUDIO
                         </h1>
-                        <p className="text-xs md:text-[20px] lg:text-[30px] font-extralight tracking-tighter text-left">
-                        {walkInList.length}
+                        <p className="text-[15px]">
+                            119 Ballecer South Signal Taguig City
                         </p>
                     </div>
-                    </div>
-
-                    <button
-                    className="bg-black rounded-full py-2 px-4 text-white text-2xl font-semibold"
-                    onClick={() => setIsAddingWalkIn(true)}
-                    >
-                    +
-                    </button>
+                    <h2 className="text-xs md:text-[20px] lg:text-[30px] font-extralight tracking-tighter text-center my-4">
+                        {today.toISOString().split("T")[0]} {time}
+                    </h2>
                 </div>
-            </div>
 
-            {/* Barber List */}
-            <div className="w-full h-full flex flex-row justify-center gap-8">
-                {barberList.map((barber) => (
-                    <div
-                    key={barber._id}
-                    className="relative w-[25%] h-[80%] flex flex-col items-center bg-white shadow-lg rounded-lg p-4"
-                    >
-                    {barber.imagePath ? (
-                        <img
-                        src={`${baseUrl}/${barber.imagePath}`}
-                        alt="Profile"
-                        className="w-20 h-20 rounded-full object-cover"
-                        />
-                    ) : (
-                        <FaUserCircle className="text-[120px] text-black mb-2" />
-                    )}
+                {/* Stats */}
+                <div className="w-[90%] md:w-[95%] lg:w-[80%] flex gap-x-2 items-center justify-between leading-3 mb-4">
+                    <div className="w-[50%] flex items-center bg-white gap-8 p-4">
+                        <MdCalendarToday className="text-[40px] text-gray-800" />
+                        <div>
+                        <h1 className="text-s md:text-[20px] lg:text-[25px] tracking-tighter text-left my-2">
+                            Appointment
+                        </h1>
+                        <p className="text-xs md:text-[20px] lg:text-[30px] font-extralight tracking-tighter text-left">
+                            {appointmentsByHour.filter((a) => a.status === "Booked").length}
+                        </p>
+                        </div>
+                    </div>
 
-                    <h1 className="text-3xl font-semibold tracking-tight">
-                        {barber.fullName}
-                    </h1>
-                    <p>
-                        Current Status:
-                        <span
-                        style={{
-                            marginLeft: "3px",
-                            color:
-                            barber.status === "Available" ||
-                            barber.status === "Barbering"
-                                ? "green"
-                                : barber.status === "On-break"
-                                ? "orange"
-                                : "red",
-                        }}
-                        >
-                        {barber.status}
-                        </span>
-                    </p>
+                    <div className="w-[50%] flex items-center justify-between bg-white gap-4 px-4 py-4">
+                        <div className="flex">
+                        <MdDirectionsWalk className="text-[50px] text-gray-800" />
+                        <div>
+                            <h1 className="text-s md:text-[20px] lg:text-[25px] tracking-tighter text-left my-2">
+                            Walk-In
+                            </h1>
+                            <p className="text-xs md:text-[20px] lg:text-[30px] font-extralight tracking-tighter text-left">
+                            {walkInList.length}
+                            </p>
+                        </div>
+                        </div>
 
-                    <div className="w-full flex flex-col space-y-3 mt-4 px-8">
                         <button
-                        className="w-full bg-black hover:bg-green-400 text-white tracking-tight py-2 rounded-lg transition-colors ease-in-out"
-                        onClick={() => {
-                            setIsAssigning(true);
-                            setBarberToUpdate(barber);
-                        }}
-                        disabled={
-                            barber.status !== "Available" ||
-                            barber.status === "On-break" ||
-                            barber.status === "Barbering"
-                        }
+                        className="bg-black rounded-full py-2 px-4 text-white text-2xl font-semibold"
+                        onClick={() => setIsAddingWalkIn(true)}
                         >
-                        Assign Customer
-                        </button>
-                        <button
-                        className="w-full bg-black hover:bg-green-400 text-white tracking-tight py-2 rounded-lg transition-colors ease-in-out"
-                        onClick={() => {
-                            setIsCompleting(true);
-                            setBarberToUpdate(barber);
-                        }}
-                        disabled={barber.status !== "Barbering"}
-                        >
-                        Complete Barbering
-                        </button>
-                        <button
-                        className="w-full bg-black hover:bg-orange-400 text-white tracking-tight py-2 rounded-lg transition-colors ease-in-out"
-                        disabled={
-                            barber.status === "Unavailable" ||
-                            barber.status === "On-break" ||
-                            barber.status === "Barbering"
-                        }
-                        onClick={() => update_barberStatus(barber, "On-break")}
-                        >
-                        Break Time
+                        +
                         </button>
                     </div>
-                    <button
-                        className="absolute bottom-0 left-0 w-full text-white py-2 tracking-tight"
-                        style={{
-                        backgroundColor:
-                            barber.status === "Unavailable" ||
-                            barber.status === "On-break"
-                            ? "green"
-                            : "red",
-                        }}
-                        disabled={barber.status === "Barbering"}
-                        onClick={() =>
-                        update_barberStatus(
-                            barber,
-                            barber.status === "Unavailable" ||
-                            barber.status === "On-break"
-                            ? "Available"
-                            : "Unavailable"
-                        )
-                        }
-                    >
-                        Set To{" "}
-                        {barber.status === "Unavailable" ||
-                        barber.status === "On-break"
-                        ? "Available"
-                        : "Unavailable"}
-                    </button>
-                    </div>
-                ))}
-            </div>
-        </main>
+                </div>
 
-        {/* Modals */}
-        {isAssigning && (
-            <AssignCustomer
-            onCancel={setIsAssigning}
-            appointments={appointmentsByHour}
-            walkIn={walkInList}
-            setUpdatedAppointments={setAppointmentsByHour}
-            setUpdatedWalkIns={setWalkInList}
-            setUpdatedBarber={setBarberList}
-            barber={barberToUpdate}
-            />
-        )}
+                {/* Barber List */}
+                <div className="w-full h-full flex flex-row justify-center gap-4 xl:gap-8">
+                    {barberList.map((barber) => (
+                        <div
+                            key={barber._id}
+                            className="relative w-[30%] lg:w-[25%] h-[80%] flex flex-col items-center bg-white shadow-lg rounded-lg p-2 xl:p-4"
+                        >
+                            {barber.imagePath ? (
+                                <img
+                                    src={`${baseUrl}/${barber.imagePath}`}
+                                    alt="Profile"
+                                    className="w-20 h-20 rounded-full object-cover"
+                                />
+                            ) : (
+                                <FaUserCircle className="md:text-[90px] xl:text-[120px] text-black mb-2" />
+                            )}
 
-        {isAddingWalkIn && (
-            <NewWalkInCustomer
-            onCancel={setIsAddingWalkIn}
-            setUpdatedData={setWalkInList}
-            barbers={barberList}
-            />
-        )}
+                            <h1 className="text-md xl:text-3xl font-semibold tracking-tight truncate max-w-[200px]">
+                                {barber.fullName}
+                            </h1>
+                            <p className="flex">
+                                <span className="hidden xl:block">Current Status:</span> 
+                                <span
+                                    style={{
+                                        marginLeft: "3px",
+                                        color:
+                                        barber.status === "Available" ||
+                                        barber.status === "Barbering"
+                                            ? "green"
+                                            : barber.status === "On-break"
+                                            ? "orange"
+                                            : "red",
+                                    }}
+                                >
+                                    {barber.status}
+                                </span>
+                            </p>
 
-        {isCompleting && (
-            <ServiceCompleteModal
-            onCancel={setIsCompleting}
-            barber={barberToUpdate}
-            setUpdatedAppointments={setAppointmentsByHour}
-            setUpdatedWalkIns={setWalkInList}
-            setUpdatedBarber={setBarberList}
-            />
-        )}
+                            <div className="w-full flex flex-col space-y-3 mt-4 px-2 xl:px-8">
+                                <button
+                                    className="w-full text-sm lg:text-md xl:text-lg bg-black hover:bg-green-400 text-white tracking-tight py-2 rounded-lg transition-colors ease-in-out"
+                                    onClick={() => {
+                                        setIsAssigning(true);
+                                        setBarberToUpdate(barber);
+                                    }}
+                                    disabled={
+                                        barber.status !== "Available" ||
+                                        barber.status === "On-break" ||
+                                        barber.status === "Barbering"
+                                    }
+                                >
+                                    Assign Customer
+                                </button>
+                                <button
+                                    className="w-full  text-sm lg:text-md xl:text-lg bg-black hover:bg-green-400 text-white tracking-tight py-2 rounded-lg transition-colors ease-in-out"
+                                    onClick={() => {
+                                        setIsCompleting(true);
+                                        setBarberToUpdate(barber);
+                                    }}
+                                    disabled={barber.status !== "Barbering"}
+                                >
+                                    Complete Barbering
+                                </button>
+                                <button
+                                    className="w-full  text-sm lg:text-md xl:text-lg bg-black hover:bg-orange-400 text-white tracking-tight py-2 rounded-lg transition-colors ease-in-out"
+                                    disabled={
+                                        barber.status === "Unavailable" ||
+                                        barber.status === "On-break" ||
+                                        barber.status === "Barbering"
+                                    }
+                                    onClick={() => update_barberStatus(barber, "On-break")}
+                                >
+                                    Break Time
+                                </button>
+                            </div>
+                            <button
+                                className="absolute bottom-0 left-0 w-full text-white py-2 tracking-tight"
+                                style={{
+                                backgroundColor:
+                                    barber.status === "Unavailable" ||
+                                    barber.status === "On-break"
+                                    ? "green"
+                                    : "red",
+                                }}
+                                disabled={barber.status === "Barbering"}
+                                onClick={() =>
+                                update_barberStatus(
+                                    barber,
+                                    barber.status === "Unavailable" ||
+                                    barber.status === "On-break"
+                                    ? "Available"
+                                    : "Unavailable"
+                                )
+                                }
+                            >
+                                Set To{" "}
+                                {barber.status === "Unavailable" ||
+                                barber.status === "On-break"
+                                ? "Available"
+                                : "Unavailable"}
+                            </button>
+                        </div>
+                    ))}
+                </div>
+            </main>
+
+            {/* Modals */}
+            {isAssigning && (
+                <AssignCustomer
+                onCancel={setIsAssigning}
+                appointments={appointmentsByHour}
+                walkIn={walkInList}
+                setUpdatedAppointments={setAppointmentsByHour}
+                setUpdatedWalkIns={setWalkInList}
+                setUpdatedBarber={setBarberList}
+                barber={barberToUpdate}
+                />
+            )}
+
+            {isAddingWalkIn && (
+                <NewWalkInCustomer
+                onCancel={setIsAddingWalkIn}
+                setUpdatedData={setWalkInList}
+                barbers={barberList}
+                />
+            )}
+
+            {isCompleting && (
+                <ServiceCompleteModal
+                onCancel={setIsCompleting}
+                barber={barberToUpdate}
+                setUpdatedAppointments={setAppointmentsByHour}
+                setUpdatedWalkIns={setWalkInList}
+                setUpdatedBarber={setBarberList}
+                />
+            )}
         </div>
     );
 };

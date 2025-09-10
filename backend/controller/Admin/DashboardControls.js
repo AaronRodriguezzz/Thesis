@@ -1,184 +1,148 @@
+const ServiceSales = require('../../models/ServiceSales');
+const ProductSales = require('../../models/SalesRecord');
 const Appointment = require('../../models/Appointment');
-const Sales = require('../../models/SalesRecord');
-const Customers = require('../../models/CustomerAccount');
-const WalkIn = require('../../models/WalkIn');
+const CustomersAccounts = require('../../models/CustomerAccount');
+const monthNumberToWord = require('../../utils/monthWord')
+const timeData = require('../../public/timeData');
 
-const dashboardCardsData = async (req,res) => {
+const cardDataControls = async (req, res) => {
+    const branchId = req.params.branchId
+
     try{
-        const now = new Date();
-        const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-        const startOfNextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+        const startOfToday = new Date();
+        startOfToday.setHours(0, 0, 0, 0);
 
-        const [customers, appointments, sales, walkIn] = await Promise.all([
-            Customers.find({ status: 'Active'}), 
-            Appointment.find({updatedAt: { 
-                $gte: startOfMonth,
-                $lt: startOfNextMonth
-            }})
-            .populate('service')
-            .populate('additionalService'),
-            Sales.find(),
-            WalkIn.find({updatedAt: { 
-                $gte: startOfMonth,
-                $lt: startOfNextMonth
-            }})
-        ])
+        const endOfToday = new Date();
+        endOfToday.setHours(23, 59, 59, 999); 
 
-        let monthlyRevenue = 0;
+        const page = parseInt(req.query.page) || 1;
+        const limit = 10;
+        const skip = (page - 1) * limit;
 
-        monthlyRevenue += appointments
-        .filter(a => a.status !== 'Finished')
-        .reduce((sum, b) => sum + (b.totalAmount), 0);
+        const query = branchId ? { branch: branchId } : {};
+        
+        const totalCustomers = await CustomersAccounts.countDocuments();
+        const productsSales = await ProductSales.find(query)
+            .populate('products.product')  
+            .populate('soldBy')       
+            .populate('branch')
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
 
-        monthlyRevenue += walkIn
-        .filter(a => a.status !== 'Finished')
-        .reduce((sum, b) => sum + (b.totalAmount || 0), 0);
+        const serviceSales = await ServiceSales.find(query)
+            .populate('service')       
+            .populate('barber')
+            .populate('branch')
+            .populate('recordedBy')
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
+            
+        const appointmentsToday = await Appointment.countDocuments({ 
+            createdAt: { $gte: startOfToday, $lte: endOfToday }, 
+            branch: branchId
+        });
 
-
-        let productRevenue = 0;
-        productRevenue = sales.reduce((sum, b) => sum + (b.totalPrice || 0), 0);
-
+        const totalProductSales = productsSales?.reduce((sum, s) => sum + s.totalPrice, 0) || 0; 
+        const servicesCompleted = serviceSales?.reduce((sum, s) => sum + 1, 0) || 0
+        
 
         return res.status(200).json({ 
-            customers: customers.length, 
-            appointmentsThisMonth: appointments.length,
-            monthlyRevenue,
-            productRevenue
+            productsSales, 
+            serviceSales,
+            totalProductSales,
+            servicesCompleted,
+            totalCustomers,
+            appointmentsToday
         })
 
-        
     }catch(err){
-        console.log(err);
-        return res.status(500).json({message: 'Error'})
+        console.log(err)
+        res.status(500).json({message: err})
     }
 }
 
-const graphData = async (req,res) => {
-
+const chartsDataControls = async (req,res) => {
     try{
-         const appointmentByStatus = await Appointment.aggregate([
-            {
-                $group: {
-                    _id: "$status",    
-                    total: { $sum: 1 }     
-                }
-            },
-            {
-                $project: {
-                    _id: 0,
-                    status: "$_id", 
-                    total: 1
-                }
+
+        const productsSales = await ProductSales.find();
+        const serviceSales = await ServiceSales.find();     
+
+        const productSalesAggregated = productsSales.reduce((acc, curr) => {
+            const existing = acc.find(item => item.month === monthNumberToWord(new Date(curr.createdAt).getMonth()))
+
+            if(existing) {
+                existing.productTotal += curr.totalPrice
+            }else{
+                acc.push({
+                    month: monthNumberToWord(new Date(curr.createdAt).getMonth()),
+                    productTotal: curr.totalPrice
+                })
             }
-        ]);
 
-        const revenueByBranch = await Appointment.aggregate([
-            {   
-                $match: { status: 'Completed' }
-            },
-            {
-                $group: {
-                    _id: "$branch",
-                    totalRevenue: { $sum: "$totalAmount" }
-                }
-            },
-            {
-                $lookup: {
-                    from: "branches",           
-                    localField: "_id",           
-                    foreignField: "_id",         
-                    as: "branchInfo"
-                }
-            },
-            {
-                $unwind: "$branchInfo"     
-            },
-            {
-                $project: {
-                    _id: 0,
-                    branch: "$branchInfo.name",  
-                    totalRevenue: 1
-                }
+            return acc
+        }, [])
+
+        const serviceSalesAggregated = serviceSales.reduce((acc, curr) => {
+            const existing = acc.find(item => item.month === monthNumberToWord(new Date(curr.createdAt).getMonth()))
+
+            if(existing) {
+                existing.serviceTotal += curr.price
+            }else{
+                acc.push({
+                    month: monthNumberToWord(new Date(curr.createdAt).getMonth()),
+                    serviceTotal: curr.price
+                })
             }
-        ]);
 
+            return acc
+        }, [])
 
-        const walkInRevenue = await WalkIn.aggregate([
-            {   
-                $match: { status: 'Completed' }
-            },
-            {
-                $group: {
-                    _id: {
-                        $dateToString: { format: "%Y-%m-%d", date: "$createdAt" }
-                    },                    
-                    totalRevenue: { $sum: "$totalAmount" }
-                }
-            },
-            {
-                $project: {
-                    _id: 0,
-                    date: "$_id",  
-                    totalRevenue: 1
-                }
-            },
-            {
-                $sort: { date: 1 }
+        const mergedAggregated = [];
+
+        // First, add all product sales
+        productSalesAggregated.forEach(prod => {
+            mergedAggregated.push({ month: prod.month, product: prod.productTotal, service: 0});
+        });
+
+        // Then, merge service sales
+        serviceSalesAggregated.forEach(service => {
+            const existing = mergedAggregated.find(item => item.month === service.month);
+            if (existing) {
+                existing.service = service.serviceTotal;
+            } else {
+                mergedAggregated.push({ month: service.month, product: 0, service: service.serviceTotal });
             }
-        ]);
+        });
 
-        const appointmentRevenue = await WalkIn.aggregate([
-            {   
-                $match: { status: 'Completed' }
-            },
-            {
-                $group: {
-                    _id: {
-                        $dateToString: { format: "%Y-%m-%d", date: "$createdAt" }
-                    },                    
-                    totalRevenue: { $sum: "$totalAmount" }
-                }
-            },
-            {
-                $project: {
-                    _id: 0,
-                    date: "$_id",  
-                    totalRevenue: 1
-                }
-            },
-            {
-                $sort: { date: 1 }
-            }
-        ]);
-        
-        const combined = [...walkInRevenue, ...appointmentRevenue];
+        let peakHours = [];
 
-        const mergedRevenue = combined.reduce((acc, curr) => {
-            const existing = acc.find(item => item.date === curr.date);
+        // Initialize peakHours with all hours
+        timeData.forEach(time => {
+            peakHours.push({ hour: time.hour, value: time.value, customer: 0 });
+        });
+
+        // Count customers per hour
+        serviceSales.forEach(service => {
+            const hour = new Date(service.createdAt).getHours();
+            const existing = peakHours.find(time => time.value === hour);
 
             if (existing) {
-                existing.totalRevenue += curr.totalRevenue;
-            } else {
-                acc.push({ ...curr });
+                existing.customer += 1;
             }
-            return acc;
-        }, []);        
+        });
 
-        console.log(mergedRevenue);
-        
 
-        return res.status(200).json({
-            appointmentByStatus,
-            revenueByBranch,
-            totalRevenue: mergedRevenue
-        })
+        res.status(200).json({ salesChart: mergedAggregated, peakHours })
+
     }catch(err){
-        console.log(err);
-        return res.status(500).json({message: err})
+        console.log(err)
+        res.status(500).json({message: err})
     }
 }
 
 module.exports = {
-    dashboardCardsData,
-    graphData
+    cardDataControls,
+    chartsDataControls
 }

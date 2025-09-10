@@ -10,19 +10,17 @@ const get_employees = async (req, res) => {
     try {
         // Get the current page number from the query; default to 1
         const page = parseInt(req.query.page) || 1;
-
         // Set how many customers to return per page
         const limit = 10;
-
         // Calculate how many customers to skip
         const skip = (page - 1) * limit;
- 
         // Count total number of customers (for pagination calculation)
         const totalCount = await EmployeeAccount.countDocuments(); // ❗ Fixed: was mistakenly using Request
 
         // Fetch customers with pagination, sorted by most recent
         const employees = await EmployeeAccount.find()
             .select('-password') // Exclude password field
+            .populate('branchAssigned')
             .sort({ createdAt: -1 }) // Show latest first
             .skip(skip)
             .limit(limit);
@@ -126,11 +124,13 @@ const new_admin = async (req, res) => {
  * @access Admin
  */
 const update_admin_account = async (req, res) => {
+    const id = req.body.newData._id;
+
+    if(!id) {
+        return res.status(400).json({message: 'Id missing'});
+    }
 
     try {
-        // Build the updated data object
-        const id = req.body.newData._id;
-
 
         // Update the account
         const account = await EmployeeAccount.findByIdAndUpdate(id, req.body.newData, { new: true });
@@ -139,25 +139,62 @@ const update_admin_account = async (req, res) => {
             return res.status(404).json({ message: 'Account not found or update failed' });
         }
 
-        const branchId = account.branchAssigned.toString();
 
-        if (global.queueState[branchId]) {
-            const barbers = global.queueState[branchId].barbers.map(b =>
-                b._id.toString() === account._id.toString() ? account : b
-            );
+        if(account.role === 'Barber'){
+            const branchId = account.branchAssigned.toString();
 
-            global.queueState[branchId].barbers = barbers;
+            if (global.queueState[branchId]) {
+                const barbers = global.queueState[branchId].barbers.map(b =>
+                    b._id.toString() === account._id.toString() ? account : b
+                );
 
-            // Emit updated state
-            global.sendQueueUpdate({ branchId, ...global.queueState[branchId] });
+                global.queueState[branchId].barbers = barbers;
+
+                // Emit updated state
+                global.sendQueueUpdate({ branchId, ...global.queueState[branchId] });
+            }
         }
+   
 
-        return res.status(200).json({ message: 'Update successful', updatedInfo: account });
+        return res.status(200).json({ message: 'Update successful.', updatedInfo: account });
     } catch (err) {
         console.error(err);
         return res.status(500).json({ message: 'Server error' });
     }
 };
+
+const updatePassword = async (req,res) => {
+    const { id, currentPassword, newPassword } = req.body.newData;
+
+    if(!id || !currentPassword || !newPassword) {
+        return res.status(400).json({ message: 'Illegal Payload'})
+    }
+
+    try{
+
+        const user = await EmployeeAccount.findById(id).select('password');
+
+        if(!user){
+            return res.status(404).json({message: 'User does not exist'})
+        }
+
+        const passwordMatch = await bcrypt.compare(currentPassword, user.password);
+
+        if(!passwordMatch){
+            return res.status(400).json({message: 'User does not exist'})
+        }
+
+        const encryptedPassword = await bcrypt.hash(newPassword, 10);
+        user.password = encryptedPassword;  
+        await user.save();
+
+        return res.status(200).json({ updated: true, message: 'Password Updated Successfully'})
+
+    }catch(err){
+        console.log(err);
+        return res.status(500).json({ message: err?.message || 'Internal server error'})
+    }
+}
 
 /**
  * @desc Deletes an employee/admin account by ID
@@ -188,5 +225,6 @@ module.exports = {
     get_Barbers,
     new_admin,
     update_admin_account,
-    delete_employee
+    delete_employee,
+    updatePassword
 };

@@ -3,10 +3,10 @@ import { update_data } from "../../services/PutMethod";
 import { useAuth } from "../../contexts/UserContext";
 import { isFormValid } from "../../utils/objectValidation";
 import { CustomAlert } from "../../components/modal/CustomAlert";
+import { LogOut, User, Lock, Edit3, Save } from "lucide-react";
 
 const AdminProfilePage = () => {
   const { user, setUser, logout } = useAuth();
-  console.log(user);
   const [editMode, setEditMode] = useState(false);
   const [changingPassMode, setChangingPassMode] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -26,19 +26,13 @@ const AdminProfilePage = () => {
   const handleSave = async (e) => {
     e.preventDefault();
 
-    if (!isFormValid(formData, ["address"])) {
-      CustomAlert("error", "Please fill in all required fields.");
-      return;
-    }
-
     try {
       setLoading(true);
-      const response = await update_data("/auth/update_user", formData);
+      const response = await update_data("/update_employee", formData);
 
       if (response.updatedInfo) {
         setUser(response.updatedInfo);
         setEditMode(false);
-        CustomAlert("success", "Profile updated successfully.");
       }
     } catch (err) {
       console.log(err);
@@ -62,7 +56,7 @@ const AdminProfilePage = () => {
 
     try {
       setLoading(true);
-      const response = await update_data("/auth/update_user_password", payload);
+      const response = await update_data("/update_password", payload);
 
       if (response.updated) {
         setChangingPassMode(false);
@@ -71,14 +65,13 @@ const AdminProfilePage = () => {
           newPassword: "",
           confirmPassword: "",
         });
-        CustomAlert("success", "Password updated successfully.");
       }
     } catch (err) {
       console.log(err);
     } finally {
       setLoading(false);
     }
-  };
+  };  
 
   useEffect(() => {
     if (user) {
@@ -90,22 +83,21 @@ const AdminProfilePage = () => {
   }, [user]);
 
   return (
-    <div className="min-h-screen w-screen bg-gray-100 flex items-center justify-center p-6">
-      <div className="w-full max-w-3xl p-10 bg-white rounded-2xl shadow-xl">
-        {/* Header */}
-        <h1 className="font-bold text-4xl text-center text-orange-500 mb-10 tracking-tight">
-          Admin Profile
+    <div className="h-screen w-screen bg-white flex items-center justify-center text-gray-100">
+      <div className="w-full max-w-3xl p-10 bg-gray-900 rounded-2xl shadow-2xl border border-gray-700">
+        <h1 className="font-bold text-4xl text-center text-gray-400 mb-10 tracking-tight flex items-center justify-center gap-2">
+          <User className="w-8 h-8" /> Admin Profile
         </h1>
 
-        {/* Action Buttons */}
         <div className="flex flex-col md:flex-row justify-center gap-4 mb-10">
           <button
             onClick={() => {
               setEditMode((prev) => !prev);
               setChangingPassMode(false);
             }}
-            className="flex-1 bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold py-3 rounded-lg transition"
+            className="flex-1 flex items-center justify-center gap-2 bg-gray-500 hover:bg-orange-600 text-white text-sm font-semibold py-3 rounded-lg transition"
           >
+            {editMode ? <Lock className="w-4 h-4" /> : <Edit3 className="w-4 h-4" />} 
             {editMode ? "Cancel Edit" : "Manage Profile"}
           </button>
           <button
@@ -113,16 +105,15 @@ const AdminProfilePage = () => {
               setChangingPassMode((prev) => !prev);
               setEditMode(false);
             }}
-            className="flex-1 bg-gray-600 hover:bg-gray-700 text-white text-sm font-semibold py-3 rounded-lg transition"
+            className="flex-1 flex items-center justify-center gap-2 bg-gray-700 hover:bg-gray-600 text-white text-sm font-semibold py-3 rounded-lg transition"
           >
+            <Lock className="w-4 h-4" />
             {changingPassMode ? "Cancel Edit" : "Change Password"}
           </button>
         </div>
 
-        {/* Profile Form */}
         {!changingPassMode ? (
           <form className="space-y-6" onSubmit={handleSave}>
-            {/* Row 1 */}
             <ProfileField
               label="Full Name"
               value={formData?.fullName}
@@ -130,9 +121,6 @@ const AdminProfilePage = () => {
               name="fullName"
               onChange={handleChange}
             />
-              
-
-            {/* Row 2 */}
             <ProfileField
               label="Email"
               value={formData?.email}
@@ -140,8 +128,6 @@ const AdminProfilePage = () => {
               name="email"
               onChange={handleChange}
             />
-
-            {/* Row 3 */}
             <ProfileField
               label="Role"
               value={formData?.role}
@@ -154,10 +140,11 @@ const AdminProfilePage = () => {
               <div className="flex justify-end">
                 <button
                   type="submit"
-                  className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg shadow"
+                  className="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg shadow"
                   disabled={loading}
                 >
-                  {loading ? "Saving Changes.." : "Save Changes"}
+                  <Save className="w-4 h-4" />
+                  {loading ? "Saving.." : "Save Changes"}
                 </button>
               </div>
             )}
@@ -192,23 +179,23 @@ const AdminProfilePage = () => {
             <div className="flex justify-end">
               <button
                 type="submit"
-                className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg shadow"
+                className="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg shadow"
                 disabled={loading}
               >
-                {loading ? "Saving Changes.." : "Save Changes"}
+                <Save className="w-4 h-4" />
+                {loading ? "Saving.." : "Save Password"}
               </button>
             </div>
           </form>
         )}
 
-        {/* Logout Button */}
         {!changingPassMode && !editMode && (
           <div className="flex justify-center mt-10">
             <button
-              className="bg-red-500 text-lg tracking-tight text-white py-3 px-10 rounded-full hover:bg-red-600 transition"
+              className="flex items-center gap-2 bg-red-600 text-lg tracking-tight text-white py-3 px-10 rounded-full hover:bg-red-700 transition"
               onClick={logout}
             >
-              LOG OUT
+              <LogOut className="w-5 h-5" /> LOG OUT
             </button>
           </div>
         )}
@@ -219,7 +206,7 @@ const AdminProfilePage = () => {
 
 const ProfileField = ({ label, value, editable, name, onChange }) => (
   <div className="flex-1">
-    <label className="font-semibold text-sm block mb-1 text-gray-600">
+    <label className="font-semibold text-sm block mb-1 text-gray-400">
       {label}
     </label>
     {editable ? (
@@ -228,24 +215,26 @@ const ProfileField = ({ label, value, editable, name, onChange }) => (
         name={name}
         value={value}
         onChange={onChange}
-        className="bg-gray-100 shadow-sm p-2 w-full text-base rounded-md focus:ring-2 focus:ring-orange-400 outline-none"
+        className="bg-gray-800 border border-gray-600 shadow-sm p-2 w-full text-base rounded-md focus:ring-2 focus:ring-orange-400 outline-none text-gray-100"
       />
     ) : (
-      <p className="text-gray-800 text-base tracking-tight">{value}</p>
+      <p className="text-gray-200 text-base tracking-tight bg-gray-800 border border-gray-700 p-2 rounded-md">
+        {value}
+      </p>
     )}
   </div>
 );
 
 const ProfilePasswordField = ({ label, value, onChange }) => (
   <div>
-    <label className="font-semibold text-sm block mb-1 text-gray-600">
+    <label className="font-semibold text-sm block mb-1 text-gray-400">
       {label}
     </label>
     <input
       type="password"
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="bg-gray-100 shadow-sm p-2 w-full text-base rounded-md focus:ring-2 focus:ring-orange-400 outline-none"
+      className="bg-gray-800 border border-gray-600 shadow-sm p-2 w-full text-base rounded-md focus:ring-2 focus:ring-orange-400 outline-none text-gray-100"
     />
   </div>
 );

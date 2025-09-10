@@ -11,14 +11,13 @@ const AdminAuth = require('./routes/Admin/AdminAuthRoutes');
 const AppointmentRoutes = require('./routes/Admin/AppointmentRoutes');
 const BranchRoutes = require('./routes/Admin/BranchRoutes');
 const CustomerRoutes = require('./routes/Admin/CustomerRoutes');
-const DashboardRoutes = require('./routes/Admin/DashboardRoutes');
+const DashboardRoutes = require('./routes/Admin/DashboardRoute');
 const EmployeeRoutes = require('./routes/Admin/EmployeeRoutes');
 const ProductRoutes = require('./routes/Admin/ProductRoutes');
 const SalesRoutes = require('./routes/Admin/SalesRoutes');
 const ServiceRoutes = require('./routes/Admin/ServicesRoutes');
 
 //Front Desk Routes
-const FrontDeskDashboardRoutes = require('./routes/FrontDesk/DashboardRoute');
 const AssignmentRoutes = require('./routes/FrontDesk/AssignmentRoutes');
 const WalkInRoutes = require('./routes/FrontDesk/WalkInRoutes');
 const POSRoutes = require('./routes/FrontDesk/POSRoutes');
@@ -93,7 +92,6 @@ app.use(SalesRoutes);
 app.use(ServiceRoutes);
 
 //use routes for front desk
-app.use(FrontDeskDashboardRoutes);
 app.use(AssignmentRoutes);
 app.use(WalkInRoutes);
 app.use(POSRoutes);

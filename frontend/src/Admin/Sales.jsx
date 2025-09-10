@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { FaSearch } from "react-icons/fa";
+import { FaSearch, FaEye } from "react-icons/fa";
 import Pagination from "@mui/material/Pagination";
 import { get_data } from "../../services/GetMethod";
+import ViewSalesModal from "../../components/modal/ViewProductSales";
 
 const Sales = ({ isExtended = false, sSales = [], pSales = [] }) => {
  
@@ -12,25 +13,17 @@ const Sales = ({ isExtended = false, sSales = [], pSales = [] }) => {
     const [serviceSalesPage, setServiceSalesPage] = useState(1);
     const [psPageLimit, setPsPageLimit] = useState(1);
     const [ssPageLimit, setSsPageLimit] = useState(1);
-    const [filterValue, setFilterValue] = useState('');
-
-    // const filteredEmployees = useMemo(() => {
-    //     return serviceSales && serviceSales.filter(service =>
-    //         service?.name.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
-    //         service?.duration.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
-    //         service?.price.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
-    //         service?.serviceType.toString().toLowerCase().includes(searchTerm.toLowerCase())
-    //     );
-    // }, [serviceSales, searchTerm]);
-
+    const [filterValue, setFilterValue] = useState('Product');
+    const [saleView, setSaleView] = useState(false);
+    const [saleToView, setSaleToView] = useState(null);
 
 
     useEffect(() => {
 
-        if(isExtended) return
+        if(isExtended || filterValue !== 'Service' ) return
 
         const get_services = async () => {
-            const data = await get_data('/sales/services', serviceSalesPage);
+            const data = await get_data('/sales/services', serviceSalesPage, searchTerm);
                     
             if (data) {
                 console.log('services', data.sales);
@@ -39,25 +32,26 @@ const Sales = ({ isExtended = false, sSales = [], pSales = [] }) => {
             }
         };
         get_services();
-    }, [serviceSalesPage]);
+    }, [serviceSalesPage, filterValue, searchTerm]);
 
     useEffect(() => {
 
-        if(isExtended) return
+        console.log(searchTerm);
+
+        if(isExtended || filterValue !== 'Product' ) return
 
         const getSales = async () => {
-            const data = await get_data(`/sales/products`, productSalesPage);
+            const data = await get_data(`/sales/products`, productSalesPage, searchTerm);
     
                 //exclude the barber's password
             if (data) {
-                console.log('Product', data.sales);
                 setProductSales(data.sales);
                 setPsPageLimit(data.pageCount);
             }
         };
         
         getSales();
-    }, [productSalesPage]); 
+    }, [productSalesPage, filterValue, searchTerm]); 
 
     
 
@@ -139,7 +133,6 @@ const Sales = ({ isExtended = false, sSales = [], pSales = [] }) => {
                                             ))}
                                         </tbody>
                                     </table>
-
                                 ) : (
                                     <table className="min-w-full divide-y divide-gray-200">
                                         <thead className="bg-gray-50">
@@ -149,6 +142,8 @@ const Sales = ({ isExtended = false, sSales = [], pSales = [] }) => {
                                                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Products/Qty</th>
                                                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Branch</th>
                                                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Total Price</th>
+                                                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Action</th>
+
                                             </tr>
                                         </thead>
                                         <tbody className="bg-white divide-y divide-gray-200">
@@ -156,7 +151,7 @@ const Sales = ({ isExtended = false, sSales = [], pSales = [] }) => {
                                                 <tr key={index}>
                                                     <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{sales?.createdAt.split('T')[0]}</td>
                                                     <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{sales.soldBy?.fullName}</td>
-                                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">
+                                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight truncate max-w-[200px]">
                                                         {sales.products.map((prod) => {
                                                             let productList = '';
                                                             return productList += `${prod.product?.name} (${prod?.quantity}), `
@@ -164,7 +159,15 @@ const Sales = ({ isExtended = false, sSales = [], pSales = [] }) => {
                                                     </td>
                                                     <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{sales.branch?.name}</td>
                                                     <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">₱ {sales?.totalPrice}.00</td>
-                                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{sales?.service?.name}</td>
+                                                    <td className="px-4 py-4 whitespace-nowrap">
+                                                        <button onClick={() => {
+                                                                setSaleView(true)
+                                                                setSaleToView(sales)
+                                                            }}
+                                                        >
+                                                            <FaEye />
+                                                        </button>
+                                                    </td>
                                                 </tr>
                                             ))}
                                         </tbody>
@@ -175,6 +178,13 @@ const Sales = ({ isExtended = false, sSales = [], pSales = [] }) => {
                     </div>
                 </div>
             </main>
+
+            <ViewSalesModal 
+                isOpen={saleView} 
+                onClose={() => setSaleToView(false)} 
+                sale={saleToView} 
+            />
+
         </div>
     );
 };

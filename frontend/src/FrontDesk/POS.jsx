@@ -43,7 +43,6 @@ const POS = () => {
 
             setCheckOutList(prevList => [...prevList, newItem]);
         }
-
     }
 
     const removeItem = (id) => {
@@ -110,7 +109,7 @@ const POS = () => {
     if (error) return <p className="p-4 text-red-500">Error loading data</p>;
 
     return (
-        <div className="flex min-h-screen">
+        <div className="flex h-screen">
             <main className="p-4 w-full">
 
                 <div className="h-[80vh] flex flex-row gap-6">
@@ -148,22 +147,21 @@ const POS = () => {
                                             <button 
                                                 className="bg-green-500 rounded-full text-white px-2 text-md my-2 font-semibold disabled:opacity-50"
                                                 onClick={() => addTo_checkOutList(product)}
-                                                disabled={product?.stock[product.branch.findIndex(b => b === user.branchAssigned)] === checkOutList[checkOutList.findIndex(c => c._id === product._id)]?.checkOutQuantity }
+                                                disabled={product?.stock[product.branch.findIndex(b => b === user.branchAssigned)] === checkOutList[checkOutList.findIndex(c => c._id === product._id)]?.checkOutQuantity}
                                             >
                                                 + Add
                                             </button>
                                         </div>
                                     </div>
                                 ))}
-
                             </div>
                         </div>
                     </div>
 
-                    <div className="flex-1 bg-white space-y-5 rounded-md p-4">
+                    <div className="h-[800px] flex-1 bg-white space-y-5 rounded-md p-4 shadow">
                         <h1 className="font-semibold text-2xl tracking-tight py-2">Check Out Summary</h1>
 
-                        <div className="h-[600px] overflow-y-auto space-y-4">
+                        <div className="h-[580px] overflow-y-auto space-y-4">
                             {checkOutList &&  checkOutList.map((product) => (
                                 <div
                                     className="relative w-full flex gap-4 bg-gray-100 p-3 shadow-md rounded-lg items-start"
@@ -219,13 +217,11 @@ const POS = () => {
                             ))}
                         </div>
                         
-                        <div className="flex flex-row justify-between items-center">
-                            <h1 className="text-xl font-semibold tracking-tight">Total Price: ₱{totalSummary || 0}.00</h1>
-                        </div>
+                        <h1 className="text-xl font-semibold tracking-tight">Total Price: ₱{totalSummary || 0}.00</h1>
                         
                         <button 
                             disabled={checkOutList.length === 0}
-                            className="w-full bg-green-400 text-white py-2 rounded-lg tracking-wide hover:bg-green-700 transition ease-in-out"
+                            className="w-full bg-green-400 text-white py-2 rounded-lg tracking-wide hover:bg-green-700 transition ease-in-out disabled:cursor-not-allowed"
                             onClick={handle_finish}
                         >
                             FINISH

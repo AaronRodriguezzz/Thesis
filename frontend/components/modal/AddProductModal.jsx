@@ -115,8 +115,8 @@ const NewProduct = ({ onCancel, route, setUpdatedData, dataToUpdate = null }) =>
     /** 📌 On edit mode → set default image & branch count */
     useEffect(() => {
         if (dataToUpdate) {
-        setDisplayedImage(`${baseUrl}/${productPayload.imagePath}`);
-        setNumberOfBranch(dataToUpdate.branch.length);
+            setDisplayedImage(`${baseUrl}/${productPayload.imagePath}`);
+            setNumberOfBranch(dataToUpdate.branch.length);
         }
     }, [dataToUpdate]);
 
@@ -128,8 +128,6 @@ const NewProduct = ({ onCancel, route, setUpdatedData, dataToUpdate = null }) =>
         };
         getBranches();
     }, []);
-
-  if (!displayedImage && !dataToUpdate) return null;
 
   return (
     <div className="h-screen w-screen flex items-center justify-center bg-transparent fixed top-0 left-0 z-50">
@@ -195,7 +193,7 @@ const NewProduct = ({ onCancel, route, setUpdatedData, dataToUpdate = null }) =>
             <input
                 type="text"
                 value={productPayload.name}
-                maxLength={25}
+                maxLength={22}
                 onChange={(e) =>
                 setProductPayload({
                     ...productPayload,

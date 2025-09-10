@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Bot, User, MessageCircle, X } from 'lucide-react';
 import { motion } from 'motion/react';
 import axios from 'axios';
+import DOMPurify from "dompurify";
+
 
 const Chatbot = () => {
     const [open, setOpen] = useState(false);
@@ -84,24 +86,30 @@ const Chatbot = () => {
                 {/* Messages */}
                 <div className="flex-1 overflow-y-auto p-3 space-y-2 bg-gray-50">
                     {messages.map((msg, index) => (
-                    <div
-                        key={index}
-                            className={`flex items-center gap-2 ${
-                            msg.sender === 'user' ? 'justify-end' : 'justify-start'
-                        }`}
-                    >
-                        {msg.sender === 'bot' && <Bot className="w-5 h-5 text-gray-600" />}
                         <div
-                            className={`p-2 rounded-lg max-w-[75%] text-sm ${
-                                msg.sender === 'user'
-                                ? 'bg-gray-600 text-right text-white object-fit'
-                                : 'bg-gray-200 text-left'
+                            key={index}
+                                className={`flex items-center gap-2 ${
+                                msg.sender === 'user' ? 'justify-end' : 'justify-start'
                             }`}
-                        >
-                            {msg.text}
+                        >   
+                            {msg.sender === 'bot' ? (
+                                <>
+                                    <Bot className="w-5 h-5 text-gray-600" />
+                                    <div
+                                        className='p-2 rounded-lg max-w-[75%] text-sm bg-gray-200 text-left'
+                                        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(msg.text.replace(/```html|```/g, "").trim()) }}
+                                    />
+                                </>
+                            ): (
+                                <>
+                                    <div className='p-2 rounded-lg max-w-[75%] text-sm bg-gray-600 text-right text-white object-fit'>
+                                        {msg.text}
+                                    </div>
+                                    <User className="w-5 h-5 text-gray-600" />
+                                </> 
+                            )}
+                            
                         </div>
-                        {msg.sender === 'user' && <User className="w-5 h-5 text-gray-600" />}
-                    </div>
                     ))}
                     <div ref={messagesEndRef} />
                 </div>

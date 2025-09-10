@@ -8,9 +8,11 @@ const ServicesSales = require('../../models/ServiceSales');
 const productSales = async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
-        const limit = 12;
+        const search = req.query.search || "";
+        const limit = 10;
         const skip = (page - 1) * limit;
 
+        
         const totalCount = await ProductSales.countDocuments();
         const sales = await ProductSales.find()
             .populate('products.product')  
@@ -21,8 +23,23 @@ const productSales = async (req, res) => {
             .limit(limit);
 
         const pageCount = Math.ceil(totalCount / limit);
+        
+        let filtered = sales;
 
-        return res.status(200).json({ sales, pageCount });
+        if (search) {
+            filtered = sales.filter(f => {
+                const createdAtStr = f.createdAt.toISOString().slice(0, 10); // YYYY-MM-DD
+
+                return (
+                createdAtStr.includes(search) ||
+                f.soldBy?.fullName?.toLowerCase().includes(search.toLowerCase()) ||
+                f.branch?.name?.toLowerCase().includes(search.toLowerCase())
+                );
+            });
+        }
+
+
+        return res.status(200).json({ sales: filtered, pageCount });
     } catch (err) {
         console.error(err);
         return res.status(500).json({ message: 'Internal server error.' });
@@ -32,8 +49,10 @@ const productSales = async (req, res) => {
 const serviceSales = async (req,res) => {
     try {
         const page = parseInt(req.query.page) || 1;
-        const limit = 12;
+        const limit = 10;
         const skip = (page - 1) * limit;
+        const search = req.query.search || "";
+
 
         const totalCount = await ServicesSales.countDocuments();
         const sales = await ServicesSales.find()
@@ -47,7 +66,24 @@ const serviceSales = async (req,res) => {
 
         const pageCount = Math.ceil(totalCount / limit);
 
-        return res.status(200).json({ sales, pageCount });
+        let filtered = sales;
+
+        if (search) {
+            filtered = sales.filter(f => {
+                const createdAtStr = f.createdAt.toISOString().slice(0, 10); // YYYY-MM-DD
+
+                return (
+                    createdAtStr.includes(search) ||
+                    f.recordedBy?.fullName?.toLowerCase().includes(search.toLowerCase()) ||
+                    f.branch?.name?.toLowerCase().includes(search.toLowerCase()) ||
+                    f.paymentMethod?.name?.toLowerCase().includes(search.toLowerCase()) ||
+                    f.service?.name?.toLowerCase().includes(search.toLowerCase()) ||
+                    f.barber?.fullName?.toLowerCase().includes(search.toLowerCase())
+                );
+            });
+        }
+
+        return res.status(200).json({ sales: filtered, pageCount });
     } catch (err) {
         console.error(err);
         return res.status(500).json({ message: 'Internal server error.' });

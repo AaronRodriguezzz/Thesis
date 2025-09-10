@@ -21,6 +21,7 @@ const Appointments = () => {
         user ? `/branch_appointments/${user?.branchAssigned}` : null, page
         [page, user]
     );
+    
 
     const appointmentList = data?.appointments || [];
     const paginationLimit = data?.pageCount || 1;
@@ -114,10 +115,10 @@ const Appointments = () => {
                                 <h2 className="text-xl font-semibold mb-4 tracking-tight">Appointment Table</h2>
 
                                 <Pagination
-                                count={paginationLimit}
-                                size="small"
-                                page={page}
-                                onChange={(event, value) => setPage(value)}
+                                    count={paginationLimit}
+                                    size="small"
+                                    page={page}
+                                    onChange={(event, value) => setPage(value)}
                                 />
                             </div>
 

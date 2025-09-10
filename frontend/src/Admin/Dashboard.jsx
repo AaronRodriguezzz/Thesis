@@ -35,7 +35,7 @@ const Dashboard = () => {
                 setLoading(true);
 
                 const [cards, chart] = await Promise.all([
-                    get_data(`/card-data/${user.branchAssigned}`),
+                    get_data('/card-data'),
                     get_data('/chart-data')
                 ])
 
