@@ -1,4 +1,4 @@
-export const dateTimeFormat = (time) => {
+export const timeFormat = (time) => {
     const hours = time.getHours();
     const rawHours = hours % 12 || 12;
     const formattedHours = rawHours.toString().padStart(2, "0");

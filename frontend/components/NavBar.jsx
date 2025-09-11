@@ -73,6 +73,13 @@ export default function Navigation() {
             </li>
           ))}
           <li
+            onClick={() => navClicked("Queueing", "/queueing")}
+            className="cursor-pointer hover:underline transition"
+            style={{ fontWeight: isActive === "Queueing" ? 600 : 400 }}
+          >
+            Queueing
+          </li>
+          <li
             onClick={() => navClicked("Faq", "/faq")}
             className="cursor-pointer hover:underline transition"
             style={{ fontWeight: isActive === "Faq" ? 600 : 400 }}

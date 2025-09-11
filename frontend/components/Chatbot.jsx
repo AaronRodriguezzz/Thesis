@@ -3,13 +3,14 @@ import { Bot, User, MessageCircle, X } from 'lucide-react';
 import { motion } from 'motion/react';
 import axios from 'axios';
 import DOMPurify from "dompurify";
+import useScrollDetect from '../hooks/useScrollDetect';
 
 
 const Chatbot = () => {
+    const scrollIsMax = useScrollDetect();
+    const messagesEndRef = useRef(null);
     const [open, setOpen] = useState(false);
     const [waiting, setWaiting] = useState(false);
-    const [scrollIsMax, setScrollIsMax] = useState(false);
-    const messagesEndRef = useRef(null);
     const [input, setInput] = useState('');
     const [messages, setMessages] = useState([
         { sender: 'bot', text: 'Hello! How can I help you today?' }
@@ -23,9 +24,7 @@ const Chatbot = () => {
         setWaiting(true);
 
         try{
-            const response = await axios.post('/api/chatbot', {prompt: input.trim()});
-            setInput('');
-    
+            const response = await axios.post('/api/chatbot', {prompt: input.trim()});    
 
             if(response.status === 200 && response.data.message){
 
@@ -37,7 +36,6 @@ const Chatbot = () => {
                 setInput('');
                 setWaiting(false);
             }
-
 
         }catch(err){
             console.log(err);
@@ -52,15 +50,6 @@ const Chatbot = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
 
-    useEffect(() => {
-        const handleScroll = () => {
-            const atBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 2;
-            setScrollIsMax(atBottom);
-        };
-
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
 
     return (
         <motion.div

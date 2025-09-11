@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { get_data } from "../../services/GetMethod";
 import { FaUserCircle } from "react-icons/fa";
 import { MdCalendarToday, MdDirectionsWalk } from "react-icons/md";
-import { dateTimeFormat } from "../../utils/formatDate";
+import { timeFormat } from "../../utils/formatDate";
 import { update_data } from "../../services/PutMethod";
 import AssignCustomer from "../../components/modal/AssigningCustomer";
 import NewWalkInCustomer from "../../components/modal/AddWalkInCustomer";
@@ -18,7 +18,7 @@ const Appointments = () => {
         : "https://tototumbs.onrender.com";
     const user = useUser();
     const today = new Date();
-    const time = dateTimeFormat(today);
+    const time = timeFormat(today);
 
     const [barberList, setBarberList] = useState([]);
     const [appointmentsByHour, setAppointmentsByHour] = useState([]);

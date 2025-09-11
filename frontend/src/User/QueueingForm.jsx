@@ -4,6 +4,7 @@ import { MdCalendarToday, MdDirectionsWalk } from "react-icons/md";
 import { queueSocket } from "../../services/SocketMethods";
 import { get_data } from "../../services/GetMethod";
 import { FaUserCircle } from 'react-icons/fa';
+import { timeFormat } from "../../utils/formatDate";
 
 export default function BarberStatusPage() {
   // useCustomerPageProtection();
@@ -15,16 +16,6 @@ export default function BarberStatusPage() {
   const [barberList, setBarberList] = useState(null);
   const [appointments, setAppointments] = useState(null);
   const [walkInList, setWalkInList] = useState(null);
-
-  const formatTime = (date) => {
-    const hours = date.getHours();
-    const rawHours = hours % 12 || 12;
-    const formattedHours = rawHours.toString().padStart(2, "0");
-    const ampm = hours >= 12 ? "PM" : "AM";
-    const minutes = date.getMinutes().toString().padStart(2, "0");
-
-    return `${formattedHours}:${minutes} ${ampm}`;
-  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -41,7 +32,6 @@ export default function BarberStatusPage() {
 
 
   useEffect(() => {
-          // When we connect
     queueSocket.on("connect", () => {
       console.log("Connected to queueing namespace");
     });
@@ -68,7 +58,7 @@ export default function BarberStatusPage() {
   useEffect(() => {
     const today = new Date();
     setDate(today.toISOString().split("T")[0]);
-    setTime(formatTime(today));
+    setTime(timeFormat(today));
   }, []);
 
   return (
@@ -76,13 +66,14 @@ export default function BarberStatusPage() {
 
       <main className="h-full w-full flex flex-col items-center">
         <div className="w-[90%] md:w-[95%] lg:w-[75%] flex justify-between items-center leading-3 bg-white p-4 my-4 shadow rounded">
-          <div className="leading-0.5">
-            <h1 className="text-s md:text-[20px] lg:text-[30px] tracking-tighter text-left my-4">
-              TOTO TUMBS STUDIO
-            </h1>
+          <div className="leading-0.2">
+            <select className="text-s md:text-[20px] lg:text-[30px] tracking-tighter text-left my-2">
+              <option value="">TOTO TUMBS STUDIO</option>
+              <option value="">TOTO TUMBS HAGONOY</option>
+            </select>
             <p className="text-xs md:text-[20px]">119 Ballecer South Signal Taguig City</p>
           </div>
-          <h2 className="text-xs md:text-[20px]  lg:text-[30px] font-extralight tracking-tighter text-center my-4">
+          <h2 className="hidden md:block md:text-[20px] lg:text-[30px] font-extralight tracking-tighter text-center my-4">
             {date} {time}
           </h2>
         </div>
@@ -103,7 +94,7 @@ export default function BarberStatusPage() {
         
           <div className="w-[50%] flex items-center justify-between bg-white gap-4 px-4 py-4 shadow-md">
             <div className="flex">
-              <MdDirectionsWalk className="text-[50px] text-gray-800" />
+              <MdDirectionsWalk className="text-[40px] text-gray-800" />
               <div>
                 <h2 className="text-s md:text-[20px] lg:text-[25px] tracking-tighter text-left my-2">
                   Walk-In

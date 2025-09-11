@@ -2,6 +2,7 @@ import React from "react";
 import Navigation from "../components/NavBar"; // or UserNavBar
 import Footer from "../components/Footer";
 import Chatbot from "../components/Chatbot";
+import HaircutSuggestionBtn from "../components/HaircutSuggestionBtn";
 import { Outlet } from "react-router-dom";
 
 const UserLayout = () => {
@@ -10,6 +11,7 @@ const UserLayout = () => {
       <Navigation otherPage={true}/>
       <main className="overflow-x-hidden pt-20">
         <Outlet />
+        <HaircutSuggestionBtn/>
         <Chatbot/>
       </main>
       <Footer />
