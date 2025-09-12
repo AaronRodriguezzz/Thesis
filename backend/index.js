@@ -16,6 +16,7 @@ const EmployeeRoutes = require('./routes/Admin/EmployeeRoutes');
 const ProductRoutes = require('./routes/Admin/ProductRoutes');
 const SalesRoutes = require('./routes/Admin/SalesRoutes');
 const ServiceRoutes = require('./routes/Admin/ServicesRoutes');
+const AnnouncementRoutes = require('./routes/Admin/AnnouncementRoute');
 
 //Front Desk Routes
 const AssignmentRoutes = require('./routes/FrontDesk/AssignmentRoutes');
@@ -90,6 +91,7 @@ app.use(EmployeeRoutes);
 app.use(ProductRoutes);
 app.use(SalesRoutes);
 app.use(ServiceRoutes);
+app.use(AnnouncementRoutes);
 
 //use routes for front desk
 app.use(AssignmentRoutes);

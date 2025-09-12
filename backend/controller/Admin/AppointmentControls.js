@@ -8,14 +8,25 @@ const cron = require('node-cron');
  */
 const getAllAppointments = async (req, res) => {
     try {
+        console.log(req.query.page);
         const page = parseInt(req.query.page) || 1;
+        const date = req.query.date
         const limit = 10;
         const skip = (page - 1) * limit;
 
-        const totalCount = await Appointment.countDocuments();
+        let query = {}
+
+        if(date){
+            const start = new Date(date);
+            const end = new Date(date);
+            end.setDate(end.getDate() + 1);
+            query.scheduledDate = { $gte: start, $lt: end };
+        }
+
+        const totalCount = await Appointment.countDocuments(query);
         const pageCount = Math.ceil(totalCount / limit);
 
-        const appointments = await Appointment.find()
+        const appointments = await Appointment.find(query)
             .populate('customer')
             .populate('service')
             .populate('additionalService')

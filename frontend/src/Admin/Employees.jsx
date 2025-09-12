@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { FaUsers, FaUserPlus, FaSearch, FaEdit, FaTrash } from "react-icons/fa";
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Pagination from "@mui/material/Pagination";
 import { get_data } from "../../services/GetMethod";
 import { delete_data } from "../../services/DeleteMethod";
@@ -55,7 +56,7 @@ const Employees = () => {
     }, [page]);
 
     return (
-        <div className="flex min-h-screen">
+        <div>
             <main className="p-4 w-full">
 
                 <div className="flex flex-col gap-6">
@@ -82,23 +83,10 @@ const Employees = () => {
                         </div>
 
                         <div className="w-full bg-white p-6 rounded-lg shadow">
-                        <h2 className="text-xl font-semibold mb-4 tracking-tight">Employees Table</h2>
 
                         <div className="flex justify-between items-center my-4 text-sm">
-                            <div>
-                                <select 
-                                    name="filter" 
-                                    value={filterValue} 
-                                    className="p-2 w-[200px] bg-gray-200 rounded-md outline-0 tracking-tight text-xs"
-                                    onChange={(e) => setFilterValue(e.target.value)}
-                                >
-                                    <option value="" disabled>Sort by</option>
-                                    <option value="Date">Date</option>
-                                    <option value="Status">Status</option>
-                                    <option value="Service">Service</option>
-                                    <option value="Branch">Branch</option>
-                                </select>
-                            </div>
+                           
+                            <h2 className="text-xl font-semibold mb-4 tracking-tight">Employees Table</h2>
 
                             <Pagination
                                 count={paginationLimit}
@@ -108,7 +96,7 @@ const Employees = () => {
                             />
                         </div>
 
-                        <div className="overflow-x-auto min-h-[400px] max-h-[600px] w-full">
+                        <div className="overflow-auto h-[550px] w-full">
                             <table className="min-w-full divide-y divide-gray-200">
                                 <thead className="bg-gray-50">
                                     <tr>

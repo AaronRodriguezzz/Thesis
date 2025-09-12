@@ -2,7 +2,6 @@ import React, { useEffect, useState, useMemo } from "react";
 import { FaSearch } from "react-icons/fa";
 import Pagination from "@mui/material/Pagination";
 import { get_data } from "../../services/GetMethod";
-import { delete_data } from "../../services/DeleteMethod";
 import NotificationBell from "../../components/NotificationBell";
 import NotificationBar from "../../components/NotificationBar";
 import { useUser } from "../../hooks/userProtectionHooks";
@@ -15,7 +14,7 @@ const Appointments = () => {
     const [appointmentList, setAppointmentList] = useState([]);
     const [notifCount, setNotifCount] = useState(5);
     const [notifOpen, setNotifOpen] = useState(false);
-    const [filterValue, setFilterValue] = useState('');
+    const [dateFilter, setDateFilter] = useState('');
 
     const filteredAppointments = useMemo(() => {
         return appointmentList && appointmentList.filter(appointment =>
@@ -32,17 +31,18 @@ const Appointments = () => {
 
 
     useEffect(() => {
+        console.log(page);
         const get_employees = async () => {
-            const data = await get_data('/all_appointments', page);
+            const data = await get_data(dateFilter !== '' ? `/all_appointments?date=${dateFilter}` : '/all_appointments' , page);
 
             //exclude the barber's password
             if (data) {
-                setAppointmentList(data.appointments);
-                setPaginationLimit(data.pageCount);
+                setAppointmentList(data?.appointments || []);
+                setPaginationLimit(data?.pageCount || 1);
             }
         };
         get_employees();
-    }, [page]);
+    }, [page, dateFilter]);
 
     return (
         <div className="flex min-h-screen">
@@ -76,30 +76,27 @@ const Appointments = () => {
                         </div>
 
                         <div className="w-full bg-white p-6 rounded-lg shadow">
-                        <h2 className="text-xl font-semibold mb-4 tracking-tight">Appointment Table</h2>
+                            <h2 className="text-xl font-semibold mb-4 tracking-tight">Appointment Table</h2>
 
-                        <div className="flex justify-between items-center my-4 text-sm">
-                            <div>
-                                <select 
-                                    name="filter" 
-                                    value={filterValue} 
-                                    className="p-2 w-[200px] bg-gray-200 rounded-md outline-0 tracking-tight text-xs"
-                                    onChange={(e) => setFilterValue(e.target.value)}
-                                >
-                                    <option value="" disabled>Sort by</option>
-                                    <option value="Date">Date</option>
-                                    <option value="Status">Status</option>
-                                    <option value="Service">Service</option>
-                                    <option value="Branch">Branch</option>
-                                </select>
+                            <div className="flex justify-between items-center my-4 text-sm">
+
+                                <div className="flex gap-x-2">
+                                    <input 
+                                        type="date" 
+                                        class="w-48 border-1 p-2 rounded-md"
+                                        value={dateFilter}
+                                        onChange={(e) => setDateFilter(e.target.value)}
+                                    /> 
+                                    <button className="text-xs bg-gray-100 hover:bg-gray-300 px-2 rounded-md transition ease-in-out" onClick={() => setDateFilter('')}>CLEAR</button>
+                                </div>
+                               
+                                <Pagination
+                                    count={paginationLimit}
+                                    size="small"
+                                    page={page}
+                                    onChange={(event, value) => setPage(value)}
+                                />
                             </div>
-                            <Pagination
-                                count={paginationLimit}
-                                size="small"
-                                page={page}
-                                onChange={(value) => setPage(value)}
-                            />
-                        </div>
 
                             <div className="overflow-x-auto min-h-[400px] max-h-[600px] w-full">
                                 <table className="min-w-full divide-y divide-gray-200">

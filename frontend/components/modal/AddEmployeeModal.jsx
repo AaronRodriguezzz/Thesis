@@ -37,7 +37,7 @@ const NewEmployee = ({  onCancel, route, setUpdatedData}) => {
     },[])
 
     return (
-        <div className='h-screen w-screen flex items-center justify-center bg-transparent fixed top-0 left-0 z-50'>
+        <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
             <form className='w-[90%] max-w-[400px] bg-white rounded-lg shadow-sm p-5 shadow-gray-200' onSubmit={add_clicked}>
                 <h1 className='text-2xl font-semibold mb-4 tracking-tight'>
                     New Employee

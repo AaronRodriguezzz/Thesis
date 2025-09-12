@@ -53,9 +53,8 @@ const Branches = () => {
     }, [page]);
 
     return (
-        <div className="flex min-h-screen">
+        <div>
             <main className="p-4 w-full">
-
                 <div className="flex flex-col gap-6">
                     <div className="space-y-4">
                         <div className="w-full bg-white p-4 rounded-lg shadow flex flex-col sm:flex-row justify-between items-center gap-4">
@@ -91,7 +90,7 @@ const Branches = () => {
                                 />
                             </div>
 
-                            <div className="min-h-[420px] w-full flex flex-row flex-wrap items-start justify-center gap-4">
+                            <div className="min-h-[550px] w-full flex flex-row flex-wrap items-start justify-center gap-4">
                                 <table className="min-w-full divide-y divide-gray-200">
                                     <thead className="bg-gray-50">
                                         <tr>

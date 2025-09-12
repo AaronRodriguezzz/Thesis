@@ -56,7 +56,7 @@ const Sales = ({ isExtended = false, sSales = [], pSales = [] }) => {
     
 
     return (
-        <div className="flex min-h-screen">
+        <div>
             <main className="p-4 w-full">
                 <div className="flex flex-col gap-6">
                     <div className="space-y-4">
@@ -100,7 +100,7 @@ const Sales = ({ isExtended = false, sSales = [], pSales = [] }) => {
                                 />}
                             </div>
 
-                            <div className="overflow-x-auto min-h-[400px] max-h-[600px] w-full">
+                            <div className="overflow-auto h-[550px] w-full">
                                 {filterValue === 'Service' ?  (
                                     <table className="min-w-full divide-y divide-gray-200">
                                         <thead className="bg-gray-50">

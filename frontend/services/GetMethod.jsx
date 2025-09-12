@@ -1,10 +1,10 @@
 import axios from 'axios';
 import { CustomAlert } from '../components/modal/CustomAlert';
 
-export const get_data = async (route, page, search) => {
+export const get_data = async (route, page) => {
     try {
         const response = await axios.get(`/api${route}`, {
-            params: { page: page, search: search},
+            params: { page: page },
             withCredentials: true,
         });
         

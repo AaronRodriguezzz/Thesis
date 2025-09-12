@@ -63,7 +63,7 @@ const NewBranch = ({ onCancel, route, setUpdatedData }) => {
 
 
     return (
-        <div className='h-screen w-screen flex items-center justify-center bg-transparent fixed top-0 left-0 z-50'>
+        <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
             <form
                 className='w-[90%] max-w-[400px] bg-white rounded-lg shadow-lg p-5 shadow-gray-400'
                 onSubmit={add_clicked}
