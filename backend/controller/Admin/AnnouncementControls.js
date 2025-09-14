@@ -40,16 +40,29 @@ const sendAnnouncement = async (req, res) => {
     }
 };
 
-const getActiveAnnouncement = async (req,res) => {
-    try{
-        const announcement = await Announcement.findOne({status: 'Active'});
+const getActiveAnnouncement = async (req, res) => {
+  try {
+    let announcement = await Announcement.findOne({ status: 'Active' });
 
-        return res.status(200).json(announcement);
-    }catch(err){
-        console.error(err);
-        return res.status(500).json({ message: err.message || 'Server Error' });
+    if (!announcement) {
+      return res.status(404).json({ message: 'No active announcement found' });
     }
-}
+
+    const expirationDate = new Date(announcement.expiration);
+
+    if (expirationDate < new Date()) {
+      announcement.status = 'Inactive';
+      await announcement.save();
+      return res.status(200).json({ message: 'Announcement expired and set to inactive' });
+    }
+
+    return res.status(200).json(announcement);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: err.message || 'Server Error' });
+  }
+};
+
 
 
 module.exports = {

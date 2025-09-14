@@ -104,9 +104,52 @@ const send_announcement = async (email, subject, description, expirationDateStr)
   }
 };
 
+const send_verification_code = async (email, code) => {
+  try {
+    await transporter.sendMail({
+      from: "Toto Tumbs Security <no-reply@tototumbs.com>",
+      to: email,
+      subject: "🔑 Forget Password Verification Code",
+      html: `
+        <div style="font-family: Arial, sans-serif; background-color: #f9f9f9; padding: 40px; color: #333;">
+          <div style="max-width: 500px; margin: auto; background: #fff; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 30px; text-align: center;">
+            
+            <!-- Header -->
+            <h2 style="font-size: 22px; color: #111; margin-bottom: 16px;">
+              🔐 Verification Code
+            </h2>
+            <p style="font-size: 15px; color: #555; margin-bottom: 30px;">
+              Use the 4-digit code below to continue with your password reset.  
+              <br />This code will expire in <b>10 minutes</b>.
+            </p>
+
+            <!-- Code Box -->
+            <div style="margin: 20px 0;">
+              <span style="display: inline-block; font-size: 28px; font-weight: bold; letter-spacing: 10px; background: #1f2937; color: #fff; padding: 12px 24px; border-radius: 8px;">
+                ${code}
+              </span>
+            </div>
+
+            <!-- Footer -->
+            <p style="font-size: 13px; color: #888; margin-top: 30px;">
+              If you didn’t request this code, please ignore this email.  
+              <br />
+              &copy; ${new Date().getFullYear()} Toto Tumbs Security Team
+            </p>
+          </div>
+        </div>
+      `,
+    });
+  } catch (err) {
+    console.log("Error sending verification code:", err);
+  }
+};
+
+
 
 
 module.exports = {
    send_appointment_details,
-   send_announcement
+   send_announcement,
+   send_verification_code
 }

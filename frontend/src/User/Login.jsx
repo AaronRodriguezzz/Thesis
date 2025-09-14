@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useUserProtection, useCustomerPageProtection, useLoginDisabling } from "../../hooks/userProtectionHooks";
 import { useAuth } from "../../contexts/UserContext";
 import { useLocation } from "react-router-dom";
+import { motion } from "motion/react"
 
 export default function Login() {
   useUserProtection();
@@ -38,15 +39,13 @@ export default function Login() {
   }
 
   return (
-    <div className="h-screen w-screen bg-[url('/login.png')] bg-cover bg-center flex items-center justify-center">
+    <motion.div 
+      initial={{ opacity: 0, y: -50 }}
+      transition={{ duration: 1.5, ease: "easeInOut" }}
+      animate={{ opacity: 1, y:0 }}
+      className="h-screen w-screen bg-[url('/login.png')] bg-cover bg-center flex items-center justify-center"
+    >
       <form className="w-[40%] min-w-[340px] max-w-[500px] flex flex-col items-center gap-y-4 md:shadow-lg rounded-xl bg-white bg-opacity-90" onSubmit={handle_submit}>
-        {/* Optional header image */}
-        {/* <img
-          src="/my-image.png"
-          alt="Description"
-          width={500}
-          height={300}
-        /> */}
 
         <h1 className="font-extralight text-[50px] my-5">TOTO TUMBS</h1>
 
@@ -86,7 +85,7 @@ export default function Login() {
             Create Account
           </a>
         </p>
-        <a href="#" className="text-blue-400 my-2 text-sm md:text-md underline">
+        <a href="/forget-password" className="text-blue-400 my-2 text-sm md:text-md underline">
           Forget Password?
         </a>
 
@@ -101,6 +100,6 @@ export default function Login() {
           Sign In with Google
         </button>
       </form>
-    </div>
+    </motion.div>
   );
 }

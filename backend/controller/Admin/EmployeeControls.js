@@ -8,30 +8,16 @@ const EmployeeAccount = require('../../models/EmployeeAccount');
  */
 const get_employees = async (req, res) => {
     try {
-        // Get the current page number from the query; default to 1
-        const page = parseInt(req.query.page) || 1;
-        // Set how many customers to return per page
-        const limit = 10;
-        // Calculate how many customers to skip
-        const skip = (page - 1) * limit;
-        // Count total number of customers (for pagination calculation)
-        const totalCount = await EmployeeAccount.countDocuments(); // ❗ Fixed: was mistakenly using Request
 
         // Fetch customers with pagination, sorted by most recent
         const employees = await EmployeeAccount.find()
             .select('-password') // Exclude password field
             .populate('branchAssigned')
-            .sort({ createdAt: -1 }) // Show latest first
-            .skip(skip)
-            .limit(limit);
-
-        // Calculate total pages needed (rounded up)
-        const pageCount = Math.ceil(totalCount / limit);
+            .sort({ createdAt: -1 })
 
         // Send customers and pagination info to frontend
         return res.status(200).json({
             employees,
-            pageCount
         });
 
     } catch (err) {
@@ -56,7 +42,6 @@ const get_Barbers = async (req, res) => {
 
     try {
 
-        // Fetch customers with pagination, sorted by most recent
         const barbers = await EmployeeAccount.find({ 
             branchAssigned: branchId, 
             role: 'Barber' 

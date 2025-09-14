@@ -11,19 +11,18 @@ const Employees = () => {
  
     const [employeeList, setEmployeeList] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
-    const [page, setPage] = useState(1);
-    const [paginationLimit, setPaginationLimit] = useState(1);
-    const [filterValue, setFilterValue] = useState('');
     const [onUpdate, setOnUpdate] = useState(false);
     const [updatingData, setUpdatingData] = useState(null);
     const [addingEmployee, setAddingEmployee] = useState(false);
 
     const filteredEmployees = useMemo(() => {
-        return employeeList && employeeList.filter(employee =>
-            employee?.email.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
-            employee?.fullName.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
-            employee?.branchAssigned.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
-            employee?.role.toString().toLowerCase().includes(searchTerm.toLowerCase())
+        if (!employeeList) return [];
+        const term = searchTerm.toLowerCase().trim();
+        if (!term) return employeeList;
+
+        return employeeList.filter(e =>
+            [e?.email, e?.fullName, e?.branchAssigned, e?.role]
+            .some(field => String(field || "").toLowerCase().includes(term))
         );
     }, [employeeList, searchTerm]);
 
@@ -44,16 +43,14 @@ const Employees = () => {
 
     useEffect(() => {
         const get_employees = async () => {
-            const data = await get_data('/employees', page);
+            const data = await get_data('/employees');
         
-            //exclude the barber's password
             if (data) {
                 setEmployeeList(data.employees);
-                setPaginationLimit(data.pageCount);
             }
         };
         get_employees();
-    }, [page]);
+    }, []);
 
     return (
         <div>
@@ -87,13 +84,6 @@ const Employees = () => {
                         <div className="flex justify-between items-center my-4 text-sm">
                            
                             <h2 className="text-xl font-semibold mb-4 tracking-tight">Employees Table</h2>
-
-                            <Pagination
-                                count={paginationLimit}
-                                size="small"
-                                page={page}
-                                onChange={(event, value) => setPage(value)}
-                            />
                         </div>
 
                         <div className="overflow-auto h-[550px] w-full">

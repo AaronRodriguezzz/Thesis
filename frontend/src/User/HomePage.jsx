@@ -26,7 +26,6 @@ export default function MainPage() {
   const [products, setProducts] = useState(null);
   const [productIndex, setProductIndex] = useState(0);
   const [subscribedEmail, setSubscribedEmail] = useState('');
-  const [subscribing, setSubscribing] = useState(false);
 
   const feedbacks = [
     {

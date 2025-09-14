@@ -105,8 +105,6 @@ export default function Navigation() {
           />
         </div>
       </div>
-
-      
     </motion.div>
   );
 }

@@ -31,9 +31,9 @@ const productSales = async (req, res) => {
                 const createdAtStr = f.createdAt.toISOString().slice(0, 10); // YYYY-MM-DD
 
                 return (
-                createdAtStr.includes(search) ||
-                f.soldBy?.fullName?.toLowerCase().includes(search.toLowerCase()) ||
-                f.branch?.name?.toLowerCase().includes(search.toLowerCase())
+                    createdAtStr.includes(search) ||
+                    f.soldBy?.fullName?.toLowerCase().includes(search.toLowerCase()) ||
+                    f.branch?.name?.toLowerCase().includes(search.toLowerCase())
                 );
             });
         }
@@ -90,8 +90,27 @@ const serviceSales = async (req,res) => {
     }
 }
 
+const productSale = async (req,res) => {
+    const productId = req.params.productId;
+
+    console.log(req.params.productId);
+    try{
+        const sales = await ProductSales.find({ "products.product": productId })
+            .populate("products.product")
+            .populate("branch");
+
+        console.log(sales)
+
+        return res.status(200).json(sales)
+    }catch(err){
+        console.log(err);
+        return res.status(500).json({ message: 'Internal server error.' });
+    }
+}
+
 
 module.exports = {
     productSales,
-    serviceSales
+    serviceSales,
+    productSale
 };

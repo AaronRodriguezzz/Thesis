@@ -1,6 +1,7 @@
 // hooks/usePost.js
 import { useState } from "react";
 import axios from "axios";
+import { CustomAlert } from "../components/modal/CustomAlert";
 
 export const usePost = () => {
   const [loading, setLoading] = useState(false);
@@ -12,10 +13,14 @@ export const usePost = () => {
 
     try {
       const response = await axios.post(url, payload, config);
+      CustomAlert('success',  response.data.message || 'Successful');
       return response.data;
+
     } catch (err) {
-      setError(err.response?.data || err.message);
-      throw err; // so caller can still handle it
+      const message = err.response.data.message || err.response.data.error || 'Unknown error';
+      CustomAlert('error', message);
+      setError(message);
+      throw err;
     } finally {
       setLoading(false);
     }

@@ -8,5 +8,7 @@ router.post('/api/user_registration', Auth.account_registration);
 router.get('/api/auth/user_check', Auth.checkAuth);
 router.put('/api/auth/update_user', Auth.update_account);
 router.put('/api/auth/update_user_password', Auth.updatePassword);
+router.post('/api/auth/send_code', Auth.send_code);
+router.put('/api/auth/forget_password', Auth.forget_password);
 
 module.exports = router;

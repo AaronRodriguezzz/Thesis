@@ -1,4 +1,5 @@
 const UserAccount = require('../../models/CustomerAccount');
+const { send_verification_code } = require('../../Services/EmailService');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -180,6 +181,61 @@ const updatePassword = async (req,res) => {
     }
 }
 
+const send_code = async (req,res) => {
+
+    const { email } = req.body;
+    
+    if(!email) {
+        return res.status(400).json({ message: 'Payload Empty'})
+    }
+
+    try{
+
+        const emailExist = await UserAccount.findOne({ email })
+
+        if(!emailExist) {
+            return res.status(404).json({message: 'User does not exist'})
+        }
+
+        const code = Math.floor(1000 + Math.random() * 9000).toString();
+
+        await send_verification_code(email,code);
+
+        return res.status(200).json({code, message: 'Verification Code Sent'})
+    }catch(err){
+        console.log(err);
+        return res.status(500).json({ message: err?.message || 'Internal server error'})
+    }
+}
+
+const forget_password = async (req,res) => {
+    const { email, password } = req.body.newData;
+
+    if(!email || !password) {
+        return res.status(400).json({ message: 'Payload Empty'})
+    }
+
+    console.log( req.body.newData)
+    try{
+        const encryptedPassword = await bcrypt.hash(password, 10);
+
+        const user = await UserAccount.findOneAndUpdate(
+            { email: email }, 
+            { $set: { password: encryptedPassword } },
+        );
+
+        if(!user){
+            return res.status(400).json({message: 'Error Update'})
+        }
+
+        return res.status(200).json({ updated: true })
+
+    }catch(err){
+        console.log(err);
+        return res.status(500).json({ message: err?.message || 'Internal server error'})
+    }
+}
+
 /**
  * @desc Verifies user's login session
  * @route GET /api/auth/user_check
@@ -194,5 +250,7 @@ module.exports = {
     account_registration,
     checkAuth,
     update_account,
-    updatePassword
+    updatePassword,
+    send_code,
+    forget_password
 };

@@ -10,6 +10,8 @@ export const useFetch = (url, page = null, deps = []) => {
   useEffect(() => {
     let isMounted = true;
 
+    if(!url) return 
+    
     const fetchData = async () => {
       try {
         setLoading(true);
@@ -26,7 +28,7 @@ export const useFetch = (url, page = null, deps = []) => {
     return () => {
       isMounted = false; // cleanup
     };
-  }, [...deps]);
+  }, [url, page, ...deps]);
 
   return { data, loading, error, setData };
 };

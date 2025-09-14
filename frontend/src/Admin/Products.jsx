@@ -4,6 +4,7 @@ import Pagination from "@mui/material/Pagination";
 import { get_data } from "../../services/GetMethod";
 import { delete_data } from "../../services/DeleteMethod";
 import ProductModal from "../../components/modal/AddProductModal";
+import ProductSale from "../../components/modal/ProductSale";
 
 const Products = () => {
     const baseUrl = import.meta.env.MODE === 'development' ? 'http://localhost:4001' : 'https://tototumbs.onrender.com';
@@ -14,6 +15,8 @@ const Products = () => {
     const [onUpdate, setOnUpdate] = useState(false);
     const [updatingData, setUpdatingData] = useState(null);
     const [addingProduct, setAddingProduct] = useState(false);
+    const [productToView, setProductToView] = useState('');
+    const [productSaleOpen, setProductSaleOpen] = useState(false);
 
     const filteredProducts = useMemo(() => {
         return productList && productList.filter(product =>
@@ -114,7 +117,10 @@ const Products = () => {
                                                     <FaTrash size={22} />
                                                 </button>
                                                 <button
-                                                    onClick={() => console.log(product.id)}
+                                                    onClick={() => {
+                                                        setProductSaleOpen(true)
+                                                        setProductToView(product._id)
+                                                    }}
                                                     className="text-gray-500 hover:text-gray-800"
                                                 >
                                                     <FaClipboardList size={22} />
@@ -148,6 +154,12 @@ const Products = () => {
                     route={'/update_product'}
                 />
             }
+
+            <ProductSale 
+                onClose={() => setProductSaleOpen(false)} 
+                isOpen={productSaleOpen} 
+                id={productToView} 
+            />
         </div>
     );
 };

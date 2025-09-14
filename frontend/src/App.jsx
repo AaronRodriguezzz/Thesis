@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AppointmentForm from "./User/AppointmentForm";
 import HomePage from "./User/HomePage";
 import Login from "./User/Login";
+import ForgetPassword from "./User/ForgetPassword";
 import QueueingForm from "./User/QueueingForm";
 import Registration from "./User/Registration";
 import Faq from "./User/FrequentlyQuestions";
@@ -89,6 +90,7 @@ function App() {
 
         {/* (outside layout) */}  
         <Route path="/login" element={<Login />}/>
+        <Route path="/forget-password" element={<ForgetPassword />} />
         <Route path="/register" element={<Registration />} />
         <Route path="/admin/login" element={<AdminLogin />} />
 
