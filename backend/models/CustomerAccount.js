@@ -20,7 +20,6 @@ const CustomerSchema = new mongoose.Schema({
     },
     password:{
         type: String,
-        required: true,
         select: false
     },
     address:{
@@ -30,7 +29,6 @@ const CustomerSchema = new mongoose.Schema({
         type: String,
         enum: ['Active', 'Inactive'],
         default: 'Active',
-        required: true,
     },
 },{ timestamps: true });
 

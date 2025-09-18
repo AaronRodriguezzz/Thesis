@@ -1,49 +1,34 @@
 const UserAccount = require('../../models/CustomerAccount');
-const { send_verification_code } = require('../../Services/EmailService');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const generateToken = require('../../utils/tokenCreation');
+const { send_verification_code } = require('../../Services/EmailService');
+const passwordVerification = require('../../utils/passwordVerification');
 
 /**
  * @desc Logs in a user
  * @route POST /api/user/login
  */
 const user_login = async (req, res) => {
-    try {
-        const { email, password } = req.body;
 
-        // Find the user by email
-       const user = await UserAccount.findOne({ email }).select('-password');
+    const { email, password } = req.body;
+
+    if(!email || !password){
+        return res.status(400).json({ message: 'Invalid Input' });
+    }
+
+    try {
+        const user = await UserAccount.findOne({ email }).select('+password');
 
         if (!user) {
-        return res.status(404).json({ message: 'Sorry, account does not exist' });
+            return res.status(404).json({ message: 'Sorry, account does not exist' });
         }
 
-        // Compare password manually using the original document (you’ll need to fetch password separately)
-        const passwordMatch = await bcrypt.compare(
-            password, 
-            await UserAccount.findOne({ email }).select('password').then(u => u?.password)
-        );
-
-        if (!passwordMatch) {
-             res.status(401).json({ message: 'Invalid credentials' });
+        if(!passwordVerification(password, user.password)){
+            res.status(401).json({ message: 'Invalid credentials' });
         }
 
-        // Create JWT token
-        const token = jwt.sign(
-            { user },
-            process.env.JWT_SECRET,
-            { expiresIn: '1d' }
-        );
+        generateToken(res, user)
 
-        // Store token in cookie
-        res.cookie('user', token, {
-            httpOnly: true,
-            maxAge: 24 * 60 * 60 * 1000,
-            sameSite: 'lax',
-            secure: process.env.NODE_ENV === 'production',
-        });
-
-        console.log('User logged in successfully:', user);
         return res.status(200).json({ message: 'Log In Successful', user });
 
     } catch (err) {
@@ -51,6 +36,41 @@ const user_login = async (req, res) => {
         return res.status(500).json({ error: 'Something went wrong. Please try again.' });
     }
 };
+
+const googleLogin = async (req, res) => {
+    const { access_token } = req.body;
+
+    if (!access_token) {
+        return res.status(400).json({ message: "Invalid Payload" });
+    }
+
+    try {
+
+        const googleRes = await fetch( "https://www.googleapis.com/oauth2/v3/userinfo",
+            { headers: { Authorization: `Bearer ${access_token}` } }
+        );
+
+        const { email, family_name, given_name } = await googleRes.json();
+
+        let user = await UserAccount.findOne({ email });
+        
+        if (!user) {
+        user = await UserAccount.create({
+            email,
+            lastName: family_name,
+            firstName: given_name,
+        });
+        }
+
+        generateToken(res, user);
+        return res.status(200).json({ message: "Log In Successful", user });
+    } catch (err) {
+        console.error("Google login error:", err);
+        return res.status(500).json({ error: 'Something went wrong. Please try again.' });
+    }
+};
+
+
 
 /**
  * @desc Logs out the user
@@ -244,8 +264,10 @@ const checkAuth = (req, res) => {
     res.status(200).json({ loggedIn: true, user: req.employee });
 };
 
+
 module.exports = {
     user_login,
+    googleLogin,
     user_logout,
     account_registration,
     checkAuth,

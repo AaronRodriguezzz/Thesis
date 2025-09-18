@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { jwtDecode } from "jwt-decode";
+import { useGoogleLogin, GoogleLogin } from "@react-oauth/google";
 import TextField from "@mui/material/TextField";
 import { post_data } from '../../services/PostMethod';
 import { useNavigate } from "react-router-dom";
@@ -37,6 +39,23 @@ export default function Login() {
       console.log(err);
     }
   }
+
+  const googleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+
+      const response = await post_data(
+        { access_token: tokenResponse.access_token },
+        "/auth/google_login"
+      );
+
+      if (response) {
+        setUser(response.user);
+        navigate(from, { replace: true });
+      }
+    },
+    onError: () => console.log("Login Failed"),
+  });
+
 
   return (
     <motion.div 
@@ -95,10 +114,26 @@ export default function Login() {
           <div className="w-[40%] border-t border-gray-300"></div>
         </div>
 
-        <button className="w-[80%] flex flex-row items-center justify-center gap-x-3 py-2 rounded-full border border-gray-300 mb-7 hover:shadow-md transition duration-200 ease-in-out">
+        <button 
+          type="button"
+          className="w-[80%] flex flex-row items-center justify-center gap-x-3 py-2 rounded-full border border-gray-300 mb-7 hover:shadow-md transition duration-200 ease-in-out" 
+          onClick={() => googleLogin()} // ✅ call login function here
+        >
           <img src="/google.png" alt="Google" width={30} height={30} />
           Sign In with Google
         </button>
+        {/* <GoogleLogin
+          onSuccess={(credentialResponse) => {
+            const userObject = jwtDecode(credentialResponse.credential);
+            console.log(userObject);
+          }}
+          onError={() => console.log("Login Failed")}
+          theme="outline"     // "outline" | "filled_blue" | "filled_black"
+          size="large"        // "large" | "medium" | "small"
+          shape="pill"        // "rectangular" | "pill" | "circle" | "square"
+          text="continue_with" // "signin_with" | "signup_with" | "continue_with"
+          logo_alignment="left"
+        /> */}
       </form>
     </motion.div>
   );

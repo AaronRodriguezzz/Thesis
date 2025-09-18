@@ -21,8 +21,9 @@ export default function BranchesPage(){
 
       get_branches();
     },[])
+    
     return (
-        <div id='Branches' className="min-h-screen bg-gray-100 p-6">
+        <div id='Branches' className="min-h-screen bg-gray-100 p-2 pt-10 md:p-12">
           {/* Header */}
           <motion.div 
             className="text-center mb-10"
@@ -37,7 +38,7 @@ export default function BranchesPage(){
           </motion.div>
 
           {/* Branch Cards Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
             {branches && branches.map((branch,index) => (
               <motion.div 
                 key={branch?._id} 
@@ -49,11 +50,11 @@ export default function BranchesPage(){
                   <img    
                       src={`${baseUrl}/${branch?.imagePath}`}
                       alt={branch.name}
-                      className="h-60 w-full obj  ect-cover"
+                      className="h-60 w-full object-cover"
                   />
                   <div className="p-4">
                     <h2 className="text-2xl font-semibold text-gray-800">{branch?.name}</h2>
-                    <p className="text-gray-600 tracking-tight">{branch?.address}</p>
+                    <p className="text-gray-600 tracking-tight truncate w-full">{branch?.address}</p>
                     <p className="text-gray-600 tracking-tight">{branch?.phone}</p>
                       <button 
                         className="mt-3 px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 text-sm"
