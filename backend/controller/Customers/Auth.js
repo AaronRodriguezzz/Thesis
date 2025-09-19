@@ -1,8 +1,9 @@
 const UserAccount = require('../../models/CustomerAccount');
 const bcrypt = require('bcrypt');
 const generateToken = require('../../utils/tokenCreation');
-const { send_verification_code } = require('../../Services/EmailService');
 const passwordVerification = require('../../utils/passwordVerification');
+const { send_verification_code } = require('../../Services/EmailService');
+const { OAuth2Client } = require( "google-auth-library");
 
 /**
  * @desc Logs in a user
@@ -38,35 +39,42 @@ const user_login = async (req, res) => {
 };
 
 const googleLogin = async (req, res) => {
-    const { access_token } = req.body;
+    const { credential } = req.body; 
 
-    if (!access_token) {
-        return res.status(400).json({ message: "Invalid Payload" });
+    if (!credential) {
+        return res.status(400).json({ message: "Invalid Input" });
     }
 
     try {
+        const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
-        const googleRes = await fetch( "https://www.googleapis.com/oauth2/v3/userinfo",
-            { headers: { Authorization: `Bearer ${access_token}` } }
-        );
-
-        const { email, family_name, given_name } = await googleRes.json();
-
-        let user = await UserAccount.findOne({ email });
-        
-        if (!user) {
-        user = await UserAccount.create({
-            email,
-            lastName: family_name,
-            firstName: given_name,
+        // ✅ Verify the token properly with Google
+        const ticket = await client.verifyIdToken({
+            idToken: credential,
+            audience: process.env.GOOGLE_CLIENT_ID,
         });
+
+        const payload = ticket.getPayload(); // verified Google user info
+        const { email, family_name, given_name } = payload;
+
+        // ✅ Check if user exists or create new
+        let user = await UserAccount.findOne({ email });
+
+        if (!user) {
+            user = await UserAccount.create({
+                email,
+                lastName: family_name,
+                firstName: given_name,
+            });
         }
 
         generateToken(res, user);
+
         return res.status(200).json({ message: "Log In Successful", user });
+
     } catch (err) {
         console.error("Google login error:", err);
-        return res.status(500).json({ error: 'Something went wrong. Please try again.' });
+        return res.status(500).json({error: "Something went wrong. Please try again."});
     }
 };
 

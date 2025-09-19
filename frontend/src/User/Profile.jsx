@@ -169,7 +169,7 @@ const ProfilePage = () => {
             />
             <ProfileField
               label="Phone"
-              value={formData?.phone}
+              value={formData?.phone || 'N/A'}
               editable={editMode}
               name="phone"
               onChange={handleChange}
