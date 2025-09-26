@@ -3,13 +3,13 @@ const WalkIn = require('../../models/WalkIn');
 
 const newWalkIn = async (req, res) => {
 
-    const { barber, additionalService } = req.body;
+    const { barber, additionalService, branch} = req.body;
     
     try{
         const walkIn = new WalkIn({
             ...req.body, 
             additionalService: additionalService ? additionalService : undefined,
-            barber: barber?.trim() ? barber : undefined 
+            barber: barber?.trim() ? barber : undefined,
         });
 
         const newWalkIn = await walkIn.save();
@@ -19,15 +19,20 @@ const newWalkIn = async (req, res) => {
         }
 
         const branchId = req.body?.branch;
-
         console.log(global.queueState[branchId])
+
         if (global.queueState[branchId]) {
-            global.queueState[branchId].walkIns = [...global.queueState[branchId].walkIns, walkIn]
+            global.queueState[branchId].walkIns = [
+                ...global.queueState[branchId].walkIns,
+                newWalkIn.toObject()
+            ] 
+            
+            console.log('ADDED WALKIN', global.queueState)
+
+            
+            global.sendQueueUpdate(global.queueState);
         }   
 
-        console.log('global', global.queueState)
-
-        global.sendQueueUpdate(global.queueState);
 
         return res.status(200).json({message: 'New Walk In Added Successfully', walkIn})
     }catch(err){
@@ -45,7 +50,6 @@ const getWalkInByBranch = async (req,res) => {
 
     const start = new Date();
     start.setHours(0, 0, 0, 0);
-
     const end = new Date();
     end.setHours(23, 59, 59, 999);
 

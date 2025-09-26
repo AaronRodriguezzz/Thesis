@@ -33,16 +33,16 @@ const Appointments = () => {
 
     const update_barberStatus = async (barber, newStatus) => {
         try {
-        const updatedData = { ...barber, status: newStatus };
-        const response = await update_data("/update_employee", updatedData);
+            const updatedData = { ...barber, status: newStatus };
+            const response = await update_data("/update_employee", updatedData);
 
-        if (response.updatedInfo) {
-            setBarberList((prev) =>
-            prev.map((b) =>
-                b._id === response.updatedInfo._id ? response.updatedInfo : b
-            )
-            );
-        }
+            if (response.updatedInfo) {
+                // setBarberList((prev) =>
+                //     prev.map((b) =>
+                //         b._id === response.updatedInfo._id ? response.updatedInfo : b
+                //     )
+                // );
+            }
         } catch (err) {
         console.error("Error updating barber:", err);
         }
@@ -103,7 +103,7 @@ const Appointments = () => {
             queueSocket.off("connect");
             queueSocket.off("queueUpdate");
         };
-    }, [user]);
+    }, []);
 
 
     // ✅ Loading & Error UI

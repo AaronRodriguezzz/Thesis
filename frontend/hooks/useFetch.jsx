@@ -1,6 +1,6 @@
 // src/hooks/useFetch.js
 import { useEffect, useState } from "react";
-import { get_data } from "../services/GetMethod";
+import axios from "axios";
 
 export const useFetch = (url, page = null, deps = []) => {
   const [data, setData] = useState(null);
@@ -15,8 +15,8 @@ export const useFetch = (url, page = null, deps = []) => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const result = await get_data(url, page);
-        if (isMounted) setData(result);
+        const result = await axios.get(`/api/${url}`, page);
+        if (isMounted) setData(result?.data || null);
       } catch (err) {
         if (isMounted) setError(err.message || "Failed to fetch");
       } finally {

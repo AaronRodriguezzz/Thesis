@@ -1,7 +1,6 @@
 const jwt = require("jsonwebtoken");
 
 const generateToken = (res, payload) => {
-    console.log(payload);
     const user = payload.toObject ? payload.toObject() : { ...payload };
     delete user.password;
 

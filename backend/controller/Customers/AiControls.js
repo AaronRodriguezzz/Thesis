@@ -60,12 +60,12 @@ const chat_bot = async (req, res) => {
         2. Cancellation must be made at least 2 hours before schedule.
         3. Late arrivals may forfeit the slot.
 
-        <b>Steps to Create an Appointment:</b><br/>
-        Step 1: Select your branch of your choice. <br/>
-        Step 2: Find a date for your appointment <br/>
-        Step 3: Select a barber if you like a specific barber (optional) <br/>
-        Step 4: Select a time. ( The time will vary depending on the appointments on the date you selected ) <br/>
-        Step 5: Select the service you want to avail then select additional service if you want to ( optional ) <br/>
+        Steps to Create an Appointment:
+        Step 1: Select your branch of your choice. 
+        Step 2: Find a date for your appointment
+        Step 3: Select a barber if you like a specific barber (optional)
+        Step 4: Select a time. ( The time will vary depending on the appointments on the date you selected )
+        Step 5: Select the service you want to avail then select additional service if you want to ( optional )
 
         ❗ Unrelated questions → Respond:  
         "I'm sorry, but I can only help you with questions related to the barbershop’s appointments, services, and policies."
@@ -89,17 +89,96 @@ const chat_bot = async (req, res) => {
 const hairCut_Suggestion = async (req, res) => {
   try {
     const prompt = req.body;
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    const genAI = new GoogleGenerativeAI(apiKey);
 
-    // Use multimodal Gemini model for both text + image
-    const multiModel = genAI.getGenerativeModel({
-      model: "gemini-2.5-flash-image-preview",
-      generationConfig: {
-        responseModalities: ["Text", "Image"],
-        candidateCount: 1
-      },
-      systemInstruction: `You are an expert barber suggesting modern haircuts.
-        Base your response on:
+    // Use text-only Gemini model (no image generation needed)
+    const model = genAI.getGenerativeModel({
+      model: "gemini-2.5-flash",
+      systemInstruction: `You are an expert barber suggesting modern haircuts. 
+      Only reply with JSON format like this:
+      {
+        "name": "Haircut Name",
+        "description": "Short 1-2 sentence description",
+        "publicId": "Public_Id_Here"
+      }
+
+      Choices:
+        1.Barber’s Cut – Short on the sides, a little longer on top. Clean and simple.
+        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
+
+        2.Semi-Kalbo – Very short all around, almost shaved. Easy to maintain.
+        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
+
+        3.Skin Fade – Sides shaved very short and blended smoothly into longer top. Sharp look.
+        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
+
+        4.Taper Fade – Sides gradually shorter, but not shaved. Neat and professional.
+        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
+
+        5.Undercut – Short or shaved sides with longer hair on top you can style.        
+        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
+
+        6.Pompadour – Hair pushed up and back for a full, stylish look.
+        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
+
+        7.Quiff – Hair brushed up at the front with some volume. Casual but neat.
+        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
+
+        8.Two-Block Cut – Short sides and back with longer, fuller hair on top. Trendy and youthful.
+        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
+
+        9.Flat Top – Hair on top cut flat and level. Clean and bold style.
+        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
+
+        10.Comb Over – Hair neatly parted to the side. Common for formal looks.
+        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
+
+        11.Long Top with Fade – Long hair on top with faded short sides. Modern style.
+        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
+
+        12.Crew Cut – Short on the sides and slightly longer on top. Simple and sporty.
+        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
+
+        13.Buzz Cut – Very short and even all over. Low-maintenance and cool.
+        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
+
+        14.French Crop – Short sides with a bit of fringe in the front. Easy to style.
+        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
+
+        15.Caesar Cut – Short cut with straight bangs in front. Works for thinning hair.
+        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
+
+        16.Spiky Hair – Hair styled upward into spikes with gel or wax. Fun and energetic.
+        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
+
+        17.High and Tight – Very short sides with a little more hair on top. Clean and sharp.
+        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
+
+        18.Slick Back – Medium hair combed straight back with gel. Mature look.
+        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
+
+        19.Mohawk (Modern) – Longer hair in the middle, short or faded sides. Bold style.
+        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
+
+        20.Disconnected Undercut – Big contrast between shaved sides and long top. Trendy and eye-catching.
+        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
+
+        21.Curly Top with Fade – Natural curls on top with faded sides. Stylish and easy to maintain.
+        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
+
+        22.Textured Crop – Short sides with a bit of length on top styled messily. Casual and modern.
+        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
+
+        23.Asian Fade – Short sides with a gradual fade and longer top. Popular in Asian communities.
+        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
+
+        24.Slick Side Part – Hair neatly parted to the side and slicked down. Classic and polished.
+        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
+
+        25.Messy Waves – Medium length hair styled into loose, natural waves. Relaxed and trendy.
+        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
+
+        Base your choice on:
         Face Shape: ${prompt.faceShape}
         Hair Type: ${prompt.hairType}
         Hair Length: ${prompt.hairLength}
@@ -110,32 +189,29 @@ const hairCut_Suggestion = async (req, res) => {
       `
     });
 
-    const content = `Suggest me the best haircut for my profile. Keep the description short (2–3 sentences), and include an illustrative image.`;
+    const content = `Suggest the best haircut for my profile. Return ONLY JSON with name, description, and publicId.`;
 
-    const result = await multiModel.generateContent(content);
+    const result = await model.generateContent(content);
 
-    let suggestionText = "";
-    let suggestionImage = null;
+    // Parse Gemini response (it should be JSON)
+    let suggestion = {};
+    const text = result.response.candidates[0].content.parts[0].text;
+    console.log("Gemini Response Text:", text);
+    try {
+      suggestion = JSON.parse(text.replace(/```json|```/g, "").trim());
+    } catch (e) {
+      console.error("JSON parse error:", e);
+      return res.status(500).json({ error: "Failed to parse haircut suggestion" });
+    }
 
-    result.response.candidates.forEach((c) => {
-      c.content.parts.forEach((part) => {
-        if (part.text) suggestionText += part.text;
-        if (part.inlineData) {
-          suggestionImage = `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`;
-        }
-      });
-    });
-
-    res.status(200).json({
-      text: suggestionText,
-      image: suggestionImage,
-    });
+    res.status(200).json(suggestion);
 
   } catch (err) {
     console.error("Error generating haircut suggestion:", err);
     res.status(500).json({ error: "Haircut suggestion failed" });
   }
 };
+
 
 
 module.exports = {

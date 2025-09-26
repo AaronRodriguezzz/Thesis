@@ -45,11 +45,11 @@ export default function Login() {
       initial={{ opacity: 0, y: -50 }}
       transition={{ duration: 1.5, ease: "easeInOut" }}
       animate={{ opacity: 1, y:0 }}
-      className="h-screen w-screen bg-[url('/login.png')] bg-cover bg-center flex items-center justify-center"
+      className="h-screen w-screen bg-[url('/login.png')] bg-cover bg-center flex items-center justify-center overflow-hidden "
     >
-      <form className="w-[40%] min-w-[340px] max-w-[500px] flex flex-col items-center gap-y-4 md:shadow-lg rounded-xl bg-white bg-opacity-90" onSubmit={handle_submit}>
+      <form className="w-[40%] min-w-[300px] max-w-[500px] flex flex-col items-center gap-y-4 md:shadow-lg rounded-xl bg-white bg-opacity-90" onSubmit={handle_submit}>
 
-        <h1 className="font-extralight text-[50px] my-5">TOTO TUMBS</h1>
+        <h1 className="font-extralight text-[30px] md:text-[45px] my-5">TOTO TUMBS</h1>
 
         <TextField
           id="outlined-email"
@@ -75,7 +75,8 @@ export default function Login() {
         />
 
         <button 
-          className="w-[80%] bg-green-500 py-3 rounded-md text-white my-4 hover:bg-green-600 transition duration-200 ease-in-out"
+          className="w-[80%] bg-green-500 py-3 rounded-md text-white my-4 hover:bg-green-600 transition duration-200 ease-in-out disabled:bg-green-700/80 disabled:cursor-not-allowed"
+          disabled={!credentials.email || !credentials.password}
           type="submit"
         >
           LOG IN

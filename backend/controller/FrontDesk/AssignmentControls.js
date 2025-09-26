@@ -34,7 +34,6 @@ const initializeBarberAssignments = async (req,res) => {
                 .populate('service')
                 .populate('additionalService')
                 .populate('barber')
-                .populate('totalAmount')
                 .populate('recordedBy'),
 
             Employees.find({ 
@@ -48,8 +47,7 @@ const initializeBarberAssignments = async (req,res) => {
         }
 
         global.queueState[branchId] = { appointments, walkIns, barbers };
-        
-        global.sendQueueUpdate({branchId, appointments, walkIns, barbers });
+        global.sendQueueUpdate(global.queueState[branchId]);
 
         return res.status(200).json({branchId, appointments, walkIns, barbers });
         
@@ -62,6 +60,7 @@ const initializeBarberAssignments = async (req,res) => {
 const assignCustomer = async (req, res) => {
     const customerType = req.params.type;
     const customer = req.body.newData;
+
 
     try {
         const modelMap = { 
@@ -77,7 +76,7 @@ const assignCustomer = async (req, res) => {
 
         const [updatedCustomer, updatedBarber] = await Promise.all([
             Model.findByIdAndUpdate(
-                 customer.id,
+                customer.id,
                 { barber: customer.barberId, status: 'Assigned' },
                 { new: true }
             ),
@@ -89,6 +88,7 @@ const assignCustomer = async (req, res) => {
         ]);
 
         const branchId = updatedBarber.branchAssigned;
+        
 
         if (global.queueState[branchId]) {
             const barbers = global.queueState[branchId].barbers.map(b =>
@@ -97,15 +97,21 @@ const assignCustomer = async (req, res) => {
 
             global.queueState[branchId].barbers = barbers;
 
-            console.log(global.queueState[branchId].walkIns);
-
             if(customerType === 'Walk-In'){
                 const walkIn = global.queueState[branchId].walkIns?.filter(w => 
                     w._id !== updatedCustomer._id
                 );  
 
                 global.queueState[branchId].walkIns = walkIn
+            }else if(customerType === 'Appointment'){
+                const appointments = global.queueState[branchId].appointment?.filter(a =>
+                    a._id !== updatedCustomer._id
+                );
+
+                global.queueState[branchId].appointments = appointments
             }
+
+            console.log('after assigning', global.queueState[branchId].walkIns);
             
             // Emit updated state
             global.sendQueueUpdate({ branchId, ...global.queueState[branchId] });
@@ -136,14 +142,10 @@ const completeAssignment = async (req, res) => {
     const { paymentMethod, barberId, recordedBy } = req.body.newData;    
     const customerType = req.params.type;
 
-    console.log(req.body.newData, customerType)
-
     if(!paymentMethod || !barberId || !customerType || !recordedBy){
         return res.status(400).json({ message: 'Invalid Payload'})
     }
-
-    console.log(req.body.newData);
-
+    
     try {
 
         const modelMap = { 
@@ -152,17 +154,18 @@ const completeAssignment = async (req, res) => {
         };
 
         const Model = modelMap[customerType];
+
         if (!Model) {
             return res.status(400).json({ message: 'Invalid customer type' });
         }
 
         const csToFinish = await Model.findOne({ barber: barberId, status: 'Assigned' });
 
+        console.log('FINISH', csToFinish);
+
         if(customerType === 'Appointment'){
             csToFinish.populate('customer')
         }
-
-        console.log(csToFinish);
 
         const sales = new ServiceSales({
             service: csToFinish.service,

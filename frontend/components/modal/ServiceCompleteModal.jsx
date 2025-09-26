@@ -27,19 +27,19 @@ const ServiceCompleteModal = ({
             if(response.updatedInfo) {
                 // setUpdatedData(prev => prev.filter(a => a._id !== response.updatedInfo._id));
 
-                barber.customerTypeAssigned === 'Appointments' ? 
+                // barber.customerTypeAssigned === 'Appointments' ? 
 
-                setUpdatedAppointments(prev => prev.map(a => 
-                    a._id === response.updatedInfo._id ? { ...a, status: 'Completed' } : a
-                )) 
+                // setUpdatedAppointments(prev => prev.map(a => 
+                //     a._id === response.updatedInfo._id ? { ...a, status: 'Completed' } : a
+                // )) 
 
-                :
+                // :
 
-                setUpdatedWalkIns(prev => prev.map(a => 
-                    a._id === response.updatedInfo._id ? { ...a, status: 'Completed' } : a
-                )) 
+                // setUpdatedWalkIns(prev => prev.map(a => 
+                //     a._id === response.updatedInfo._id ? { ...a, status: 'Completed' } : a
+                // )) 
 
-                setUpdatedBarber(prev => prev.map(a => a._id === barber._id ? { ...a, status: 'Available' } : a));
+                // setUpdatedBarber(prev => prev.map(a => a._id === barber._id ? { ...a, status: 'Available' } : a));
                 onCancel(false);
             }
     

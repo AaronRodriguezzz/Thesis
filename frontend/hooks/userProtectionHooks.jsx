@@ -15,7 +15,7 @@ import { useLocation } from "react-router-dom";
 
 export const useUser = () => {
     const { user } = useAuth();
-
+    
     return user;
 }
 

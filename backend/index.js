@@ -62,7 +62,6 @@ app.get('/api/protected', (req, res) => {
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-        console.log(decoded.user);
         res.json({ message: 'Access granted', user: decoded.user });
     } catch (err) {
         res.status(403).json({ message: err.message });

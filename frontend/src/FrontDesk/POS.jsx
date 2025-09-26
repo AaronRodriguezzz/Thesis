@@ -105,7 +105,7 @@ const POS = () => {
         setTotalSummary(totalAmount);
     },[checkOutList])
 
-    if(loading) return <POSLoading />;
+    // if(loading) return <POSLoading />;
     if (error) return <p className="p-4 text-red-500">Error loading data</p>;
 
     return (

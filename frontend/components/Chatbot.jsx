@@ -111,6 +111,7 @@ const Chatbot = () => {
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         onKeyDown={handleKeyPress}
+                        disabled={waiting}
                         className="flex-1 bg-gray-200 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400 outline-none"
                     />
                     <button

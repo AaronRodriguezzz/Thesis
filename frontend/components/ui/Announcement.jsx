@@ -4,15 +4,9 @@ import { useFetch } from '../../hooks/useFetch';
 import { motion } from 'motion/react';
 
 const Announcement = () => {
-  const { data, loading, error } = useFetch('/active-announcement');
-  
-  if (error) {
-    return <div className="w-full h-10 bg-red-600 text-white flex items-center justify-center">{error}</div>;
-  }
+  const { data, loading } = useFetch('/active-announcement');
 
   if (!data || loading) return null;
-
-  console.log(data.message);
 
   return (
     <motion.div 

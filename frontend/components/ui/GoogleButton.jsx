@@ -1,13 +1,14 @@
 import React from 'react'
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import { CustomAlert } from '../modal/CustomAlert';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { post_data } from '../../services/PostMethod';
 import { useAuth } from '../../contexts/UserContext';
 
 const GoogleButton = () => {
 
     const { setUser } = useAuth();
+    const navigate = useNavigate();
     const location = useLocation();
     const from = location.state?.from || "/";
 
