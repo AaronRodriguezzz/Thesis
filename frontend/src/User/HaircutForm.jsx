@@ -56,8 +56,12 @@ export default function HaircutForm() {
   }
 
 
-  const handleDownload = async () => {
+  const handleDownload = async (e) => {
+    e.preventDefault();
+    if (!imageId) return;
+
     const response = await fetch(`https://res.cloudinary.com/dk3bbinj9/image/upload/${imageId}`);
+    console.log(response);
     const blob = await response.blob();
     const url = window.URL.createObjectURL(blob);
 

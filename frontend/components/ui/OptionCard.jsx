@@ -1,5 +1,5 @@
 const OptionCard = ({ field, value, label, description }) => {
-    
+
     const selected = formData[field] === value;
 
     return (
@@ -16,3 +16,5 @@ const OptionCard = ({ field, value, label, description }) => {
       </motion.div>
     );
 };
+
+export default OptionCard
