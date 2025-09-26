@@ -39,6 +39,8 @@ const GoogleButton = () => {
                 <GoogleLogin
                     onSuccess={credentialResponse => handleSuccess(credentialResponse)}
                     onError={() => CustomAlert('error', 'Login Failed')}
+                    useOneTap={false}
+                    type='standard'
                     size="large"
                     shape="pill"
                     text="signup_with"
