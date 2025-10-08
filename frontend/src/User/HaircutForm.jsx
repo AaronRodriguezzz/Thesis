@@ -1,3 +1,4 @@
+// src/pages/HaircutForm.jsx
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { post_data } from "../../services/PostMethod";
@@ -48,20 +49,20 @@ export default function HaircutForm() {
   };
 
   const generateMore = () => {
-    setImageId('');
+    setImageId("");
     setHairCutInfo({
-      name: '',
-      description: '',
+      name: "",
+      description: "",
     });
-  }
-
+  };
 
   const handleDownload = async (e) => {
     e.preventDefault();
     if (!imageId) return;
 
-    const response = await fetch(`https://res.cloudinary.com/dk3bbinj9/image/upload/${imageId}`);
-    console.log(response);
+    const response = await fetch(
+      `https://res.cloudinary.com/dk3bbinj9/image/upload/${imageId}`
+    );
     const blob = await response.blob();
     const url = window.URL.createObjectURL(blob);
 
@@ -72,12 +73,11 @@ export default function HaircutForm() {
     link.click();
     document.body.removeChild(link);
 
-    window.URL.revokeObjectURL(url); 
+    window.URL.revokeObjectURL(url);
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-6">
-      {/* If we already have a suggestion, show result instead of form */}
       {imageId ? (
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -97,15 +97,18 @@ export default function HaircutForm() {
               <p className="text-gray-700">{haircutInfo.description}</p>
 
               <div className="flex gap-x-2 mt-6 justify-center">
-                <button  onClick={generateMore} className="border-1 border-gray-200 py-1 px-4 rounded-lg">BACK</button>
-                <button onClick={async () => await handleDownload()} className="bg-green-600 text-white px-4 py-1 rounded-lg shadow-md hover:bg-green-700">DOWNLOAD</button>
-                {/* <a
-                  href={`https://res.cloudinary.com/dk3bbinj9/image/upload/${imageId}`}
-                  download="haircut-suggestion.jpg"
+                <button
+                  onClick={generateMore}
+                  className="border border-gray-200 py-1 px-4 rounded-lg"
+                >
+                  BACK
+                </button>
+                <button
+                  onClick={async () => await handleDownload()}
                   className="bg-green-600 text-white px-4 py-1 rounded-lg shadow-md hover:bg-green-700"
                 >
                   DOWNLOAD
-                </a>               */}
+                </button>
               </div>
             </>
           )}
@@ -130,36 +133,48 @@ export default function HaircutForm() {
                 value="oval"
                 label="Oval"
                 description="Balanced proportions, slightly longer than wide, rounded jaw."
+                selected={formData.faceShape === "oval"}
+                handleSelect={handleSelect}
               />
               <OptionCard
                 field="faceShape"
                 value="round"
                 label="Round"
                 description="Full cheeks, soft jawline, equal width and height."
+                selected={formData.faceShape === "round"}
+                handleSelect={handleSelect}
               />
               <OptionCard
                 field="faceShape"
                 value="square"
                 label="Square"
                 description="Strong jawline, broad forehead, equal proportions."
+                selected={formData.faceShape === "square"}
+                handleSelect={handleSelect}
               />
               <OptionCard
                 field="faceShape"
                 value="oblong"
                 label="Oblong"
                 description="Longer face shape with taller forehead."
+                selected={formData.faceShape === "oblong"}
+                handleSelect={handleSelect}
               />
               <OptionCard
                 field="faceShape"
                 value="heart"
                 label="Heart"
                 description="Wide forehead tapering to a narrow, pointed chin."
+                selected={formData.faceShape === "heart"}
+                handleSelect={handleSelect}
               />
               <OptionCard
                 field="faceShape"
                 value="diamond"
                 label="Diamond"
                 description="Narrow forehead and jawline, widest at cheekbones."
+                selected={formData.faceShape === "diamond"}
+                handleSelect={handleSelect}
               />
             </div>
           </section>
@@ -168,30 +183,24 @@ export default function HaircutForm() {
           <section>
             <h2 className="text-xl font-semibold mb-3">Hair Type</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <OptionCard
-                field="hairType"
-                value="straight"
-                label="Straight"
-                description="Smooth, flat, and sleek hair strands."
-              />
-              <OptionCard
-                field="hairType"
-                value="wavy"
-                label="Wavy"
-                description="Loose waves, adds natural volume."
-              />
-              <OptionCard
-                field="hairType"
-                value="curly"
-                label="Curly"
-                description="Bouncy curls with defined texture."
-              />
-              <OptionCard
-                field="hairType"
-                value="coily"
-                label="Coily"
-                description="Tight curls or coils with lots of volume."
-              />
+              {["straight", "wavy", "curly", "coily"].map((type) => (
+                <OptionCard
+                  key={type}
+                  field="hairType"
+                  value={type}
+                  label={type.charAt(0).toUpperCase() + type.slice(1)}
+                  description={
+                    {
+                      straight: "Smooth, flat, and sleek hair strands.",
+                      wavy: "Loose waves, adds natural volume.",
+                      curly: "Bouncy curls with defined texture.",
+                      coily: "Tight curls or coils with lots of volume.",
+                    }[type]
+                  }
+                  selected={formData.hairType === type}
+                  handleSelect={handleSelect}
+                />
+              ))}
             </div>
           </section>
 
@@ -199,24 +208,23 @@ export default function HaircutForm() {
           <section>
             <h2 className="text-xl font-semibold mb-3">Hair Length</h2>
             <div className="grid grid-cols-3 gap-4">
-              <OptionCard
-                field="hairLength"
-                value="short"
-                label="Short"
-                description="Ends above the ears or jawline."
-              />
-              <OptionCard
-                field="hairLength"
-                value="medium"
-                label="Medium"
-                description="Falls around the shoulders."
-              />
-              <OptionCard
-                field="hairLength"
-                value="long"
-                label="Long"
-                description="Extends past the shoulders."
-              />
+              {["short", "medium", "long"].map((len) => (
+                <OptionCard
+                  key={len}
+                  field="hairLength"
+                  value={len}
+                  label={len.charAt(0).toUpperCase() + len.slice(1)}
+                  description={
+                    {
+                      short: "Ends above the ears or jawline.",
+                      medium: "Falls around the shoulders.",
+                      long: "Extends past the shoulders.",
+                    }[len]
+                  }
+                  selected={formData.hairLength === len}
+                  handleSelect={handleSelect}
+                />
+              ))}
             </div>
           </section>
 
@@ -224,24 +232,23 @@ export default function HaircutForm() {
           <section>
             <h2 className="text-xl font-semibold mb-3">Hair Density</h2>
             <div className="grid grid-cols-3 gap-4">
-              <OptionCard
-                field="hairDensity"
-                value="thin"
-                label="Thin"
-                description="Light and airy, less volume."
-              />
-              <OptionCard
-                field="hairDensity"
-                value="normal"
-                label="Normal"
-                description="Balanced density with moderate volume."
-              />
-              <OptionCard
-                field="hairDensity"
-                value="thick"
-                label="Thick"
-                description="Dense and voluminous strands."
-              />
+              {["thin", "normal", "thick"].map((density) => (
+                <OptionCard
+                  key={density}
+                  field="hairDensity"
+                  value={density}
+                  label={density.charAt(0).toUpperCase() + density.slice(1)}
+                  description={
+                    {
+                      thin: "Light and airy, less volume.",
+                      normal: "Balanced density with moderate volume.",
+                      thick: "Dense and voluminous strands.",
+                    }[density]
+                  }
+                  selected={formData.hairDensity === density}
+                  handleSelect={handleSelect}
+                />
+              ))}
             </div>
           </section>
 
@@ -249,24 +256,31 @@ export default function HaircutForm() {
           <section>
             <h2 className="text-xl font-semibold mb-3">Hairline</h2>
             <div className="grid grid-cols-3 gap-4">
-              <OptionCard
-                field="hairline"
-                value="straight"
-                label="Straight"
-                description="Even line across the forehead."
-              />
-              <OptionCard
-                field="hairline"
-                value="widowsPeak"
-                label="Widow’s Peak"
-                description="V-shaped point at the center of forehead."
-              />
-              <OptionCard
-                field="hairline"
-                value="receding"
-                label="Receding"
-                description="Gradual thinning around the temples."
-              />
+              {[
+                { val: "straight", desc: "Even line across the forehead." },
+                {
+                  val: "widowsPeak",
+                  desc: "V-shaped point at the center of forehead.",
+                },
+                {
+                  val: "receding",
+                  desc: "Gradual thinning around the temples.",
+                },
+              ].map((hl) => (
+                <OptionCard
+                  key={hl.val}
+                  field="hairline"
+                  value={hl.val}
+                  label={
+                    hl.val === "widowsPeak"
+                      ? "Widow’s Peak"
+                      : hl.val.charAt(0).toUpperCase() + hl.val.slice(1)
+                  }
+                  description={hl.desc}
+                  selected={formData.hairline === hl.val}
+                  handleSelect={handleSelect}
+                />
+              ))}
             </div>
           </section>
 
@@ -287,24 +301,29 @@ export default function HaircutForm() {
           <section>
             <h2 className="text-xl font-semibold mb-3">Gender</h2>
             <div className="grid grid-cols-3 gap-4">
-              <OptionCard
-                field="gender"
-                value="male"
-                label="Male"
-                description="Masculine style preference."
-              />
-              <OptionCard
-                field="gender"
-                value="female"
-                label="Female"
-                description="Feminine style preference."
-              />
-              <OptionCard
-                field="gender"
-                value="other"
-                label="Other"
-                description="Non-binary / custom style preference."
-              />
+              {[
+                { val: "male", label: "Male", desc: "Masculine style preference." },
+                {
+                  val: "female",
+                  label: "Female",
+                  desc: "Feminine style preference.",
+                },
+                {
+                  val: "other",
+                  label: "Other",
+                  desc: "Non-binary / custom style preference.",
+                },
+              ].map((g) => (
+                <OptionCard
+                  key={g.val}
+                  field="gender"
+                  value={g.val}
+                  label={g.label}
+                  description={g.desc}
+                  selected={formData.gender === g.val}
+                  handleSelect={handleSelect}
+                />
+              ))}
             </div>
           </section>
 

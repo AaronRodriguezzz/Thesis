@@ -129,7 +129,7 @@ const Chatbot = () => {
                 onClick={() => setOpen((prev) => !prev)}
                 className="bg-gray-600 text-white rounded-full p-3 shadow-lg hover:bg-gray-800 transition"
             >
-                <img src="./robot.png" alt="robot" />
+                <img src="./robot.png" alt="robot" className='w-7 h-7 md:w-10 md:h-10' />
             </button>
         </motion.div>
     );
