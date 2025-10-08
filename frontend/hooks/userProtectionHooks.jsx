@@ -21,13 +21,14 @@ export const useUser = () => {
 
 export const useUserProtection = () => {
     const navigate = useNavigate();
-    const { user } = useAuth();
+    const { user, loading} = useAuth();
     
     useEffect(() => {
+        if(loading) return;
         if (user && user?.role !== undefined) {
             navigate(user?.role === 'Admin' ? '/admin/Dashboard' : '/front-desk/dashboard');
         }
-    }, [user, navigate]);
+    }, [user, loading, navigate]);
 }
 
 export const useCustomerPageProtection = () => {
@@ -37,12 +38,11 @@ export const useCustomerPageProtection = () => {
     const { user, loading } = useAuth();
 
     useEffect(() => {
-        if(!loading){
-            if (user && user?.role === undefined) {
-                navigate(from);
-            }else {
-                navigate('/login');
-            }
+        if(loading) return;
+        if (user && user?.role === undefined) {
+            navigate(from);
+        }else {
+            navigate('/login');
         }
         
     }, [user, loading, navigate]);
@@ -50,23 +50,26 @@ export const useCustomerPageProtection = () => {
 
 export const useLoginDisabling = () => {
     const navigate = useNavigate();
-    const { user } = useAuth();
+    const { user, loading } = useAuth();
 
     useEffect(() => {
+        if(loading) return;
         if(user && user?.role === undefined){
             navigate('/');
         }else if(user && user?.role !== undefined){
             navigate(user?.role === 'Admin' ? '/admin/dashboard' : '/front-desk/dashboard')
         }
-    },[navigate, user])
+    },[navigate, user, loading])
 }
 
 export const useAdminPageProtection = () => {
     const navigate = useNavigate();
-    const { user } = useAuth();
+    const { user, loading} = useAuth();
 
     useEffect(() => {   
+        if(loading) return;
         if(!user) return navigate('/admin/login')
+        if(user && user?.role === undefined) return navigate('/');
 
     }, [user, navigate]);
 }

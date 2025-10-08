@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const path = require('path');
 const jwt = require('jsonwebtoken');
+const verifyToken = require('./middleware/Auth');
 
 // Routes Import
 //Admin Routes
@@ -62,7 +63,7 @@ app.get('/api/protected', (req, res) => {
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-        res.json({ message: 'Access granted', user: decoded.user });
+        res.json({ message: 'Access granted', user: decoded });
     } catch (err) {
         res.status(403).json({ message: err.message });
     }
@@ -82,20 +83,24 @@ app.post("/api/logout", (req, res) => {
 
 //use routes for admin
 app.use(AdminAuth);
-app.use(AppointmentRoutes);
-app.use(BranchRoutes);
-app.use(CustomerRoutes);
-app.use(DashboardRoutes);
-app.use(EmployeeRoutes);
-app.use(ProductRoutes);
-app.use(SalesRoutes);
-app.use(ServiceRoutes);
-app.use(AnnouncementRoutes);
+app.use(verifyToken, [
+  AppointmentRoutes,
+  BranchRoutes,
+  CustomerRoutes,
+  DashboardRoutes,
+  EmployeeRoutes,
+  ProductRoutes,
+  SalesRoutes,
+  ServiceRoutes,
+  AnnouncementRoutes
+]);
 
 //use routes for front desk
-app.use(AssignmentRoutes);
-app.use(WalkInRoutes);
-app.use(POSRoutes);
+app.use(verifyToken, [
+  AssignmentRoutes,
+  WalkInRoutes,
+  POSRoutes
+]);
 
 //use router for customer
 app.use(CustomerAuth);

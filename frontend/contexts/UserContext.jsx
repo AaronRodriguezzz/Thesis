@@ -12,7 +12,7 @@ export const AuthProvider = ({children}) => {
         const checkAuth = async () => {
             try {
                 setLoading(true)
-                const res = await axios.get('/api/protected');
+                const res = await axios.get('/api/protected', { withCredentials: true });
                 console.log('hello', res.data.user);
                 setUser(res.data.user);
 
