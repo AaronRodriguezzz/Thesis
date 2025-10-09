@@ -7,6 +7,6 @@ router.get('/api/barbers/:branchId', Employee.get_Barbers);
 router.post('/api/new_employee', Employee.new_admin);
 router.put('/api/update_employee', Employee.update_admin_account);
 router.put('/api/update_password', Employee.updatePassword);
-router.delete('/api/delete_employee/:id', Employee.delete_employee);
+router.delete('/api/delete_employee/:id', Employee.delete_employee); //it should just disabled the employee not actually delete it, you should check it
 
 module.exports = router;

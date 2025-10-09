@@ -5,14 +5,14 @@ import debounce from 'lodash.debounce';
 import Rating from '@mui/material/Rating';
 import Box from '@mui/material/Box';
 import { motion } from 'framer-motion';
-import { useCustomerPageProtection, useUserProtection } from '../../hooks/userProtectionHooks';
+import { useCustomerPageProtection, useUser, useUserProtection } from '../../hooks/userProtectionHooks';
 
 const ReviewForm = () => {
   useCustomerPageProtection();
   useUserProtection();
 
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem('user'));
+  const user = useUser();
 
   const [formData, setFormData] = useState({
     customer: user?._id,
@@ -50,11 +50,12 @@ const ReviewForm = () => {
   return (
     <div className="w-screen h-screen bg-[url('/login.png')] bg-cover bg-center pt-10 flex justify-center items-start">
       <motion.form 
-        initial={{ opacity: 0}}
+        initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 1 }}
-        className="bg-white bg-opacity-90 rounded-md shadow-md p-6 w-[400px]" 
-        onSubmit={handleSubmit}>
+        transition={{ duration: 2.5 }}
+        className="bg-white bg-opacity-90 rounded-md shadow-md p-6 w-[280px] md:w-[400px] mx-auto" 
+        onSubmit={handleSubmit}
+      >
         <h1 className="text-2xl font-semibold mb-4">Leave a Review</h1>
 
         <label className="block mb-2">Rating</label>

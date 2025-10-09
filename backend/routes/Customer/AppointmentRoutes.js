@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Appointment = require('../../controller/Customers/Appointment');
-const verifyToken = require('../../middleware/Auth');
+const { verifyToken } = require('../../middleware/Auth');
 
 router.post('/api/new_appointment', verifyToken, Appointment.appointment_creation);
 router.put('/api/appointment_cancellation/:id', verifyToken, Appointment.appointment_cancellation);

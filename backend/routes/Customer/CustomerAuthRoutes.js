@@ -1,11 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const Auth = require('../../controller/Customers/Auth');
-const verifyToken = require('../../middleware/Auth');
+const { verifyToken } = require('../../middleware/Auth');
 
 router.post('/api/auth/user_login', Auth.user_login);
 router.post('/api/auth/google_login', Auth.googleLogin);
-router.post('/api/auth/user_logout', verifyToken, Auth.user_logout);
 router.post('/api/user_registration', Auth.account_registration);
 router.get('/api/auth/user_check', Auth.checkAuth);
 router.put('/api/auth/update_user', verifyToken, Auth.update_account);

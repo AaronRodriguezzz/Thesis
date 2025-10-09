@@ -4,7 +4,7 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const path = require('path');
 const jwt = require('jsonwebtoken');
-const verifyToken = require('./middleware/Auth');
+const { verifyToken, verifyAdminToken} = require('./middleware/Auth');
 
 // Routes Import
 //Admin Routes
@@ -47,12 +47,6 @@ app.use("/uploads/branches", express.static("uploads/branches"));
 //global state for the queue
 global.queueState = {};
 
-
-app.use((req,res,next) => {
-    console.log(req.path, req.method);
-    next()
-})
-
 app.get('/api/protected', (req, res) => {
     const token = req.cookies.user; 
     
@@ -80,27 +74,11 @@ app.post("/api/logout", (req, res) => {
 });
 
 
+app.use((req,res,next) => {
+    console.log(req.path, req.method);
+    next()
+})
 
-//use routes for admin
-app.use(AdminAuth);
-app.use(verifyToken, [
-  AppointmentRoutes,
-  BranchRoutes,
-  CustomerRoutes,
-  DashboardRoutes,
-  EmployeeRoutes,
-  ProductRoutes,
-  SalesRoutes,
-  ServiceRoutes,
-  AnnouncementRoutes
-]);
-
-//use routes for front desk
-app.use(verifyToken, [
-  AssignmentRoutes,
-  WalkInRoutes,
-  POSRoutes
-]);
 
 //use router for customer
 app.use(CustomerAuth);
@@ -110,8 +88,23 @@ app.use(Getter);
 app.use(Subscriber);
 app.use(AiRoutes);
 
-const dirname = path.resolve();
 
+app.use(AdminAuth);
+app.use(verifyAdminToken, [
+  AppointmentRoutes,
+  CustomerRoutes,
+  DashboardRoutes,
+  EmployeeRoutes,
+  ProductRoutes,
+  SalesRoutes,
+  ServiceRoutes,
+  AssignmentRoutes,
+  WalkInRoutes,
+  POSRoutes
+]);
+
+
+const dirname = path.resolve();
 // Now you can use dirname
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(dirname, "/frontend/dist")));

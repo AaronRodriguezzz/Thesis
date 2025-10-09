@@ -4,7 +4,6 @@ const generateToken = require('../../utils/tokenCreation');
 const passwordVerification = require('../../utils/passwordVerification');
 const { send_verification_code } = require('../../Services/EmailService');
 const { OAuth2Client } = require( "google-auth-library");
-
 /**
  * @desc Logs in a user
  * @route POST /api/user/login
@@ -79,26 +78,6 @@ const googleLogin = async (req, res) => {
 };
 
 
-
-/**
- * @desc Logs out the user
- * @route POST /api/user/logout
- */
-const user_logout = (req, res) => {
-    try {
-        res.clearCookie('jwt', {
-            httpOnly: true,
-            sameSite: 'lax',
-            secure: process.env.NODE_ENV === 'production',
-        });
-
-        return res.sendStatus(200);
-    } catch (err) {
-        console.error(err);
-        return res.status(500).json({ message: 'Logout error' });
-    }
-};
-
 /**
  * @desc Registers a new user
  * @route POST /api/user/register
@@ -156,18 +135,19 @@ const account_registration = async (req, res) => {
  */
 const update_account = async (req, res) => {
     const { _id, email, lastName, firstName, phone, address } = req.body.newData;
-    console.log(req.body.newData);  
 
     try {
-        const updateData = { email, lastName, firstName, phone, address };
+        const updatedData = { email, lastName, firstName, phone, address };
 
-        const account = await UserAccount.findByIdAndUpdate(_id, updateData, { new: true });
+        const user = await UserAccount.findByIdAndUpdate(_id, updatedData, { new: true });
 
-        if (!account) {
+        if (!user) {
             return res.status(404).json({ message: 'Updating Failed' });
         }
 
-        return res.status(200).json({ message: 'Updating Successful', updatedInfo: account });
+        generateToken(res, user)
+
+        return res.status(200).json({ message: 'Updating Successful', updatedInfo: user });
 
     } catch (err) {
         console.error(err);
@@ -276,7 +256,6 @@ const checkAuth = (req, res) => {
 module.exports = {
     user_login,
     googleLogin,
-    user_logout,
     account_registration,
     checkAuth,
     update_account,

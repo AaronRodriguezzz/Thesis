@@ -60,27 +60,6 @@ const admin_login = async (req, res) => {
 };
 
 /**
- * @desc Logs out the current admin/employee
- * @route POST /api/auth/logout
- * @access Private
- */
-const admin_logout = (req, res) => {
-    try {
-        // Clear the jwt cookie
-        res.clearCookie('jwt', {
-            httpOnly: true,
-            sameSite: 'lax',
-            secure: process.env.NODE_ENV === 'production',
-        });
-
-        return res.sendStatus(200).json({message:'Successfully Log out'}); // OK
-    } catch (err) {
-        console.error(err);
-        return res.status(500).json({ message: 'Logout error' });
-    }
-};
-
-/**
  * @desc Checks if the user is authenticated
  * @route GET /api/auth/check
  * @access Private
@@ -98,6 +77,5 @@ const checkAuth = (req, res) => {
 
 module.exports = {
     admin_login,
-    admin_logout,
     checkAuth,
 };
