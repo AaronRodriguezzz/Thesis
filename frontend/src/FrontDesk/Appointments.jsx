@@ -18,11 +18,14 @@ const Appointments = () => {
     const [currentlyUpdatingId, setCurrentlyUpdatingId] = useState('');
 
     const { data, loading, error, setData } = useFetch(
-        user ? `/branch_appointments/${user?.branchAssigned}` : null, page
+        user ? `/branch_appointments/${user?.branchAssigned}` : null,
+        page,
+        null, 
         [page, user]
     );
-    
 
+    url, page = null, limit = null, deps = []
+    
     const appointmentList = data?.appointments || [];
     const paginationLimit = data?.pageCount || 1;
 

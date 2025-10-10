@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-export const useFetch = (url, page = null, deps = []) => {
+export const useFetch = (url, page = null, limit = null, deps = []) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -14,9 +14,12 @@ export const useFetch = (url, page = null, deps = []) => {
     
     const fetchData = async () => {
       try {
+
         setLoading(true);
-        const result = await axios.get(`/api/${url}`, page);
+        const result = await axios.get(`/api/${url}`, { params: { page, limit } });        
+        
         if (isMounted) setData(result?.data || null);
+
       } catch (err) {
         if (isMounted) setError(err.message || "Failed to fetch");
       } finally {
@@ -28,7 +31,7 @@ export const useFetch = (url, page = null, deps = []) => {
     return () => {
       isMounted = false; // cleanup
     };
-  }, [url, page, ...deps]);
+  }, [url, page, limit, ...deps]);
 
   return { data, loading, error, setData };
 };

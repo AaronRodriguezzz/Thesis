@@ -90,6 +90,8 @@ app.use(AiRoutes);
 
 
 app.use(AdminAuth);
+app.use(BranchRoutes);
+app.use(AnnouncementRoutes);
 app.use(verifyAdminToken, [
   AppointmentRoutes,
   CustomerRoutes,

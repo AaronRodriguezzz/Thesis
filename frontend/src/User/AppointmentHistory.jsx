@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from "react";
-import Navigation from "../../components/NavBar";
 import { get_data } from "../../services/GetMethod";
 import { HistoryCard } from "../../components/UserHistoryCard";
-import { useCustomerPageProtection, useUserProtection } from '../../hooks/userProtectionHooks';
+import { useCustomerPageProtection } from '../../hooks/userProtectionHooks';
 import CancellationModal from "../../components/modal/CancellationModal";
 import { update_data } from '../../services/PutMethod';
 
 const AppointmentHistory = () => {
   useCustomerPageProtection();
-  useUserProtection();
 
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(false);

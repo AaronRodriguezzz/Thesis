@@ -55,7 +55,6 @@ const Employees = () => {
     return (
         <div>
             <main className="p-4 w-full">
-
                 <div className="flex flex-col gap-6">
                     <div className="space-y-4">
                         <div className="w-full bg-white p-4 rounded-lg shadow flex flex-col sm:flex-row justify-between items-center gap-4">

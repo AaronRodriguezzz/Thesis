@@ -11,11 +11,11 @@ const getAllAppointments = async (req, res) => {
         console.log(req.query.page);
         const page = parseInt(req.query.page) || 1;
         const date = req.query.date
-        const limit = 10;
+        const limit = req.query.limit || 10;
         const skip = (page - 1) * limit;
 
         let query = {}
-
+        
         if(date){
             const start = new Date(date);
             const end = new Date(date);

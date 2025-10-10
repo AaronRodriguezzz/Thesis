@@ -10,14 +10,14 @@ const NotificationBell = ({isOpen, onClick }) => {
   if(isOpen) setNewNotifCount(0);
 
   return (
-    <div className="fixed top-14 right-15" onClick={onClick}>
-      <IoNotificationsOutline className="text-2xl cursor-pointer" />
+    <div className="hover:color-blue-500" onClick={onClick}>
+      <IoNotificationsOutline className="text-[30px] hover:text-blue-500 transition-colors duration-200"/>
       
       {newNotifCount > 0 && (
         <span
           className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full px-1.5"
         >
-          {count > 99 ? "99+" : newNotifCount}
+          {newNotifCount > 99 ? "99+" : newNotifCount}
         </span>
       )}
     </div>

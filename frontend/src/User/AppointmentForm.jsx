@@ -12,7 +12,6 @@ import { notificationsSocket } from '../../services/SocketMethods';
 import TermsModal from '../../components/modal/TermsAndConditionModal';
 
 const AppointmentPage = () => {
-  useUserProtection();
   useCustomerPageProtection();
 
   const { branchId } = useParams();

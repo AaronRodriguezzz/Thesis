@@ -2,11 +2,8 @@ import React from 'react';
 import {faqs} from '../../data/Questions';
 import {motion} from 'motion/react';
 import { SlideTxt } from '../../components/animations/TextAnimation';
-import { useUserProtection } from "../../hooks/userProtectionHooks";
 
-export default function Faq() {
-  useUserProtection();
-  
+export default function Faq() {  
   return (
     <div id='Faq' className="min-h-screen w-screen overflow-x-hidden bg-gray-100 bg-[url('/login.png')] bg-cover bg-center">
 

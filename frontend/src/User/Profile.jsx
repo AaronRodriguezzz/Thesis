@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useCustomerPageProtection, useUserProtection } from "../../hooks/userProtectionHooks";
 import { useAuth } from "../../contexts/UserContext";
 import ChangePassword from "../../components/ui/ChangePassword";
 import ProfileUpdate from "../../components/ui/ProfileUpdate";
+import { useCustomerPageProtection } from "../../hooks/userProtectionHooks";
 
 const ProfilePage = () => {
   useCustomerPageProtection();
-  useUserProtection();
-
   const navigate = useNavigate();
   const { logout } = useAuth();
   const [editMode, setEditMode] = useState(false);

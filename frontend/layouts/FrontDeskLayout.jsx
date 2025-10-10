@@ -6,7 +6,7 @@ import AdminHeader from "../components/ui/AdminHeader";
 
 const FrontDeskLayout = () => {
   useAdminPageProtection();
-      
+  
   return (
     <div className="flex">
       <FrontDeskSideBar />

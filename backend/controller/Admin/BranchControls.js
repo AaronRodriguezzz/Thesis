@@ -1,6 +1,5 @@
 const Branch = require('../../models/Branch');
 
-
 /**
  * @desc Fetch paginated list of customers
  * @route GET /api/branches?page=1

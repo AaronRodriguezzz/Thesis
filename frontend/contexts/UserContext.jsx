@@ -13,8 +13,7 @@ export const AuthProvider = ({children}) => {
             try {
                 setLoading(true)
                 const res = await axios.get('/api/protected', { withCredentials: true });
-                console.log('hello', res.data.user);
-                setUser(res.data.user);
+                setUser(res.data.user.user);
 
             } catch (err) {
                 console.log('hello', err)

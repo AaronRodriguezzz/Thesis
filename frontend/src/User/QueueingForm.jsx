@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useCustomerPageProtection, useUserProtection} from "../../hooks/userProtectionHooks";
 import { MdCalendarToday, MdDirectionsWalk } from "react-icons/md";
 import { queueSocket } from "../../services/SocketMethods";
 import { get_data } from "../../services/GetMethod";
@@ -7,8 +6,6 @@ import { FaUserCircle } from 'react-icons/fa';
 import { timeFormat } from "../../utils/formatDate";
 
 export default function BarberStatusPage() {
-  // useCustomerPageProtection();
-  // useUserProtection();
   
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");

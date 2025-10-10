@@ -45,8 +45,8 @@ const Branches = () => {
         
             //exclude the barber's password
             if (data) {
-                setBranchList(data.branches);
-                setPaginationLimit(data.pageCount);
+                setBranchList(data?.branches || []);
+                setPaginationLimit(data?.pageCount || 1);
             }
         };  
         get_branches();

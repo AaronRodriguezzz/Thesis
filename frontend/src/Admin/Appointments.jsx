@@ -2,18 +2,12 @@ import React, { useEffect, useState, useMemo } from "react";
 import { FaSearch } from "react-icons/fa";
 import Pagination from "@mui/material/Pagination";
 import { get_data } from "../../services/GetMethod";
-import NotificationBell from "../../components/NotificationBell";
-import NotificationBar from "../../components/NotificationBar";
-import { useUser } from "../../hooks/userProtectionHooks";
 
 const Appointments = () => {
-    const user = useUser();
     const [searchTerm, setSearchTerm] = useState("");
     const [page, setPage] = useState(1);
     const [paginationLimit, setPaginationLimit] = useState(1);
     const [appointmentList, setAppointmentList] = useState([]);
-    const [notifCount, setNotifCount] = useState(5);
-    const [notifOpen, setNotifOpen] = useState(false);
     const [dateFilter, setDateFilter] = useState('');
 
     const filteredAppointments = useMemo(() => {
@@ -45,19 +39,7 @@ const Appointments = () => {
     }, [page, dateFilter]);
 
     return (
-        <div className="flex min-h-screen">
-
-            <NotificationBell
-                isOpen={notifOpen}
-                onClick={() => setNotifOpen(!notifOpen)}
-            />
-
-            <NotificationBar 
-                isOpen={notifOpen}
-                setNewCount={setNotifCount}
-                appointments={appointmentList}
-            />
-            
+        <div className="flex min-h-screen"> 
             <main className="p-4 w-full">
 
                 <div className="flex flex-col gap-6">

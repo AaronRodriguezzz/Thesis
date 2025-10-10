@@ -5,12 +5,15 @@ import Chatbot from "../components/Chatbot";
 import HaircutSuggestionBtn from "../components/HaircutSuggestionBtn";
 import Announcement from "../components/ui/Announcement";
 import { Outlet } from "react-router-dom";
+import { useUserProtection } from "../hooks/userProtectionHooks";
 
 const UserLayout = () => {
+  useUserProtection();
+  
   return (
     <div>
       <Navigation otherPage={true}/>
-      <Announcement />
+      <Announcement /> 
       <main className="overflow-x-hidden pt-20">
         <Outlet />
         <HaircutSuggestionBtn/>

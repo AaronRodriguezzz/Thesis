@@ -1,15 +1,19 @@
+import { useState } from "react";
 import { UserCircle } from "lucide-react";
 import pageTitles from "../../data/PageTitles";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useUser } from "../../hooks/userProtectionHooks";
 import { HiOutlineMegaphone } from "react-icons/hi2";
 import AnnouncementModal from '../../components/modal/SendAnnouncementModal';
-import { useState } from "react";
+import NotificationBar from "../NotificationBar";
+import NotificationBell from "../NotificationBell";
 
 export default function AdminHeader() {
   const location = useLocation();
   const navigate = useNavigate();
   const user = useUser();
+
+  const [notifOpen, setNotifOpen] = useState(false);
   const currentTitle = pageTitles[location.pathname]?.title || "";
   const description = pageTitles[location.pathname]?.description || "";
 
@@ -40,6 +44,10 @@ export default function AdminHeader() {
 
         <div className="flex items-center gap-x-2"> 
           <HiOutlineMegaphone className="w-7 h-7 text-gray-700 transform -scale-x-100 hover:text-blue-500 cursor-pointer" onClick={() => setSendAnnouncement(true)}/>
+          <NotificationBell
+            isOpen={notifOpen}
+            onClick={() => setNotifOpen(!notifOpen)}
+          />
           <div
             className="flex items-center justify-end gap-x-2 group cursor-pointer"
             onClick={() => navigate(path)}
@@ -53,6 +61,11 @@ export default function AdminHeader() {
           </div>
         </div>
       </div>
+      
+      <NotificationBar 
+        isOpen={notifOpen}
+        onClose={() => setNotifOpen(false)}
+      />
 
       <AnnouncementModal isOpen={sendingAnnouncement} onClose={() => setSendAnnouncement(false)}/>
     </div>

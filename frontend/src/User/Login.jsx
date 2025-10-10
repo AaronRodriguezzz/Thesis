@@ -9,10 +9,8 @@ import { useLocation } from "react-router-dom";
 import { motion } from "motion/react"
 
 export default function Login() {
-  // useUserProtection();
-  // useCustomerPageProtection();
   useLoginDisabling();
-
+  
   const { setUser } = useAuth();
   const location = useLocation();
   const from = location.state?.from || "/";

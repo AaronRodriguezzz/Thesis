@@ -7,14 +7,12 @@ import { post_data } from "../../services/PostMethod";
 import { motion } from "motion/react"
 import { SlideTxt } from "../../components/animations/TextAnimation";
 import { useSectionViews } from "../../hooks/HomeRef";
-import { useUserProtection } from "../../hooks/userProtectionHooks";
 import { useIsMobile } from "../../hooks/useIsInMobile";
 
 const baseUrl = import.meta.env.MODE === 'development' ? 'http://localhost:4001' : 'https://tototumbs.onrender.com';
 const images = ["/lower_bicutan.png", "/toto_studio.JPG", "/totobg.JPG"];
 
 export default function MainPage() {
-  useUserProtection();
 
   const isMobile = useIsMobile(); 
   const itemsPerPage = isMobile ? 3 : 5;  

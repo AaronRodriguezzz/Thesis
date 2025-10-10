@@ -3,16 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
-// export const useNav = (endpoint) => {
-//     const navigate = useNavigate();
-
-//     useEffect(() => {
-//         if (endpoint) {
-//             navigate(endpoint);
-//         }
-//     }, [endpoint, navigate]);
-// }
-
 export const useUser = () => {
     const { user } = useAuth();
     
@@ -21,55 +11,75 @@ export const useUser = () => {
 
 export const useUserProtection = () => {
     const navigate = useNavigate();
-    const { user, loading} = useAuth();
-    
-    useEffect(() => {
-        if(loading) return;
-        if (user && user?.role !== undefined) {
-            navigate(user?.role === 'Admin' ? '/admin/Dashboard' : '/front-desk/dashboard');
-        }
-    }, [user, loading, navigate]);
-}
-
-export const useCustomerPageProtection = () => {
-    const navigate = useNavigate();
     const location = useLocation();
     const from = location.pathname || '/'
     const { user, loading } = useAuth();
 
     useEffect(() => {
-        if(loading) return;
-        if (user && user?.role === undefined) {
-            navigate(from);
-        }else {
-            navigate('/login');
+        console.log(user);
+        if (!loading && user) {
+            // Redirect based on role
+            if (user.role === "Admin" || user.role === "Front Desk") {
+                navigate(user?.role === 'Admin' ? '/admin/Dashboard' : '/front-desk/dashboard', { replace: true });
+            } else {
+                navigate(from, { replace: true });
+            }
         }
-        
     }, [user, loading, navigate]);
-}
+};
 
-export const useLoginDisabling = () => {
+export const useLoginDisabling = () =>{
     const navigate = useNavigate();
     const { user, loading } = useAuth();
 
     useEffect(() => {
-        if(loading) return;
-        if(user && user?.role === undefined){
-            navigate('/');
-        }else if(user && user?.role !== undefined){
-            navigate(user?.role === 'Admin' ? '/admin/dashboard' : '/front-desk/dashboard')
+        if(!loading && user){
+            console.log(user);
+            if(user && user.role === undefined) {
+                navigate("/", { replace: true });
+            }
+            else if(user.role === "Admin" || user.role === "Front Desk"){
+                navigate(user.role === 'Admin' ? '/admin/Dashboard' : '/front-desk/dashboard', { replace: true });
+            }
         }
-    },[navigate, user, loading])
+    },[user, loading, navigate])
 }
+
+export const useCustomerPageProtection = () => {
+  const navigate = useNavigate();
+  const { user, loading } = useAuth();
+
+    useEffect(() => {
+        if (!loading) {
+        // Not logged in → login
+            if (!user) {
+                navigate("/login", { replace: true });
+            }
+            // Admin trying to access customer page → redirect to admin dashboard
+            else if (user.role === "Admin" || user.role === "Front Desk") {
+                navigate(user?.role === 'Admin' ? '/admin/Dashboard' : '/front-desk/dashboard', { replace: true });
+            }
+        }
+    }, [user, loading, navigate]);
+};
+
 
 export const useAdminPageProtection = () => {
     const navigate = useNavigate();
-    const { user, loading} = useAuth();
+    const { user, loading } = useAuth();
+    
+    useEffect(() => {
+        if (!loading) {
+        // Not logged in → admin login
+            if (!user) {
+                navigate("/admin/login", { replace: true });
+            }
+            // Non-admin → redirect home
+            else if (user.role !== "Admin" && user.role !== "Front Desk") {
+                navigate("/", { replace: true });
+            }
+        }
+    }, [user, loading, navigate]);
+};
 
-    useEffect(() => {   
-        if(loading) return;
-        if(!user) return navigate('/admin/login')
-        if(user && user?.role === undefined) return navigate('/');
 
-    }, [user, navigate]);
-}
