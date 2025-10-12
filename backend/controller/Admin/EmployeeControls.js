@@ -127,16 +127,16 @@ const update_admin_account = async (req, res) => {
 
         if(account.role === 'Barber'){
             const branchId = account.branchAssigned.toString();
-
-            if (global.queueState[branchId]) {
+            if (branchId in global.queueState) {
                 const barbers = global.queueState[branchId].barbers.map(b =>
                     b._id.toString() === account._id.toString() ? account : b
                 );
 
                 global.queueState[branchId].barbers = barbers;
-
+                
+                console.log('new state', global.queueState);
                 // Emit updated state
-                global.sendQueueUpdate({ branchId, ...global.queueState[branchId] });
+                global.sendQueueUpdate(branchId, global.queueState);
             }
         }
    

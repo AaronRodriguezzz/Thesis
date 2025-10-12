@@ -29,23 +29,39 @@ export default function BarberStatusPage() {
 
 
   useEffect(() => {
+    const branchId = '6862a4bed08d2b82975b2ac6';
+    
+    const fetchInitialData = async () => {
+  
+      if(!branchId) return
+  
+      try {
+        const response = await get_data(`/initialBarberAssignment/${branchId}`);
+
+        setBarberList(response?.barbers || []);
+        setAppointments(response?.appointments || []);
+        setWalkInList(response?.walkIns || []);
+  
+      } catch (err) {
+        console.error("Error fetching initial data:", err);
+      } 
+    };
+  
+    fetchInitialData();
+  
     queueSocket.on("connect", () => {
       console.log("Connected to queueing namespace");
     });
-
-    // frontDesk?.branchAssigned
-    const branchId = '6862a4bed08d2b82975b2ac6';
-    const fetchInitialData = async () => await get_data(`/initialBarberAssignment/${branchId}`)
   
-    fetchInitialData();
-          
-    // Listen for new appointments    
+    queueSocket.emit("joinBranch", branchId);
+    
     queueSocket.on("queueUpdate", (data) => {
-      setBarberList(data?.barbers || []);
-      setAppointments(data?.appointments || []);
-      setWalkInList(data.walkIns || []);
+      console.log('new data', data);
+      setBarberList(data[branchId]?.barbers || []);
+      setAppointments(data[branchId]?.appointments || []);
+      setWalkInList(data[branchId]?.walkIns || []);
     });
-          
+  
     return () => {
       queueSocket.off("connect");
       queueSocket.off("queueUpdate");

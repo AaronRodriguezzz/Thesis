@@ -1,7 +1,6 @@
 const EmployeeAccount = require('../../models/EmployeeAccount');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken'); // ✅ Make sure this is imported
-
+const generateToken = require('../../utils/tokenCreation');
 /**
  * @desc Logs in an admin/employee
  * @route POST /api/auth/login
@@ -32,20 +31,9 @@ const admin_login = async (req, res) => {
         // Convert Mongoose document to plain object and remove password
         const adminObj = user.toObject();
         const { password: _, ...employee } = adminObj;
-
-        // Generate JWT
-        const token = jwt.sign(
-            { user: employee },
-            process.env.JWT_SECRET,
-            { expiresIn: '1d' }
-        );
-
-        res.cookie('user', token, {
-            httpOnly: true,
-            maxAge: 24 * 60 * 60 * 1000, // 1 day
-            sameSite: 'lax',
-            secure: process.env.NODE_ENV === 'production' // Only secure in production
-        });
+        
+        console.log('employee in the controller', employee);
+        generateToken(res, employee)
 
         // Send success response
         return res.status(200).json({

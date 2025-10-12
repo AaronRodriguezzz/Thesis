@@ -14,7 +14,6 @@ const verifyToken = (req, res, next) => {
             return res.status(403).json({ message: "Access denied" });
         }
         
-        req.user = decoded;
         next();
     } catch (err) {
         return res.status(403).json({ message: "Invalid or expired token." });
@@ -31,13 +30,10 @@ const verifyAdminToken = (req, res, next) => {
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-        console.log(decoded);
         // Only allow users with an admin role
         if (!decoded.role === 'Front Desk' || !decoded.role === 'Admin') {
             return res.status(403).json({ message: "Access denied" });
         }
-
-        req.user = decoded; // store decoded info
 
         next();
     } catch (err) {

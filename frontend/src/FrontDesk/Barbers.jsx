@@ -9,14 +9,14 @@ import NewWalkInCustomer from "../../components/modal/AddWalkInCustomer";
 import ServiceCompleteModal from "../../components/modal/ServiceCompleteModal";
 import AssignmentLoading from "../../components/animations/AssignmentLoading";
 import { queueSocket } from "../../services/SocketMethods";
-import { useUser } from "../../hooks/userProtectionHooks";
+import { useAuth } from "../../contexts/UserContext";
 
 const Appointments = () => {
     const baseUrl =
         import.meta.env.MODE === "development"
         ? "http://localhost:4001"
         : "https://tototumbs.onrender.com";
-    const user = useUser();
+    const { user, loading } = useAuth();
     const today = new Date();
     const time = timeFormat(today);
 
@@ -28,21 +28,12 @@ const Appointments = () => {
     const [barberToUpdate, setBarberToUpdate] = useState(null);
     const [isAddingWalkIn, setIsAddingWalkIn] = useState(false);
     const [currentHour, setCurrentHour] = useState(new Date().getHours());
-    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     const update_barberStatus = async (barber, newStatus) => {
         try {
             const updatedData = { ...barber, status: newStatus };
-            const response = await update_data("/update_employee", updatedData);
-
-            if (response.updatedInfo) {
-                // setBarberList((prev) =>
-                //     prev.map((b) =>
-                //         b._id === response.updatedInfo._id ? response.updatedInfo : b
-                //     )
-                // );
-            }
+            await update_data("/update_employee", updatedData);
         } catch (err) {
         console.error("Error updating barber:", err);
         }
@@ -62,17 +53,16 @@ const Appointments = () => {
 
   // Initial fetch + socket
     useEffect(() => {
+        if(loading) return 
+        const branchId = user?.branchAssigned;
 
         const fetchInitialData = async () => {
 
-            if(!user) return
-            const branchId = user?.branchAssigned;
+            if(!branchId) return
 
             try {
-                setLoading(true);
                 const response = await get_data(`/initialBarberAssignment/${branchId}`);
 
-                console.log(response);
                 setBarberList(response?.barbers || []);
                 setAppointmentsByHour(response?.appointments || []);
                 setWalkInList(response?.walkIns || []);
@@ -81,8 +71,6 @@ const Appointments = () => {
             } catch (err) {
                 console.error("Error fetching initial data:", err);
                 setError("Failed to load data. Please try again.");
-            } finally {
-                setLoading(false);
             }
         };
 
@@ -93,17 +81,19 @@ const Appointments = () => {
             console.log("Connected to queueing namespace");
         });
 
+        queueSocket.emit("joinBranch", branchId);
+
         queueSocket.on("queueUpdate", (data) => {
-            setBarberList(data?.barbers || []);
-            setAppointmentsByHour(data?.appointments || []);
-            setWalkInList(data?.walkIns || []);
+            setBarberList(data[branchId]?.barbers || []);
+            setAppointmentsByHour(data[branchId]?.appointments || []);
+            setWalkInList(data[branchId]?.walkIns || []);
         });
 
         return () => {
             queueSocket.off("connect");
             queueSocket.off("queueUpdate");
         };
-    }, []);
+    }, [loading]);
 
 
     // ✅ Loading & Error UI

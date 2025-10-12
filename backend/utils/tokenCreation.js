@@ -1,11 +1,9 @@
 const jwt = require("jsonwebtoken");
 
 const generateToken = (res, payload) => {
-    const user = payload.toObject ? payload.toObject() : { ...payload };
-    delete user.password;
-
+    
     const token = jwt.sign(
-        user, 
+        payload, 
         process.env.JWT_SECRET, 
         { expiresIn: "1d" }
     );

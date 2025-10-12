@@ -18,21 +18,25 @@ const newWalkIn = async (req, res) => {
             return res.status(400).json({message: 'New Walk In Adding Failed'})
         }
 
-        const branchId = req.body?.branch;
-        console.log(global.queueState[branchId])
+        const populatedWalkIn = await newWalkIn.populate([
+            { path: 'service' },
+            { path: 'additionalService' },
+            { path: 'barber' },
+            { path: 'recordedBy' },
+        ]);
 
-        if (global.queueState[branchId]) {
+        const branchId = req.body?.branch;
+        console.log('outside if',  global.queueState)
+        if (branchId in global.queueState) {
             global.queueState[branchId].walkIns = [
                 ...global.queueState[branchId].walkIns,
-                newWalkIn.toObject()
+                populatedWalkIn.toObject()
             ] 
             
-            console.log('ADDED WALKIN', global.queueState)
+            console.log('inside if',  global.queueState)
 
-            
-            global.sendQueueUpdate(global.queueState);
+            global.sendQueueUpdate(branchId, global.queueState);
         }   
-
 
         return res.status(200).json({message: 'New Walk In Added Successfully', walkIn})
     }catch(err){

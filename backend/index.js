@@ -92,6 +92,7 @@ app.use(AiRoutes);
 app.use(AdminAuth);
 app.use(BranchRoutes);
 app.use(AnnouncementRoutes);
+app.use(AssignmentRoutes);
 app.use(verifyAdminToken, [
   AppointmentRoutes,
   CustomerRoutes,
@@ -100,7 +101,6 @@ app.use(verifyAdminToken, [
   ProductRoutes,
   SalesRoutes,
   ServiceRoutes,
-  AssignmentRoutes,
   WalkInRoutes,
   POSRoutes
 ]);

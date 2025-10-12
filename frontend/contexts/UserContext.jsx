@@ -1,5 +1,4 @@
 import { createContext, useState, useEffect, useContext } from 'react';
-import { get_data } from '../services/GetMethod';
 import axios from 'axios';
 
 const UserAuthContext = createContext();
@@ -13,7 +12,8 @@ export const AuthProvider = ({children}) => {
             try {
                 setLoading(true)
                 const res = await axios.get('/api/protected', { withCredentials: true });
-                setUser(res.data.user.user);
+                console.log('user', res.data);
+                setUser(res.data.user);
 
             } catch (err) {
                 console.log('hello', err)

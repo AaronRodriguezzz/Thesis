@@ -47,7 +47,7 @@ const initializeBarberAssignments = async (req,res) => {
         }
 
         global.queueState[branchId] = { appointments, walkIns, barbers };
-        global.sendQueueUpdate(global.queueState[branchId]);
+        global.sendQueueUpdate(branchId, global.queueState[branchId]);
 
         return res.status(200).json({branchId, appointments, walkIns, barbers });
         
