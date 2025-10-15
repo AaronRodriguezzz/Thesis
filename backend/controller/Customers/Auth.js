@@ -70,7 +70,7 @@ const googleLogin = async (req, res) => {
             });
         }
 
-        generateToken(res, user);
+        generateToken(res, user.toObject());
 
         return res.status(200).json({ message: "Log In Successful", user });
 

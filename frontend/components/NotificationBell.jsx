@@ -15,7 +15,7 @@ const NotificationBell = ({isOpen, onClick }) => {
       
       {newNotifCount > 0 && (
         <span
-          className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full px-1.5"
+          className="absolute top-11 right-75 bg-red-500 text-white text-xs font-bold rounded-full px-1.5"
         >
           {newNotifCount > 99 ? "99+" : newNotifCount}
         </span>
