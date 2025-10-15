@@ -27,7 +27,10 @@ const user_login = async (req, res) => {
             res.status(401).json({ message: 'Invalid credentials' });
         }
 
-        generateToken(res, user)
+        const adminObj = user.toObject();
+        const { password: _, ...customer } = adminObj;
+
+        generateToken(res, customer)
 
         return res.status(200).json({ message: 'Log In Successful', user });
 
