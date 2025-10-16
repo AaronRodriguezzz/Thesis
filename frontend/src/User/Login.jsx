@@ -3,7 +3,7 @@ import TextField from "@mui/material/TextField";
 import GoogleButton from "../../components/ui/GoogleButton";
 import { post_data } from '../../services/PostMethod';
 import { useNavigate } from "react-router-dom";
-import { useUserProtection, useCustomerPageProtection, useLoginDisabling } from "../../hooks/userProtectionHooks";
+import { useLoginDisabling } from "../../hooks/userProtectionHooks";
 import { useAuth } from "../../contexts/UserContext";
 import { useLocation } from "react-router-dom";
 import { motion } from "motion/react"
@@ -12,10 +12,10 @@ export default function Login() {
   useLoginDisabling();
   
   const { setUser } = useAuth();
+  const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from || "/";
 
-  const navigate = useNavigate();
   const [credentials, setCredentials] = useState({
     email: "",
     password: "",

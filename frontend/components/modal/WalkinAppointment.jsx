@@ -18,6 +18,7 @@ const ThreeLayerModal = ({ onClose, setNewData }) => {
         phone: '',
         password: '',
     });
+    
     const [formData, setAppointmentData] = useState({
         customer: '',
         branch: '',

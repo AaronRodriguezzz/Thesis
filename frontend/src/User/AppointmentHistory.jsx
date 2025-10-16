@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { get_data } from "../../services/GetMethod";
+import React, { useState } from "react";
 import { HistoryCard } from "../../components/UserHistoryCard";
 import { useCustomerPageProtection } from '../../hooks/userProtectionHooks';
-import CancellationModal from "../../components/modal/CancellationModal";
 import { update_data } from '../../services/PutMethod';
+import { useFetch } from "../../hooks/useFetch";
+import CancellationModal from "../../components/modal/CancellationModal";
 
 const AppointmentHistory = () => {
   useCustomerPageProtection();
 
-  const [appointments, setAppointments] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const { data, loading, error, setData } = useFetch('/get_data/appointments', null, null, []);
   const [showCancellationModal, setShowCancellationModal] = useState(false);
   const [appointmentToCancel, setAppointmentToCancel] = useState(null);
   const statusOrder = {
@@ -19,25 +18,8 @@ const AppointmentHistory = () => {
     Cancelled: 4,
     "No-Show": 5,
   };
-
-  useEffect(() => {
-    const initializeData = async () => {
-      try{
-        const response = await get_data('/get_data/appointments');
-
-        if(response){
-          setAppointments(response)
-        }
-      }catch(err){
-        console.log(err);
-      }
-    }
-
-    initializeData();
-  },[])
-
   
-  const sortedAppointments = appointments && [...appointments].sort(
+  const sortedAppointments = data && [...data].sort(
     (a, b) => statusOrder[a.status] - statusOrder[b.status]
   );
 
@@ -45,51 +27,48 @@ const AppointmentHistory = () => {
     e.preventDefault();
 
     try {
-      setLoading(true);
       const response = await update_data(`/appointment_cancellation/${appointmentToCancel}` , cancellationReason);
 
       if (response) {
         setShowCancellationModal(false);
-        setAppointments(prev =>
+        setData(prev =>
           prev.map(s => (s._id === response.appointment._id ? response.appointment : s))
         );
       }
     } catch (err) {
       console.log(err);
-    } finally {
-      setLoading(false);
-    }
+    } 
   };
-
-  useEffect(() => {
-    console.log(sortedAppointments);
-  },[sortedAppointments])
   
-
   return (
     <>
-      <div className="h-screen max-w-4xl mx-auto p-6 mt-10">
-        <h1 className="font-extralight text-[50px] text-center my-5">Appointment History</h1>
+      <div className="h-screen max-w-4xl mx-auto p-6 mt-5">
+        <h1 className="font-extralight text-[25px] md:text-[50px] text-center my-5">Appointment History</h1>
 
-        {sortedAppointments && sortedAppointments.map((appointment) => (
-          <HistoryCard 
-            key={appointment._id}
-            id={appointment._id}
-            service={appointment.service.name}
-            date={appointment.scheduledDate.toString().split('T')[0]}
-            status={appointment.status}
-            onCancel={() => {
-              setAppointmentToCancel(appointment._id);
-              setShowCancellationModal(true);
-            }}
+        <div className="max-h-[600px] overflow-auto custom-scrollbar">
+          {sortedAppointments && sortedAppointments.map((appointment) => (
+            <HistoryCard 
+              key={appointment._id}
+              id={appointment._id}
+              service={appointment.service.name}
+              date={appointment.scheduledDate.toString().split('T')[0]}
+              status={appointment.status}
+              onCancel={() => {
+                setAppointmentToCancel(appointment._id);
+                setShowCancellationModal(true);
+              }}
+            />
+          ))}
+        </div>
+        
+
+        {showCancellationModal && 
+          <CancellationModal 
+            onClose={() => setShowCancellationModal(false)}
+            cancelling={loading}
+            onProceed={handleCancellation}
           />
-        ))}
-
-        {showCancellationModal && <CancellationModal 
-          onClose={() => setShowCancellationModal(false)}
-          cancelling={loading}
-          onProceed={handleCancellation}
-        />}
+        }
       </div>
     </>
     
