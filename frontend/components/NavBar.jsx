@@ -32,7 +32,7 @@ export default function Navigation() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: "easeInOut" }}
       exit={{ opacity: 0, y: -20 }}
-      className="w-screen fixed top-0 z-50 shadow-sm bg-white py-3 px-5 overflow-hidden p-4"
+      className="w-screen fixed top-0 z-50 shadow-sm bg-black/90 py-3 px-5 overflow-hidden p-4 text-white"
     >
       <div className="flex items-center justify-between w-full">
         {/* Left: Burger icon (mobile only) */}
@@ -101,7 +101,7 @@ export default function Navigation() {
           <FiUser
             size={30}
             onClick={() => navigate("/profile")}
-            className="text-gray-500 cursor-pointer"
+            className="text-white cursor-pointer"
           />
         </div>
       </div>

@@ -18,7 +18,7 @@ const HaircutSuggestionBtn = () => {
             }}
             transition={{ duration: .5, ease: "easeInOut" }}
             onClick={() => navigate('/haircut-form')}
-            className="fixed right-2 bottom-20 md:bottom-22 bg-gray-600 text-white rounded-full p-3 shadow-lg hover:bg-gray-800 transition"
+            className="fixed right-2 bottom-20 md:bottom-22 bg-black/90 text-white rounded-full p-3 shadow-lg hover:bg-gray-800 transition"
         >
             <BsScissors className='w-7 h-7 md:w-10 md:h-10' />
         </motion.button>

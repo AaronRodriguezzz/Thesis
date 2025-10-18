@@ -10,7 +10,6 @@ const FeedbackSection = () => {
     const { data, loading, error } = useFetch('/reviews', null, null, []);
     const navigate = useNavigate();
 
-    console.log(data);
     return (
         <div className="px-4 md:px-10">
             <div className="flex flex-col md:flex-row justify-between items-center mb-4">
@@ -27,7 +26,7 @@ const FeedbackSection = () => {
                       initial={{ opacity: 0, y: -200 }}
                       animate={inViews.feedback ? { opacity: 1, y: 0 } : {}}
                       transition={{ duration: .5, ease: "easeInOut", delay: index * .2 }}
-                      className="w-full sm:w-[300px] h-[300px] flex flex-col gap-y-4 justify-center items-center shadow p-4"
+                      className="w-full sm:w-[300px] h-[300px] flex flex-col gap-y-4 justify-center items-center p-4 bg-black/30 text-white shadow shadow-white"
                     >
                       <Rating name="read-only" value={feeds.rating} readOnly />
                       <p className="tracking-tighter text-center">"{feeds.comment}"</p>

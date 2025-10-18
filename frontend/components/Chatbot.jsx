@@ -59,7 +59,7 @@ const Chatbot = () => {
                 opacity: 1
             }}
             transition={{ duration: 0.7, ease: "easeInOut" }}
-            className="fixed right-2 bottom-5 z-50 flex flex-col items-end gap-2"
+            className="fixed right-2 bottom-5 z-50 flex flex-col items-end gap-2 z-10"
         >
 
         {open && (
@@ -127,7 +127,7 @@ const Chatbot = () => {
             {/* Floating Button */}
             <button
                 onClick={() => setOpen((prev) => !prev)}
-                className="bg-gray-600 text-white rounded-full p-3 shadow-lg hover:bg-gray-800 transition"
+                className="bg-black/90 text-white rounded-full p-3 shadow-lg hover:bg-gray-800 transition"
             >
                 <img src="./robot.png" alt="robot" className='w-7 h-7 md:w-10 md:h-10' />
             </button>

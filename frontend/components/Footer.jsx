@@ -4,11 +4,11 @@ import { FaFacebookF, FaInstagram, FaTwitter, FaCut } from "react-icons/fa";
 
 export default function Footer() {
   return (
-    <div className="w-full h-20 shadow flex items-center justify-between px-2 md:px-6 z-50 bg-gray-50">
+    <div className="w-full h-20 shadow flex items-center justify-between px-2 md:px-6 bg-black z-50 text-white">
 
       {/* Left: Logo */}
       <div className="flex items-center gap-2">
-        <FaCut size={28} className="text-black" />
+        <FaCut size={28} />
         <div className="flex flex-col leading-4">
           <p className="text-sm tracking-widest font-light">TOTO TUMBS</p>
           <p className="text-xl font-semibold tracking-widest">BARBERSHOP</p>
@@ -28,13 +28,13 @@ export default function Footer() {
       {/* Right: Social Icons */}
       <div className="flex items-center gap-2 md:gap-4 text-gray-600">
         <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
-          <FaFacebookF size={20} className="hover:text-black transition" />
+          <FaFacebookF size={20} className="text-white hover:text-gray-200 transition" />
         </a>
         <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
-          <FaInstagram size={20} className="hover:text-black transition" />
+          <FaInstagram size={20} className="text-white hover:text-gray-200 transition" />
         </a>  
         <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
-          <FaTwitter size={20} className="hover:text-black transition" />
+          <FaTwitter size={20} className="text-white hover:text-gray-200 transition" />
         </a>
       </div>
     </div>

@@ -20,7 +20,7 @@ const SubscribeSection = () => {
 
     return (
         <form 
-            className="w-full flex flex-col justify-center items-center gap-y-4 bg-gray-800 py-12 px-4 mt-10 text-center text-white"
+            className="w-full flex flex-col justify-center items-center gap-y-4  py-12 px-4 mt-10 text-center text-white"
             onSubmit={handle_subscribed_email}
         >
             <h1 className="text-2xl md:text-4xl font-light">

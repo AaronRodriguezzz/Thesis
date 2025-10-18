@@ -78,7 +78,7 @@ export default function BarberStatusPage() {
     <div className="w-screen h-screen overflow-x-hidden bg-gray-100 bg-[url('/login.png')] bg-cover bg-center">
 
       <main className="h-full w-full flex flex-col items-center">
-        <div className="w-[90%] md:w-[95%] lg:w-[75%] flex justify-between items-center leading-3 bg-white p-4 my-4 shadow rounded">
+        <div className="w-[90%] md:w-[95%] lg:w-[75%] flex justify-between items-center leading-3 bg-white p-4 my-2 md:my-4 shadow rounded">
           <div className="leading-0.2">
             <select className="text-s md:text-[20px] lg:text-[30px] tracking-tighter text-left my-2">
               <option value="">TOTO TUMBS STUDIO</option>
@@ -91,8 +91,8 @@ export default function BarberStatusPage() {
           </h2>
         </div>
 
-        <div className="w-[90%] md:w-[95%] lg:w-[75%] flex gap-x-2 items-center justify-between leading-3 mb-4">
-          <div className="w-[50%] flex items-center bg-white gap-8 p-4 shadow-md">
+        <div className="w-[90%] md:w-[95%] lg:w-[75%] flex flex-col gap-y-2 md:flex-row gap-x-2 items-center justify-between leading-3 mb-4">
+          <div className="w-full md:w-[50%] flex items-center bg-white gap-4 p-4 shadow-md">
             <MdCalendarToday className="text-[40px] text-gray-800" />
         
             <div>
@@ -104,20 +104,19 @@ export default function BarberStatusPage() {
               </p>
             </div>
           </div>
+
+          <div className="w-full md:w-[50%] flex items-center bg-white gap-4 p-4 shadow-md">
+            <MdDirectionsWalk className="text-[40px] text-gray-800" />
         
-          <div className="w-[50%] flex items-center justify-between bg-white gap-4 px-4 py-4 shadow-md">
-            <div className="flex">
-              <MdDirectionsWalk className="text-[40px] text-gray-800" />
-              <div>
-                <h2 className="text-s md:text-[20px] lg:text-[25px] tracking-tighter text-left my-2">
-                  Walk-In
-                </h2>
-                <h3 className="text-xs md:text-[20px] lg:text-[30px] font-extralight tracking-tighter text-left">
+            <div>
+              <h1 className="text-s md:text-[20px] lg:text-[25px] tracking-tighter text-left my-2">
+                Walk-In
+              </h1>
+              <p className="text-xs md:text-[20px] lg:text-[30px] font-extralight tracking-tighter text-left">
                  {walkInList && walkInList.length || 0}  
-                </h3>
-              </div>
+              </p>
             </div>
-          </div>                    
+          </div>                 
         </div>  
 
         <div className="w-full h-auto md:h-[60%] flex flex-col md:flex-row items-center justify-center gap-4 px-4">
@@ -142,7 +141,7 @@ export default function BarberStatusPage() {
                     className="w-20 h-20 rounded-full object-cover mb-3"
                   />
                 ) : (
-                  <FaUserCircle className="text-[120px] text-gray-800 mb-3" />
+                  <FaUserCircle className="text-[80px] md:text-[120px] text-gray-800 mb-3" />
                 )}
 
                 <h1 className="text-[30px] font-semibold tracking-tight text-center">
