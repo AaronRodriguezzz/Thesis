@@ -1,16 +1,16 @@
 const ProfileField = ({ label, value, editable, name, onChange }) => (
   <div>
-    <label className="font-semibold text-sm block mb-1">{label}</label>
+    <label className="font-semibold text-sm block mb-1 text-white">{label}</label>
     {editable ? (
       <input
         type="text"
         name={name}
         value={value}
         onChange={onChange}
-        className="bg-gray-100 shadow-sm p-2 w-full text-base rounded-md focus:ring-2 focus:ring-blue-400 outline-none"
+        className="w-full bg-black shadow shadow-white text-base rounded-md focus:ring-2 focus:ring-gray-600 outline-none p-2 "
       />
     ) : (
-      <p className="text-gray-800 text-base">{value}</p>
+      <p className="text-base">{value}</p>
     )}
   </div>
 );

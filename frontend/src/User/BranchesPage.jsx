@@ -24,16 +24,16 @@ export default function BranchesPage(){
         )
 
     return (
-        <div id='Branches' className="min-h-screen bg-gray-100 p-2 pt-10 md:p-12">
+        <div id='Branches' className="min-h-screen p-2 pt-10 md:p-12">
           {/* Header */}
           <motion.div 
-            className="text-center mb-10"
+            className="text-center text-white mb-10"
             initial={{ opacity: 0 }}
             transition={{ duration: 3, ease: "easeInOut" }}
             animate={{ opacity: 1 }}
           >
-              <h1 className="text-4xl font-bold text-gray-800 mb-2">Our Branches</h1>
-              <p className="text-gray-600 max-w-xl mx-auto">
+              <h1 className="text-4xl font-bold mb-2">Our Branches</h1>
+              <p className="max-w-xl mx-auto">
                 Find your nearest Toto Tumbs Barbershop branch and experience premium service at your convenience.
               </p>
           </motion.div>
@@ -43,7 +43,7 @@ export default function BranchesPage(){
             {data && data.map((branch,index) => (
               <motion.div 
                 key={branch?._id} 
-                className="bg-white rounded-2xl shadow-lg overflow-hidden transition hover:scale-[1.02]"
+                className="bg-black/40 text-white rounded-2xl shadow-lg overflow-hidden transition hover:scale-[1.02]"
                 initial={{ opacity: 0, y: -50 }}
                 animate={{ opacity: 1, y: 0 }}  
                 transition={{ duration: .5, ease: "easeInOut", delay: index * 0.3 }}
@@ -54,11 +54,11 @@ export default function BranchesPage(){
                       className="h-60 w-full object-cover"
                   />
                   <div className="p-4">
-                    <h2 className="text-2xl font-semibold text-gray-800">{branch?.name}</h2>
-                    <p className="text-gray-600 tracking-tight truncate w-full">{branch?.address}</p>
-                    <p className="text-gray-600 tracking-tight">{branch?.phone}</p>
+                    <h2 className="text-2xl font-semibold">{branch?.name}</h2>
+                    <p className="tracking-tight truncate w-full">{branch?.address}</p>
+                    <p className="tracking-tight">{branch?.phone}</p>
                       <button 
-                        className="mt-3 px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 text-sm"
+                        className="mt-3 px-4 py-2 bg-white text-black rounded-lg hover:bg-gray-800 text-sm"
                         onClick={() => navigate(`/appointment/${branch?._id}`)}
                       >
                           Book Now

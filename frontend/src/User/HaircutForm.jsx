@@ -77,7 +77,7 @@ export default function HaircutForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-6">
+    <div className="min-h-screen flex items-center justify-center p-6">
       {imageId ? (
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -118,9 +118,9 @@ export default function HaircutForm() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           onSubmit={handleSubmit}
-          className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-3xl space-y-8"
+          className="bg-black/40 text-white shadow-xl rounded-2xl p-8 w-full max-w-3xl space-y-8"
         >
-          <h1 className="text-2xl font-bold text-gray-800 text-center">
+          <h1 className="text-2xl font-bold text-center">
             Haircut Suggestion Form
           </h1>
 
@@ -293,7 +293,7 @@ export default function HaircutForm() {
               value={formData.age}
               onChange={(e) => handleSelect("age", e.target.value)}
               placeholder="Enter your age"
-              className="w-full border rounded-lg p-3"
+              className="w-full border rounded-lg p-3 placeholder:text-white"
             />
           </section>
 
@@ -331,7 +331,7 @@ export default function HaircutForm() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-white text-black py-3 rounded-lg hover:bg-black font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? "Processing..." : "Submit"}
           </button>

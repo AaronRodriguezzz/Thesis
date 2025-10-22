@@ -22,69 +22,69 @@ const FeedbackPage = () => {
         )
 
     return (
-        <div className="min-h-screen w-full bg-gradient-to-br from-gray-50 via-white to-gray-100 p-6 py-10">
-        {/* Header Section */}
-        <div className="text-center leading-8 mb-10">
-            <h1 className="text-[25px] md:text-3xl font-bold text-gray-800">Customer Feedbacks</h1>
-            <p className="text-sm md:text-lg text-gray-600 max-w-xl mx-auto">
-            We truly appreciate your time and feedback. Here’s what our customers are saying about us.
-            </p>
-        </div>
+        <div className="min-h-screen w-full p-6 py-10 text-white">
+            {/* Header Section */}
+            <div className="text-center leading-8 mb-10">
+                <h1 className="text-[25px] md:text-3xl font-bold">Customer Feedbacks</h1>
+                <p className="text-sm md:text-lg max-w-xl mx-auto">
+                We truly appreciate your time and feedback. Here’s what our customers are saying about us.
+                </p>
+            </div>
 
-        {/* Feedback Cards */}
-        <div className="flex flex-wrap justify-center gap-6">
-            <AnimatePresence>
-            {data?.reviews?.length > 0 ? (
-                data.reviews.map((feeds, index) => (
-                <motion.div
-                    key={feeds._id || index}
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -30 }}
-                    transition={{ duration: 0.4, delay: index * 0.1 }}
-                    whileHover={{ scale: 1.05, boxShadow: '0px 6px 15px rgba(0,0,0,0.1)' }}
-                    className="bg-white rounded-2xl shadow-md w-full sm:w-[300px] h-[250px] md:h-[300px] flex flex-col justify-center items-center p-6"
+            {/* Feedback Cards */}
+            <div className="flex flex-wrap justify-center gap-6">
+                <AnimatePresence>
+                {data?.reviews?.length > 0 ? (
+                    data.reviews.map((feeds, index) => (
+                        <motion.div
+                            key={feeds._id || index}
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -30 }}
+                            transition={{ duration: 0.4, delay: index * 0.1 }}
+                            whileHover={{ scale: 1.05, boxShadow: '0px 6px 15px rgba(0,0,0,0.1)' }}
+                            className="bg-black/40 text-white shadow shadow-white rounded-2xl w-full sm:w-[300px] h-[250px] md:h-[300px] flex flex-col justify-center items-center p-6"
+                        >
+                            <Rating name="read-only" value={feeds.rating} readOnly size="medium" />
+                            <p className="text-center italic mt-3 px-2">“{feeds.comment}”</p>
+                            <h2 className="mt-4 font-semibold">– {feeds.customer?.firstName}</h2>
+                        </motion.div>
+                    ))
+                ) : (
+                    <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="text-gray-500 text-lg text-center mt-10"
+                    >
+                    No feedbacks available at the moment.
+                    </motion.p>
+                )}
+                </AnimatePresence>
+            </div>
+
+            {/* Pagination Buttons */}
+            <div className="flex justify-center items-center gap-6 mt-10 text-white">
+                <button
+                className="px-3 md:px-6 py-2 rounded-full bg-white text-black text-sm md:text-md font-medium transition disabled:bg-white/90"
+                onClick={() => setPage((prev) => prev - 1)}
+                disabled={page === 1}
                 >
-                    <Rating name="read-only" value={feeds.rating} readOnly size="medium" />
-                    <p className="text-center italic text-gray-700 mt-3 px-2">“{feeds.comment}”</p>
-                    <h2 className="mt-4 font-semibold text-gray-800">– {feeds.customer?.firstName}</h2>
-                </motion.div>
-                ))
-            ) : (
-                <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="text-gray-500 text-lg text-center mt-10"
+                Previous
+                </button>
+
+                <p className="font-medium text-sm md:text-md">
+                    Page <span >{page}</span> of{' '}
+                    <span>{data?.maxPage || 1}</span>
+                </p>
+
+                <button
+                className="px-3 md:px-6 py-2 rounded-full bg-white text-black text-sm md:text-md font-medium  transition disabled:bg-white/90"
+                onClick={() => setPage((prev) => prev + 1)}
+                disabled={page === data?.maxPage}
                 >
-                No feedbacks available at the moment.
-                </motion.p>
-            )}
-            </AnimatePresence>
-        </div>
-
-        {/* Pagination Buttons */}
-        <div className="flex justify-center items-center gap-6 mt-10">
-            <button
-            className="px-3 md:px-6 py-2 rounded-full bg-red-500 text-white text-sm md:text-md font-medium hover:bg-red-600 transition disabled:opacity-40"
-            onClick={() => setPage((prev) => prev - 1)}
-            disabled={page === 1}
-            >
-            Previous
-            </button>
-
-            <p className="text-gray-600 font-medium text-sm md:text-md">
-            Page <span className="text-gray-800">{page}</span> of{' '}
-            <span className="text-gray-800">{data?.maxPage || 1}</span>
-            </p>
-
-            <button
-            className="px-3 md:px-6 py-2 rounded-full bg-green-500 text-white text-sm md:text-md font-medium hover:bg-green-600 transition disabled:opacity-40"
-            onClick={() => setPage((prev) => prev + 1)}
-            disabled={page === data?.maxPage}
-            >
-            Next
-            </button>
-        </div>
+                Next
+                </button>
+            </div>
         </div>
     )
 }

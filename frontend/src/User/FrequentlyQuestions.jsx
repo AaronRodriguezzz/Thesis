@@ -5,7 +5,7 @@ import { SlideTxt } from '../../components/animations/TextAnimation';
 
 export default function Faq() {  
   return (
-    <div id='Faq' className="min-h-screen w-screen overflow-x-hidden bg-gray-100 bg-[url('/login.png')] bg-cover bg-center">
+    <div id='Faq' className="min-h-screen w-screen overflow-x-hidden text-white">
 
 
       <SlideTxt

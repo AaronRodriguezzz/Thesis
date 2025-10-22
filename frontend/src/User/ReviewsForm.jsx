@@ -47,12 +47,12 @@ const ReviewForm = () => {
   };
 
   return (
-    <div className="w-screen h-screen bg-[url('/login.png')] bg-cover bg-center pt-10 flex justify-center items-start">
+    <div className="w-screen h-screen pt-10 flex justify-center items-start">
       <motion.form 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 2.5 }}
-        className="bg-white bg-opacity-90 rounded-md shadow-md p-6 w-[280px] md:w-[400px] mx-auto" 
+        className="bg-black/40 text-white bg-opacity-90 rounded-md shadow-md p-6 w-[280px] md:w-[400px] mx-auto" 
         onSubmit={handleSubmit}
       >
         <h1 className="text-2xl font-semibold mb-4">Leave a Review</h1>
@@ -64,6 +64,10 @@ const ReviewForm = () => {
             value={formData.rating}
             onChange={handleRatingChange}
             size="large"
+            sx={{
+              color: 'white',
+              '& .MuiRating-iconEmpty': { color: 'rgba(255,255,255,0.3)' },
+            }}
           />
         </Box>
 
@@ -71,7 +75,7 @@ const ReviewForm = () => {
         <textarea
           onChange={handleCommentChange}
           placeholder="Write your feedback here..."
-          className="w-full px-3 py-2 rounded mb-1 resize-none bg-gray-100 outline-gray-200"
+          className="w-full px-3 py-2 rounded mb-1 resize-none shadow shadow-white"
           rows={4}
           maxLength={100}
         ></textarea>
@@ -82,8 +86,8 @@ const ReviewForm = () => {
         <button
           type="submit"
           disabled={loading}
-          className={`w-full py-2 mt-4 text-white rounded-md text-lg ${
-            loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-500'
+          className={`w-full py-2 mt-4 text-black rounded-md text-lg ${
+            loading ? 'bg-white/40 cursor-not-allowed' : 'bg-white'
           }`}
         >
           {loading ? 'Submitting...' : 'Submit Review'}

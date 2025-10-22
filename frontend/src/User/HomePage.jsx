@@ -4,12 +4,11 @@ import { motion } from "motion/react"
 import { SlideTxt } from "../../components/animations/TextAnimation";
 import { useSectionViews } from "../../hooks/HomeRef";
 import { useIsMobile } from "../../hooks/useIsInMobile";
+import branchImages from '../../data/branchImages';
 import ServiceSection from "./HomeSections/ServiceSection";
 import ProductSection from "./HomeSections/ProductSection";
 import FeedbackSection from "./HomeSections/FeedbackSection";
 import SubscribeSection from "./HomeSections/SubscribeSection";
-
-const images = ["/lower_bicutan.png", "/toto_studio.JPG", "/totobg.JPG"];
 
 export default function MainPage() {
   const { sectionRefs, inViews } = useSectionViews();
@@ -19,11 +18,11 @@ export default function MainPage() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % branchImages.length);
     }, 5000);
     return () => clearInterval(interval);
   }, []);
-
+  
   return (
     <div className="w-full overflow-x-hidden">
       {/* Hero Section */}
@@ -33,12 +32,38 @@ export default function MainPage() {
         initial={{ opacity: 0 }}
         transition={{ type: "spring", duration: 2, ease: "easeInOut" }}
         animate={inViews.home ? { opacity: 1, y: 0 } : {}}
-        style={{
-          backgroundImage: isMobile ? "none" : `url(${images[currentIndex]})`,
-        }}
-        className="relative h-screen w-full flex flex-col justify-center text-white px-4 md:px-20 bg-cover bg-center gap-y-2 transition ease-in-out"
+        // style={{
+        //   backgroundImage: isMobile ? "none" : `url(${images[currentIndex]})`,
+        // }}
+        className="relative h-screen w-full flex flex-col justify-center items-center text-white px-4 md:px-20 bg-cover bg-center transition ease-in-out"
       >
-        <div className='h-screen w-full bg-black/40 rounded-lg absolute top-0 left-0'/>
+        <div className="relative text-center space-y-2 mb-5 z-20">
+          <SlideTxt
+            text="Where Tradition Meets Precision"
+            enable={inViews.home}
+            speed={5}
+            className="font-bold text-2xl md:text-4xl lg:text-5xl"
+          />
+          
+          <SlideTxt
+            text="Book an appointment now and experience the art of grooming"
+            enable={inViews.home}
+            speed={5}
+            className="text-sm md:text-md lg:text-lg font-extralight mt-[-4px]"
+          />
+          <motion.button
+            initial={{ opacity: 0, x: -100 }}
+            animate={inViews.home ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 1, ease: "easeInOut" }}
+            whileHover={{ scale: 1.03 }}
+            onClick={() => navigate("/appointment")}
+            className="inline-block w-[100px] md:w-[150px] lg:w-[170px] bg-white  text-gray-900 px-4 py-2 shadow-md rounded-full
+            hover:bg-gray-900 hover:text-white transition-colors text-center"
+          >
+            BOOK
+          </motion.button>
+        </div>
+
         {/* Mobile video */}
         <motion.video
           initial={{ opacity: 0 }}
@@ -53,31 +78,17 @@ export default function MainPage() {
           className="absolute top-0 left-0 block md:hidden w-full h-full object-cover z-0"
         />
 
-        {/* Text content */}
-        <div className="relative space-y-2 z-20">
-          <SlideTxt
-            text="Where Tradition Meets Precision"
-            enable={inViews.home}
-            speed={5}
-            className="font-bold text-2xl md:text-4xl lg:text-6xl leading-tighter"
-          />
-          <SlideTxt
-            text="Book an appointment now and experience the art of grooming"
-            enable={inViews.home}
-            speed={5}
-            className="text-sm md:text-lg lg:text-2xl font-extralight leading-tighter mt-[-4px]"
-          />
-          <motion.button
-            initial={{ opacity: 0, x: -100 }}
-            animate={inViews.home ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 1, ease: "easeInOut" }}
-            whileHover={{ scale: 1.03 }}
-            onClick={() => navigate("/appointment")}
-            className="inline-block w-[100px] md:w-[150px] lg:w-[200px] bg-white text-sm md:text-md lg:text-xl text-gray-900 px-4 py-2 shadow-md hover:bg-gray-900 hover:text-white transition-colors text-center"
-          >
-            BOOK
-          </motion.button>
-        </div>
+        <motion.img
+          key={branchImages[currentIndex]} 
+          src={branchImages[currentIndex]}
+          alt={'Branch Image'}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={inViews.home ? { opacity: 1, scale: 1 } : {}}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5 }}
+          className={`w-[75%] h-[600px] rounded-lg ${isMobile ? 'hidden' : 'block'}`}
+        />
+          
       </motion.div>
 
 

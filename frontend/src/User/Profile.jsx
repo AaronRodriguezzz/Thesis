@@ -13,11 +13,11 @@ const ProfilePage = () => {
   const [changingPassMode, setChangingPassMode] = useState(false);  
 
   return (
-    <div className="min-h-screen w-full bg-[url('/login.png')] bg-cover bg-center flex items-center justify-center p-4">
-      <div className="w-full max-w-3xl p-8 bg-white rounded-xl shadow-lg">
+    <div className="min-h-screen w-full flex items-center justify-center p-4">
+      <div className="w-full max-w-3xl p-8 bg-black/40 rounded-xl shadow shadow-white text-white">
         {/* Title */}
-        <h1 className="font-bold text-4xl text-center mb-6 tracking-tight">
-          Profile
+        <h1 className="font-extralight text-4xl text-center mb-6 tracking-tight">
+          PROFILE
         </h1>
 
         {/* Quick Action Buttons */}

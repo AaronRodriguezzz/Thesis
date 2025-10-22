@@ -72,7 +72,6 @@ const AppointmentPage = () => {
   };
 
   useEffect(() => {
-
         // When we connect
         notificationsSocket.on("connect", () => {
             console.log("Connected to notifications namespace");
@@ -89,7 +88,6 @@ const AppointmentPage = () => {
             notificationsSocket.off("newAppointment");
             notificationsSocket.off("connection");
         };
-
   }, []);
 
   useEffect(() => {
@@ -129,9 +127,9 @@ const AppointmentPage = () => {
   }, []);
 
   return (
-    <div className="w-screen h-screen overflow-x-hidden bg-[url('/login.png')] bg-cover bg-center pt-10">
+    <div className="w-screen h-screen overflow-x-hidden pt-10">
 
-      <main className="flex gap-x-3 justify-center items-center my-2">
+      <main className="flex gap-x-3 justify-center items-center my-2 text-white">
 
         <motion.video
           initial={{ opacity: 0}}
@@ -161,7 +159,7 @@ const AppointmentPage = () => {
             delay={0.3}
             value={formData.branch}
             onChange={handleChange('branch')}
-            className="border px-3 py-2 rounded mb-3"
+            className="bg-black/90 border px-3 py-2 rounded mb-3"
             disabled={!branch}
           >
             <option value="" className='hidden'>Select Branch</option>
@@ -205,7 +203,7 @@ const AppointmentPage = () => {
             delay={0.7}
             value={formData.barber}
             onChange={handleChange('barber')}
-            className="border px-3 py-2 rounded mb-3 disabled:border-gray-300"
+            className="bg-black/90 border px-3 py-2 rounded mb-3 disabled:border-white/40"
             disabled={!formData.branch}
           >   
             <option value="" disabled>Select Barber (Optional)</option>
@@ -231,7 +229,7 @@ const AppointmentPage = () => {
             delay={0.9}
             value={formData.scheduledTime}
             onChange={handleChange('scheduledTime')}
-            className="border px-3 py-2 rounded mb-3 disabled:border-gray-300"
+            className="bg-black/90 border px-3 py-2 rounded mb-3 disabled:border-white/40"
             disabled={!formData.scheduledDate && !formData.barber}
           >
             <option value="" disabled>Select Time</option>
@@ -286,7 +284,7 @@ const AppointmentPage = () => {
             delay={1.1}
             value={formData.service}
             onChange={handleChange('service')}
-            className="border px-3 py-2 rounded mb-3"
+            className="bg-black/90 border px-3 py-2 rounded mb-3"
           >
             <option value="" disabled>Select Service</option>
             {services &&
@@ -310,7 +308,7 @@ const AppointmentPage = () => {
             delay={1.3}
             value={formData.additionalService}
             onChange={handleChange('additionalService')}
-            className="border px-3 py-2 rounded mb-3"
+            className="bg-black/90 border px-3 py-2 rounded mb-3"
           >
             <option value="">Select Extra Service (Optional)</option>
             {services &&
@@ -364,8 +362,8 @@ const AppointmentPage = () => {
             transition={{ duration: 0.5, ease: "easeInOut", delay: 1.5 }}
             type="submit"
             disabled={loading || !termsChecked}
-            className={`py-2 my-4 rounded-md text-white text-lg text-center disabled:cursor-not-allowed disabled:bg-green-600/80 ${
-              loading ? 'bg-green-600/80 cursor-not-allowed' : 'bg-green-500'
+            className={`py-2 my-4 rounded-md bg-white text-black text-lg text-center disabled:cursor-not-allowed disabled:bg-white/80 ${
+              loading ? 'bg-white/80 cursor-not-allowed' : 'bg-white'
             }`}
           >
             {loading ? 'Submitting...' : 'SUBMIT'}

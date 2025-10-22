@@ -19,7 +19,7 @@ export default function Footer() {
       <div className="text-center hidden md:block">
         <Link
           to="/terms-and-conditions"
-          className="text-sm px-4 py-2 border border-gray-300 rounded-full hover:bg-gray-100 transition"
+          className="text-sm px-4 py-2 border border-gray-300 rounded-full hover:bg-white hover:text-black transition"
         >
           Terms & Conditions
         </Link>

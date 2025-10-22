@@ -38,29 +38,29 @@ export default function ProductAvailability(){
     },[])
 
     return (
-        <div id='Branches' className="min-h-screen bg-gray-100 p-6 bg-[url('/login.png')] bg-cover bg-center">
+        <div id='Branches' className="min-h-screen p-6">
             {/* Header */}
             <motion.div 
-                className="text-center mb-10"
+                className="text-center text-white mb-10"
                 initial={{ opacity: 0, x: -50 }}
                 transition={{ duration: 1, ease: "easeInOut" }}
                 animate={{ opacity: 1, x: 0 }}
             >
-                <h1 className="text-4xl font-bold text-gray-800 mb-2">Branches Products Availability</h1>
-                <p className="text-gray-600 max-w-xl mx-auto">
+                <h1 className="text-4xl font-bold mb-2">Branches Products Availability</h1>
+                <p className="max-w-xl mx-auto">
                     Check your favorite product availability by branch. 
                 </p>
             </motion.div>
 
             <div className="flex flex-col gap-8">
                 <div className="flex flex-col gap-y-8">
-                    <div className="w-full rounded-full py-4 px-2 flex gap-x-8 justify-center bg-white shadow-lg">
+                    <div className="w-full rounded-full py-4 px-2 flex gap-x-8 justify-center  text-white bg-black/40 shadow shadow-white">
                         <button onClick={handlePrev}>
-                            <FaChevronLeft className="text-gray-500" size={30} />
+                            <FaChevronLeft size={30} />
                         </button>
                         <h1 className="text-2xl font-semibold tracking-tighter text-center">{branches && branches[branchIndex]?.name}</h1>
                         <button onClick={handleNext}>
-                            <FaChevronRight className="text-gray-500" size={30} />
+                            <FaChevronRight size={30} />
                         </button>
                     </div>
                     <div className="w-full flex flex-wrap justify-center gap-6">
@@ -77,7 +77,7 @@ export default function ProductAvailability(){
                                         initial={{ opacity: 0, y: -20 }}
                                         animate={{ opacity: 1, x: 0, y: 0 }}
                                         transition={{ duration: 0.2, ease: "easeInOut", delay: index * 0.1 }}
-                                        className="bg-white h-[350px] lg:h-[400px] w-[80%] sm:w-[45%] md:w-[30%] lg:w-[250px] p-2 hover:scale-105 transition-transform rounded-lg shadow-md"
+                                        className="h-[350px] lg:h-[400px] w-[80%] sm:w-[45%] md:w-[30%] lg:w-[250px] bg-black rounded-lg text-gray-200  p-2 hover:scale-105 transition-transform"
                                     >
                                         <img
                                             src={`${baseUrl}/${product.imagePath}`}
@@ -85,7 +85,7 @@ export default function ProductAvailability(){
                                             className="w-full h-[55%] object-cover rounded-md mb-4 shadow"
                                         />
 
-                                        <div className="w-full text-black tracking-tight space-y-1">
+                                        <div className="w-full tracking-tight space-y-1">
                                             <h2 className="text-sm lg:text-lg font-bold">{product.name}</h2>
                                             <p className="text-base font-semibold">₱{product.price}</p>
                                             <p className="text-sm">{product.description}</p>

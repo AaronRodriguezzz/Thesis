@@ -75,10 +75,9 @@ export default function BarberStatusPage() {
   }, []);
 
   return (
-    <div className="w-screen h-screen overflow-x-hidden bg-gray-100 bg-[url('/login.png')] bg-cover bg-center">
-
+    <div className="w-screen h-screen overflow-x-hidden">
       <main className="h-full w-full flex flex-col items-center">
-        <div className="w-[90%] md:w-[95%] lg:w-[75%] flex justify-between items-center leading-3 bg-white p-4 my-2 md:my-4 shadow rounded">
+        <div className="w-[90%] md:w-[95%] lg:w-[75%] flex justify-between items-center leading-3 bg-black/40 text-white p-4 my-2 md:my-4 shadow  shadow-white rounded">
           <div className="leading-0.2">
             <select className="text-s md:text-[20px] lg:text-[30px] tracking-tighter text-left my-2">
               <option value="">TOTO TUMBS STUDIO</option>
@@ -92,10 +91,10 @@ export default function BarberStatusPage() {
         </div>
 
         <div className="w-[90%] md:w-[95%] lg:w-[75%] flex flex-col gap-y-2 md:flex-row gap-x-2 items-center justify-between leading-3 mb-4">
-          <div className="w-full md:w-[50%] flex items-center bg-white gap-4 p-4 shadow-md">
-            <MdCalendarToday className="text-[40px] text-gray-800" />
+          <div className="w-full md:w-[50%] flex items-center text-white bg-black/40 shadow shadow-white gap-4 p-4">
+            <MdCalendarToday className="text-[40px]"/>
         
-            <div>
+            <div >
               <h1 className="text-s md:text-[20px] lg:text-[25px] tracking-tighter text-left my-2">
                 Appointment
               </h1>
@@ -105,8 +104,8 @@ export default function BarberStatusPage() {
             </div>
           </div>
 
-          <div className="w-full md:w-[50%] flex items-center bg-white gap-4 p-4 shadow-md">
-            <MdDirectionsWalk className="text-[40px] text-gray-800" />
+          <div className="w-full md:w-[50%] flex items-center text-white bg-black/40 shadow shadow-white gap-4 p-4">
+            <MdDirectionsWalk className="text-[40px]" />
         
             <div>
               <h1 className="text-s md:text-[20px] lg:text-[25px] tracking-tighter text-left my-2">
@@ -132,7 +131,7 @@ export default function BarberStatusPage() {
             return (
               <div
                 key={index}
-                className="h-full w-[90%] md:w-[35%] lg:w-[25%] flex flex-col items-center justify-center bg-white rounded-lg shadow-md p-4"
+                className="h-full w-[90%] md:w-[35%] lg:w-[25%] flex flex-col items-center justify-center rounded-lg bg-black/40 text-white shadow shadow-white p-4"
               >
                 {barber?.imagePath ? (
                   <img
@@ -141,7 +140,7 @@ export default function BarberStatusPage() {
                     className="w-20 h-20 rounded-full object-cover mb-3"
                   />
                 ) : (
-                  <FaUserCircle className="text-[80px] md:text-[120px] text-gray-800 mb-3" />
+                  <FaUserCircle className="text-[80px] md:text-[120px mb-3" />
                 )}
 
                 <h1 className="text-[30px] font-semibold tracking-tight text-center">

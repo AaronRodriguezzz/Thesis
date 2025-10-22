@@ -10,7 +10,7 @@ export const HistoryCard = ({
   return(
     <div
       key={id}
-      className={`relative bg-white shadow-md rounded-lg p-4 mb-4 border-l-4 transition-all
+      className={`relative bg-black/40 shadow shadow-white text-white rounded-lg p-4 mb-4 border-l-4 transition-all
       ${status === 'Booked' ? 'border-yellow-600' : 
         status === 'Assigned' ? 'border-orange-600' : 
         status === 'Completed' ? 'border-green-600' : 
@@ -19,15 +19,15 @@ export const HistoryCard = ({
         'border-black'}`}
     >
       <div className="mb-2">
-        <span className="font-semibold text-gray-800">Selected Service:</span>{" "}
+        <span className="font-semibold">Selected Service:</span>{" "}
         {service}
       </div>
       <div className="mb-2">
-        <span className="font-semibold text-gray-800">Date:</span>{" "}
+        <span className="font-semibold">Date:</span>{" "}
         {date}
       </div>
       <div>
-        <span className="font-semibold text-gray-800">Status:</span>{" "}
+        <span className="font-semibold">Status:</span>{" "}
         <span
           className={`font-medium px-2 py-1 rounded-full text-sm ${
             status === "Booked"
