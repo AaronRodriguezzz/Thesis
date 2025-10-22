@@ -42,7 +42,6 @@ const GoogleButton = () => {
                     useOneTap={false}
                     type='standard'
                     size="large"
-                    shape="pill"
                     text="signup_with"
                     logo_alignment="center"
                     width="100%"

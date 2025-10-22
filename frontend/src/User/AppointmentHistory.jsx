@@ -42,8 +42,8 @@ const AppointmentHistory = () => {
   
   return (
     <>
-      <div className="h-screen max-w-4xl mx-auto p-6 mt-5">
-        <h1 className="font-extralight text-[25px] md:text-[50px] text-center my-5">Appointment History</h1>
+      <div className="h-screen w-full max-w-7xl mx-auto p-6 mt-5">
+        <h1 className="font-extralight text-white text-[25px] md:text-[50px] text-center my-5">Appointment History</h1>
 
         <div className="max-h-[600px] overflow-auto custom-scrollbar">
           {sortedAppointments && sortedAppointments.map((appointment) => (

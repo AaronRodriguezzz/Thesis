@@ -13,21 +13,20 @@ const ProductSection = () => {
     const { sectionRefs, inViews } = useSectionViews();
     const navigate = useNavigate();
     const isMobile = useIsMobile(); 
-    const itemsPerPage = isMobile ? 3 : 5; 
      
     const [productIndex, setProductIndex] = useState(0);
     
     const handlePrev = () => {
-        setProductIndex((prev) => Math.max(prev - itemsPerPage, 0));
+        setProductIndex((prev) => Math.max(prev - 3, 0));
     };
 
     const handleNext = () => {
         setProductIndex((prev) =>
-            Math.min(prev + itemsPerPage, data.length - itemsPerPage)
+            Math.min(prev + 3, data.length - 3)
         );
     };
 
-    const visibleProducts = data && data.slice(productIndex, productIndex + itemsPerPage);
+    const visibleProducts = data && data.slice(productIndex, productIndex + 3);
 
     // if(loading || error) return
 
@@ -59,7 +58,7 @@ const ProductSection = () => {
                         initial={isMobile ? { opacity: 0, x: 0 } : { opacity: 0, y: -20 }}
                         animate={isMobile || inViews.products ? { opacity: 1, x: 0, y: 0 } : {}}
                         transition={{ duration: 0.3, ease: "easeInOut", delay: index * 0.2 }}
-                        className="bg-black/40 h-[500px] w-[85%] sm:w-[45%] md:w-[30%] lg:w-[280px] p-4 hover:scale-105 transition-transform rounded-lg shadow-md"
+                        className="bg-black/40 h-[500px] w-[85%] sm:w-[45%] md:w-[30%] lg:w-[300px] p-4 hover:scale-105 transition-transform rounded-lg shadow-md"
                     >
                         <img
                             src={`${baseUrl}/${product.imagePath}`}

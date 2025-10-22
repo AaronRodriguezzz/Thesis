@@ -118,7 +118,7 @@ export default function BarberStatusPage() {
           </div>                 
         </div>  
 
-        <div className="w-full h-auto md:h-[60%] flex flex-col md:flex-row items-center justify-center gap-4 px-4">
+        <div className="w-full h-auto md:h-[60%] flex flex-col md:flex-row items-center justify-center gap-4 md:px-4">
           {barberList && barberList.map((barber, index) => {
             // Decide badge color
             let statusColor = "text-red-600"; // default

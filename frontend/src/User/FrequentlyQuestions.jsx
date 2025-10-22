@@ -5,7 +5,7 @@ import { SlideTxt } from '../../components/animations/TextAnimation';
 
 export default function Faq() {  
   return (
-    <div id='Faq' className="min-h-screen w-screen overflow-x-hidden text-white">
+    <div id='Faq' className="min-h-screen w-full overflow-x-hidden text-white">
 
 
       <SlideTxt
@@ -15,7 +15,7 @@ export default function Faq() {
         className="text-4xl font-bold my-10 text-center tracking-tighter"
       />
 
-      <div className="max-w-3xl mx-auto space-y-8 px-4 pb-20">
+  <div className="w-full max-w-7xl mx-auto space-y-8 px-4 pb-20">
         {faqs.map((faq, index) => (
           <motion.div 
             initial={{ opacity: 0 }}

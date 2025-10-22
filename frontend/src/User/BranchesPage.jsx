@@ -25,6 +25,7 @@ export default function BranchesPage(){
 
     return (
         <div id='Branches' className="min-h-screen p-2 pt-10 md:p-12">
+          <div className="w-full max-w-7xl mx-auto px-4">
           {/* Header */}
           <motion.div 
             className="text-center text-white mb-10"
@@ -39,7 +40,7 @@ export default function BranchesPage(){
           </motion.div>
 
           {/* Branch Cards Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {data && data.map((branch,index) => (
               <motion.div 
                 key={branch?._id} 
@@ -66,6 +67,7 @@ export default function BranchesPage(){
                   </div>
               </motion.div>
             ))}
+          </div>
           </div>
         </div>
     );

@@ -14,7 +14,8 @@ const ProfilePage = () => {
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center p-4">
-      <div className="w-full max-w-3xl p-8 bg-black/40 rounded-xl shadow shadow-white text-white">
+      <div className="w-full max-w-7xl mx-auto px-4">
+        <div className="w-full max-w-3xl p-8 bg-black/40 rounded-xl shadow shadow-white text-white mx-auto">
         {/* Title */}
         <h1 className="font-extralight text-4xl text-center mb-6 tracking-tight">
           PROFILE
@@ -67,15 +68,16 @@ const ProfilePage = () => {
 
         {/* Logout */}
         {!changingPassMode && !editMode && (
-          <div className="flex justify-center mt-8">
+          <div className="flex justify-end mt-8">
             <button
-              className="bg-red-500 hover:bg-red-600 text-white text-lg font-semibold py-2 px-8 rounded-full transition"
+              className="bg-red-500 hover:bg-red-600 text-white text-md py-1 px-4 rounded-full transition"
               onClick={logout}
             >
               LOG OUT
             </button>
           </div>
         )}
+        </div>
       </div>
     </div>
   );
