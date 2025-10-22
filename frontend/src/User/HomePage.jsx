@@ -57,8 +57,8 @@ export default function MainPage() {
             transition={{ duration: 1, ease: "easeInOut" }}
             whileHover={{ scale: 1.03 }}
             onClick={() => navigate("/appointment")}
-            className="inline-block w-[100px] md:w-[150px] lg:w-[170px] bg-white  text-gray-900 px-4 py-2 shadow-md rounded-full
-            hover:bg-gray-900 hover:text-white transition-colors text-center"
+            className="inline-block w-[100px] md:w-[150px] lg:w-[170px] border border-white px-4 py-2 shadow-md rounded-full
+            hover:bg-white hover:text-black transition-colors text-center"
           >
             BOOK
           </motion.button>

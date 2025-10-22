@@ -82,7 +82,7 @@ export default function HaircutForm() {
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-2xl text-center"
+          className="bg-white rounded-2xl p-8 w-full max-w-2xl text-center"
         >
           {loading ? (
             <p>Loading...</p>
@@ -118,7 +118,7 @@ export default function HaircutForm() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           onSubmit={handleSubmit}
-          className="bg-black/40 text-white shadow-xl rounded-2xl p-8 w-full max-w-3xl space-y-8"
+          className="bg-black/40 text-white shadow shadow-white rounded-2xl p-8 w-full max-w-3xl space-y-8"
         >
           <h1 className="text-2xl font-bold text-center">
             Haircut Suggestion Form

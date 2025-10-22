@@ -5,7 +5,7 @@ const PasswordField = ({ label, value, onChange }) => (
       type="password"
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="bg-gray-100 shadow-sm p-2 w-full text-base rounded-md focus:ring-2 focus:ring-blue-400 outline-none"
+      className="bg-black shadow shadow-white p-2 w-full text-base rounded-md focus:ring-2 focus:ring-gray-600 outline-none"
     />
   </div>
 );

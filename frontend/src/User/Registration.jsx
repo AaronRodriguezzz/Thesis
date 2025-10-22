@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import TextField from "@mui/material/TextField";
-import { post_data } from "../../services/PostMethod"; // Adjust this path as needed
+import { post_data } from "../../services/PostMethod";
 import { useUserProtection } from "../../hooks/userProtectionHooks";
+import { motion } from "framer-motion";
 
 export default function RegisterPage() {
   useUserProtection();
@@ -34,63 +34,73 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="h-screen w-screen bg-[url('/login.png')] bg-cover bg-center flex items-center justify-center">
-      <form
+    <div className="h-screen w-screen flex items-center justify-center">
+      {/* Background */}
+      <div className="fixed inset-0 -z-10 overflow-hidden">
+        <div className="absolute inset-0 bg-[url('./login.png')] bg-cover bg-center filter invert" />
+        <div className="absolute inset-0 bg-black/40" />
+      </div>
+
+      {/* Form Container */}
+      <motion.form
+        initial={{ opacity: 0, y: -50 }}
+        transition={{ duration: 1.5, ease: "easeInOut" }}
+        animate={{ opacity: 1, y:0 }}
         onSubmit={handleSubmit}
-        className="w-[40%] min-w-[340px] max-w-[500px] flex flex-col items-center gap-y-4 md:shadow-lg rounded-xl bg-white/80 py-6"
+        className="w-[40%] min-w-[340px] max-w-[500px] flex flex-col items-center gap-y-4 md:shadow-lg shadow-white rounded-xl bg-black/40 text-white py-6"
       >
         <h1 className="font-extralight text-[40px] my-3">Create Account</h1>
 
-        <TextField
-          label="First Name"
+        {/* Inputs */}
+        <input
+          type="text"
           name="firstName"
-          variant="outlined"
+          placeholder="First Name"
           value={formData.firstName}
           onChange={handleChange}
-          sx={{ width: "80%" }}
+          className="w-[80%] max-w-sm px-3 py-2 rounded-md border border-white/20 text-white placeholder-white/60 bg-white/10 focus:outline-none focus:border-white/40"
         />
 
-        <TextField
-          label="Last Name"
+        <input
+          type="text"
           name="lastName"
-          variant="outlined"
+          placeholder="Last Name"
           value={formData.lastName}
           onChange={handleChange}
-          sx={{ width: "80%" }}
+          className="w-[80%] max-w-sm px-3 py-2 rounded-md border border-white/20 text-white placeholder-white/60 bg-white/10 focus:outline-none focus:border-white/40"
         />
 
-        <TextField
-          label="Phone"
+        <input
+          type="text"
           name="phone"
-          variant="outlined"
+          placeholder="Phone"
           value={formData.phone}
           onChange={handleChange}
-          sx={{ width: "80%" }}
+          className="w-[80%] max-w-sm px-3 py-2 rounded-md border border-white/20 text-white placeholder-white/60 bg-white/10 focus:outline-none focus:border-white/40"
         />
 
-        <TextField
-          label="Email"
-          name="email"
+        <input
           type="email"
-          variant="outlined"
+          name="email"
+          placeholder="Email"
           value={formData.email}
           onChange={handleChange}
-          sx={{ width: "80%" }}
+          className="w-[80%] max-w-sm px-3 py-2 rounded-md border border-white/20 text-white placeholder-white/60 bg-white/10 focus:outline-none focus:border-white/40"
         />
 
-        <TextField
-          label="Password"
-          name="password"
+        <input
           type="password"
-          variant="outlined"
+          name="password"
+          placeholder="Password"
           value={formData.password}
           onChange={handleChange}
-          sx={{ width: "80%" }}
+          className="w-[80%] max-w-sm px-3 py-2 rounded-md border border-white/20 text-white placeholder-white/60 bg-white/10 focus:outline-none focus:border-white/40"
         />
 
+        {/* Submit Button */}
         <button
           type="submit"
-          className="w-[80%] bg-green-500 py-3 rounded-md text-white my-4 hover:bg-green-600 transition duration-200 ease-in-out"
+          className="w-[80%]  max-w-sm bg-green-500 py-2 rounded-md text-white my-4 hover:bg-green-600 transition duration-200 ease-in-out"
         >
           REGISTER
         </button>
@@ -101,7 +111,7 @@ export default function RegisterPage() {
             Log In
           </a>
         </p>
-      </form>
+      </motion.form>
     </div>
   );
 }

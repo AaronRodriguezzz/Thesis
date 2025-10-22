@@ -18,8 +18,8 @@ export default function Faq() {
       <div className="max-w-3xl mx-auto space-y-8 px-4 pb-20">
         {faqs.map((faq, index) => (
           <motion.div 
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             transition={{ duration: 0.3, ease: "easeInOut", delay: index * .3 }}
             key={index}
           >

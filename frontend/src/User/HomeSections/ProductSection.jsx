@@ -37,7 +37,7 @@ const ProductSection = () => {
                 initial={isMobile ? { opacity: 0, x: 0 } : { opacity: 0, x: -100 }}
                 transition={{ duration: 1, ease: "easeInOut"}}
                 animate={isMobile || inViews.products ? { opacity: 1, x: 0 } : {}}
-                className="text-white/80 text-center font-extralight tracking-widest text-3xl md:text-5xl mb-10"
+                className="text-white/80 text-center font-extralight tracking-widest text-2xl md:text-5xl mb-10"
             > 
                 PRODUCT CATALOG
             </motion.h1>
@@ -78,7 +78,7 @@ const ProductSection = () => {
             {/* Right Arrow */}
             <button
                 onClick={handleNext}
-                className="absolute top-1/2 translate-y-1/2 right-0 md:static flex items-center justify-center md:p-2 hover:bg-gray-500 rounded-full z-20"
+                className="absolute top-1/2 translate-y-1/2 right-0 md:static flex items-center justify-center md:p-2 hover:bg-gray-500 rounded-full"
             >
                 <FaChevronRight className="text-white/50" size={isMobile ? 20 : 40} />
             </button>
@@ -89,7 +89,7 @@ const ProductSection = () => {
                 animate={inViews.products ? { opacity: 1, y:0} : {}}
                 transition={{ duration: 2, ease: "easeInOut" }}
                 onClick={() => navigate('/available-products')}
-                className="mt-10 bg-black/90 text-white py-3 px-8 rounded-sm hover:bg-green-500 tracking-tight transition-colors z-20"
+                className="mt-10 border text-white py-3 px-8 rounded-sm hover:bg-white hover:text-black tracking-tight transition-colors"
             >
                 BRANCH AVAILABILITY
             </motion.button>

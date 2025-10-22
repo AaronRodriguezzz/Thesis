@@ -16,7 +16,7 @@ const ServiceSection = () => {
                 text="SERVICES WE OFFER"
                 enable={inViews.services ? true : false}
                 speed={5}
-                className="text-white text-center my-10 font-extralight tracking-widest text-4xl md:text-5xl" 
+                className="text-white text-center my-10 font-extralight tracking-widest text-2xl md:text-5xl" 
                 id="Services"
             />
             
