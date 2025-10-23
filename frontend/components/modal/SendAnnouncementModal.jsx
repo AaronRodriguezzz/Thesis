@@ -58,7 +58,7 @@ export default function AnnouncementModal({ isOpen, onClose }) {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <MdAnnouncement className="w-7 h-7 text-gray-800" />
-            <h1 className="text-xl font-semibold tracking-tight text-gray-800">
+            <h1 className="text-xl font-semibold tracking-tight text-black">
               New Announcement
             </h1>
           </div>
@@ -77,7 +77,7 @@ export default function AnnouncementModal({ isOpen, onClose }) {
           <div>
             <label
               htmlFor="subject"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="block text-sm font-medium text-black mb-1"
             >
               Subject
             </label>
@@ -88,7 +88,7 @@ export default function AnnouncementModal({ isOpen, onClose }) {
               value={formData.subject}
               onChange={handleChange}
               placeholder="Enter subject"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-gray-600 focus:border-gray-600 outline-none"
+              className="w-full border text-black border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-gray-600 focus:border-gray-600 outline-none"
               required
             />
           </div>
@@ -97,7 +97,7 @@ export default function AnnouncementModal({ isOpen, onClose }) {
           <div>
             <label
               htmlFor="message"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="block text-sm font-medium text-black mb-1"
             >
               Message
             </label>
@@ -108,7 +108,7 @@ export default function AnnouncementModal({ isOpen, onClose }) {
               onChange={handleChange}
               rows={5}
               placeholder="Write your message..."
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-gray-600 focus:border-gray-600 outline-none resize-none"
+              className="w-full border border-gray-300 text-black rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-gray-600 focus:border-gray-600 outline-none resize-none"
               required
             />
           </div>
@@ -117,7 +117,7 @@ export default function AnnouncementModal({ isOpen, onClose }) {
           <div>
             <label
               htmlFor="expiration"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="block text-sm font-medium text-black mb-1"
             >
               Expiration Date
             </label>
@@ -128,7 +128,7 @@ export default function AnnouncementModal({ isOpen, onClose }) {
               value={formData.expiration}
               onChange={handleChange}
               min={getTomorrowDate()}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-gray-600 focus:border-gray-600 outline-none"
+              className="w-full border text-black border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-gray-600 focus:border-gray-600 outline-none"
               required
             />
           </div>
@@ -139,14 +139,14 @@ export default function AnnouncementModal({ isOpen, onClose }) {
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 transition text-sm"
+            className="px-4 py-2 rounded bg-black hover:bg-black/80 transition text-sm"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={loading}
-            className="flex items-center gap-2 px-4 py-2 rounded bg-gray-600 text-white hover:bg-gray-800 transition text-sm"
+            className="flex items-center gap-2 px-4 py-2 rounded bg-black text-white hover:bg-green-500/80 transition text-sm"
           >
             <IoSend className="w-5 h-5" />
             {loading ? "Sending..." : "Send"}

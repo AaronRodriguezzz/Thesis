@@ -29,7 +29,7 @@ const NotificationBar = ({ isOpen, onClose }) => {
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: 100, opacity: 0 }}
             transition={{ duration: 0.4 }}
-            className="relative w-[320px] h-full bg-gray-900 text-white shadow-xl p-4 flex flex-col"
+            className="relative w-[320px] h-full bg-black/40 border border-white/10 text-white shadow-xl p-4 flex flex-col"
           >
             {/* Header */}
             <div className="flex justify-between items-center mb-4 border-b border-gray-700 pb-2">
@@ -58,7 +58,7 @@ const NotificationBar = ({ isOpen, onClose }) => {
                   .map((appointment, i) => (
                     <div
                       key={`live-${i}`}
-                      className="bg-gray-800 p-3 rounded-lg shadow-sm hover:bg-gray-700 transition"
+                      className="bg-black/60 border border-white/10 p-3 rounded-lg shadow-sm hover:bg-gray-700 transition"
                     >
                       <h2 className="font-semibold text-green-400 text-sm">
                         {appointment.customer.firstName}
@@ -83,7 +83,7 @@ const NotificationBar = ({ isOpen, onClose }) => {
                   .map((appointment, i) => (
                     <div
                       key={`db-${i}`}
-                      className="bg-gray-800 p-3 rounded-lg shadow-sm hover:bg-gray-700 transition"
+                      className="bg-black/60 border border-white/10 p-3 rounded-lg shadow-sm hover:bg-gray-700 transition"
                     >
                       <h2 className="font-semibold text-green-400 text-sm">
                         {appointment.customer.firstName}

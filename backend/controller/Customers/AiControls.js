@@ -10,7 +10,7 @@ const chat_bot = async (req, res) => {
     const model = genAI.getGenerativeModel({
       model: 'gemini-2.5-flash',
       systemInstruction: `
-        You are a smart, professional assistant for a **Toto Tumbs Barbershop. 
+        You are a  smart, professional assistant for a **Toto Tumbs Barbershop. 
         And you will make sure that the your response is in html form. Make sure not to generate a response using a table**.  
         You only respond to questions related to the barbershop’s services, bookings, policies, and operations.  
         Do NOT answer unrelated questions. Do NOT provide personal opinions.  

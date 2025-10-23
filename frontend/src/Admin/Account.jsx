@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { update_data } from "../../services/PutMethod";
 import { useAuth } from "../../contexts/UserContext";
-import { isFormValid } from "../../utils/objectValidation";
 import { CustomAlert } from "../../components/modal/CustomAlert";
 import { LogOut, User, Lock, Edit3, Save } from "lucide-react";
 
@@ -49,10 +48,7 @@ const AdminProfilePage = () => {
       return;
     }
 
-    const payload = {
-      ...passwordData,
-      id: user?._id,
-    };
+    const payload = { ...passwordData, id: user?._id };
 
     try {
       setLoading(true);
@@ -71,22 +67,19 @@ const AdminProfilePage = () => {
     } finally {
       setLoading(false);
     }
-  };  
+  };
 
   useEffect(() => {
     if (user) {
-      setFormData({
-        ...user,
-        address: user.address || "",
-      });
+      setFormData({ ...user, address: user.address || "" });
     }
   }, [user]);
 
   return (
-    <div className="h-screen w-screen bg-white flex items-center justify-center text-gray-100">
-      <div className="w-full max-w-3xl p-10 bg-gray-900 rounded-2xl shadow-2xl border border-gray-700">
-        <h1 className="font-bold text-4xl text-center text-gray-400 mb-10 tracking-tight flex items-center justify-center gap-2">
-          <User className="w-8 h-8" /> Admin Profile
+    <div className="flex flex-col items-center justify-start text-white min-h-[calc(100vh-100px)] mt-10">
+      <div className="w-full max-w-3xl p-10 bg-black/40 border border-white/10 rounded-2xl shadow-xl backdrop-blur-md">
+        <h1 className="font-bold text-3xl text-center text-gray-300 mb-10 tracking-tight flex items-center justify-center gap-2">
+          Admin Profile
         </h1>
 
         <div className="flex flex-col md:flex-row justify-center gap-4 mb-10">
@@ -95,9 +88,9 @@ const AdminProfilePage = () => {
               setEditMode((prev) => !prev);
               setChangingPassMode(false);
             }}
-            className="flex-1 flex items-center justify-center gap-2 bg-gray-500 hover:bg-orange-600 text-white text-sm font-semibold py-3 rounded-lg transition"
+            className="flex-1 flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold py-3 rounded-lg transition"
           >
-            {editMode ? <Lock className="w-4 h-4" /> : <Edit3 className="w-4 h-4" />} 
+            {editMode ? <Lock className="w-4 h-4" /> : <Edit3 className="w-4 h-4" />}
             {editMode ? "Cancel Edit" : "Manage Profile"}
           </button>
           <button
@@ -131,7 +124,7 @@ const AdminProfilePage = () => {
             <ProfileField
               label="Role"
               value={formData?.role}
-              editable={editMode}
+              editable={false}
               name="role"
               onChange={handleChange}
             />
@@ -169,10 +162,7 @@ const AdminProfilePage = () => {
               label="Confirm New Password"
               value={passwordData.confirmPassword}
               onChange={(val) =>
-                setPasswordData((prev) => ({
-                  ...prev,
-                  confirmPassword: val,
-                }))
+                setPasswordData((prev) => ({ ...prev, confirmPassword: val }))
               }
             />
 
@@ -187,17 +177,6 @@ const AdminProfilePage = () => {
               </button>
             </div>
           </form>
-        )}
-
-        {!changingPassMode && !editMode && (
-          <div className="flex justify-center mt-10">
-            <button
-              className="flex items-center gap-2 bg-red-600 text-lg tracking-tight text-white py-3 px-10 rounded-full hover:bg-red-700 transition"
-              onClick={logout}
-            >
-              <LogOut className="w-5 h-5" /> LOG OUT
-            </button>
-          </div>
         )}
       </div>
     </div>
@@ -215,10 +194,10 @@ const ProfileField = ({ label, value, editable, name, onChange }) => (
         name={name}
         value={value}
         onChange={onChange}
-        className="bg-gray-800 border border-gray-600 shadow-sm p-2 w-full text-base rounded-md focus:ring-2 focus:ring-orange-400 outline-none text-gray-100"
+        className="bg-black/50 border border-white/10 shadow-sm p-2 w-full text-base rounded-md focus:ring-2 focus:ring-orange-400 outline-none text-white"
       />
     ) : (
-      <p className="text-gray-200 text-base tracking-tight bg-gray-800 border border-gray-700 p-2 rounded-md">
+      <p className="text-gray-100 text-base tracking-tight bg-black/50 border border-white/10 p-2 rounded-md">
         {value}
       </p>
     )}
@@ -234,7 +213,7 @@ const ProfilePasswordField = ({ label, value, onChange }) => (
       type="password"
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="bg-gray-800 border border-gray-600 shadow-sm p-2 w-full text-base rounded-md focus:ring-2 focus:ring-orange-400 outline-none text-gray-100"
+      className="bg-black/50 border border-white/10 shadow-sm p-2 w-full text-base rounded-md focus:ring-2 focus:ring-orange-400 outline-none text-white"
     />
   </div>
 );

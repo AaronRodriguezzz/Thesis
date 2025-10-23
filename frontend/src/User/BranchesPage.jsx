@@ -59,7 +59,7 @@ export default function BranchesPage(){
                     <p className="tracking-tight truncate w-full">{branch?.address}</p>
                     <p className="tracking-tight">{branch?.phone}</p>
                       <button 
-                        className="mt-3 px-4 py-2 bg-white text-black rounded-lg hover:bg-gray-800 text-sm"
+                        className="mt-3 px-4 py-2 border text-white rounded-lg hover:bg-white hover:text-black transition text-sm"
                         onClick={() => navigate(`/appointment/${branch?._id}`)}
                       >
                           Book Now

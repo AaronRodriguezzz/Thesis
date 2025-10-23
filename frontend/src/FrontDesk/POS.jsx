@@ -109,17 +109,16 @@ const POS = () => {
     if (error) return <p className="p-4 text-red-500">Error loading data</p>;
 
     return (
-        <div className="flex h-screen">
+        <div className="flex">
             <main className="p-4 w-full">
-
                 <div className="h-[80vh] flex flex-row gap-6">
                     <div className="flex-3 flex-col space-y-4">
-                        <div className="w-full bg-white p-4 rounded-lg shadow flex flex-col sm:flex-row justify-between items-center gap-4">
+                        <div className="w-full bg-black/40 border border-white/10 p-4 rounded-lg shadow flex flex-col sm:flex-row justify-between items-center gap-4">
                             <div className="relative w-full sm:w-auto flex-grow">
                                 <input 
                                     type="text"
                                     placeholder="Search employees (Name, Role, Email)..."
-                                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full text-sm tracking-tight focus:outline-none focus:ring-1 focus:ring-gray-500 focus:border-gray-500"
+                                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full text-sm tracking-tight focus:outline-none focus:ring-1 focus:ring-gray-500 focus:border-gray-500 placeholder:text-white"
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
                                 />
@@ -128,14 +127,14 @@ const POS = () => {
                         </div>
 
 
-                        <div className="bg-white p-6 rounded-lg shadow">
+                        <div className="bg-black/40 border border-white/10 p-6 rounded-lg shadow">
                             <div className="flex flex-row justify-between mb-4">
                                 <h2 className="text-2xl font-semibold mb-4 tracking-tight">Product Catalog</h2>
                             </div>
 
-                            <div className="h-[600px] w-full flex flex-row flex-wrap items-center justify-center gap-4 overflow-x-auto">
+                            <div className="h-[600px] w-full flex flex-row flex-wrap items-center justify-center gap-4 overflow-x-auto custom-scrollbar">
                                 {filteredProducts.map((product) => (
-                                    <div className="flex flex-col bg-gray-100 items-start p-4 w-[200px] shadow-md rounded-lg" key={product._id}>
+                                    <div className="flex flex-col bg-white/10 text-white items-start p-4 w-[200px] shadow-md rounded-lg" key={product._id}>
                                         <img src={`${baseUrl}/${product.imagePath}`} alt="" className="w-[180px] h-[180px] rounded-lg mb-3 shadow-md"/>
 
                                         <div className="tracking-tighter" key={product._id}>
@@ -158,13 +157,13 @@ const POS = () => {
                         </div>
                     </div>
 
-                    <div className="h-[800px] flex-1 bg-white space-y-5 rounded-md p-4 shadow">
+                    <div className="h-[800px] flex-1 bg-black/40 border border-white/10 text-white space-y-5 rounded-md p-4 shadow">
                         <h1 className="font-semibold text-2xl tracking-tight py-2">Check Out Summary</h1>
 
-                        <div className="h-[580px] overflow-y-auto space-y-4">
+                        <div className="h-[580px] overflow-y-auto space-y-4 custom-scrollbar">
                             {checkOutList &&  checkOutList.map((product) => (
                                 <div
-                                    className="relative w-full flex gap-4 bg-gray-100 p-3 shadow-md rounded-lg items-start"
+                                    className="relative w-full flex gap-4 bg-white/10 text-white p-3 shadow-md rounded-lg items-start"
                                     key={product._id}
                                 >
                                     {/* Image */}
@@ -177,8 +176,8 @@ const POS = () => {
                                 {/* Product Details */}
                                     <div className="flex flex-col justify-between flex-1 tracking-tight h-full">
                                         <div className="space-y-1">
-                                            <h1 className="text-md font-bold text-gray-800">{product.name}</h1>
-                                            <h3 className="text-md font-semibold text-gray-600">₱ {product.price}</h3>
+                                            <h1 className="text-md font-bold">{product.name}</h1>
+                                            <h3 className="text-md font-semibold">₱ {product.price}</h3>
                                         </div>
 
                                         {/* Quantity & Remove */}
@@ -186,7 +185,7 @@ const POS = () => {
                                             <div className="flex items-center gap-2 text-sm font-semibold">
                                                 <span>Qty:</span>
                                                 <button 
-                                                    className="bg-white px-2 text-lg" 
+                                                    className="px-2 text-lg" 
                                                     onClick={() => quantityChange(product._id, -1)}
                                                     disabled={product.checkOutQuantity === 1 }
                                                 >
@@ -196,7 +195,7 @@ const POS = () => {
                                                 <span className="w-4 text-center">{product.checkOutQuantity}</span>
 
                                                 <button 
-                                                    className="bg-white px-2 text-lg" 
+                                                    className="px-2 text-lg" 
                                                     onClick={() => quantityChange(product._id, 1)}
                                                     disabled={product?.stock[product.branch.findIndex(b => b === user.branchAssigned)] === product.checkOutQuantity}
                                                 >
