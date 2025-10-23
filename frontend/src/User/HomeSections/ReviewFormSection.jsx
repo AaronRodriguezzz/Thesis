@@ -44,25 +44,18 @@ const ReviewFormSection = () => {
             transition={{ duration: .7, ease: "easeInOut" }}
             className={`w-full max-w-7xl mx-auto px-4 md:px-6 flex flex-col md:flex-row items-center justify-center gap-8 py-20 z-20`}
         >
-            <div className="w-full md:w-1/2 bg-black/40 rounded-xl flex flex-col justify-center items-center text-center p-6 md:p-10 text-white shadow shadow-white">
-            <h1 className="text-3xl md:text-5xl font-semibold">Give us your feedback!</h1>
-            <p className="text-md md:text-lg">Help us to find what we could improve!</p>
-            <button 
-                className="py-2 md:py-3 px-3 md:px-6 my-3 border text-white text-sm md:text-md hover:bg-white hover:text-black transition-colors"
-                onClick={() => navigate('/feedback')}
-            >
-                Feedback Form
-            </button>
+            <div className="w-full md:w-1/2 flex flex-col justify-center items-start p-6 md:p-10 text-white">
+                <h1 className="text-3xl md:text-5xl font-semibold">Give us your feedback!</h1>
+                <p className="text-md md:text-lg">We value your feedback and would love to hear how we can improve your experience. Your suggestions help us grow and serve you better.</p>
             </div>
 
             <motion.form
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
-                className="text-white bg-opacity-90 rounded-md shadow-md p-6 w-full max-w-sm md:w-[400px] mx-auto"
+                className="w-full md:w-1/2 text-white rounded-md shadow-md p-6"
                 onSubmit={handleSubmit}
             >
-                <h1 className="text-2xl font-semibold mb-4">Leave a Review</h1>
 
                 <label className="block mb-2">Rating</label>
                 <Box className="mb-4">
