@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 const baseUrl = import.meta.env.MODE === 'development' ? 'http://localhost:4001' : 'https://tototumbs.onrender.com';
 
 const ProductSection = () => {
-    const { data, loading, error } = useFetch('/get_data/product', null, null, [])
+    const { data, loading, error } = useFetch('get_data/product', null, null, [])
     const { sectionRefs, inViews } = useSectionViews();
     const navigate = useNavigate();
     const isMobile = useIsMobile(); 

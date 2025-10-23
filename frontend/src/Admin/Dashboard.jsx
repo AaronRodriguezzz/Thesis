@@ -40,7 +40,6 @@ const Dashboard = () => {
                 ])
 
                 if (cards && chart) {
-                    console.log(cards, chart);
                     setProductSales(cards.productsSales)
                     setServiceSales(cards.serviceSales)
                     setSalesData(chart.salesChart)
@@ -99,40 +98,40 @@ const Dashboard = () => {
             {/* 📊 Charts Section */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Bar Chart */}
-                <div className="bg-white rounded-2xl shadow-md p-4">
-                <h2 className="text-lg font-semibold mb-4">Monthly Sales (Bar)</h2>
-                <ResponsiveContainer width="100%" height={300}>
-                    <BarChart data={salesData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="month" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="service" fill="#1e3a8a" radius={[10, 10, 0, 0]} /> {/* Dark Blue */}
-                    <Bar dataKey="product" fill="#b91c1c" radius={[10, 10, 0, 0]} /> {/* Dark Red */}
-                    </BarChart>
-                </ResponsiveContainer>
+                <div className="bg-black/40 text-white border border-white/10 rounded-2xl shadow-md p-4">
+                    <h2 className="text-lg font-semibold mb-4">Monthly Sales (Bar)</h2>
+                    <ResponsiveContainer width="100%" height={300}>
+                        <BarChart data={salesData}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="month" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Bar dataKey="service" fill="#1e3a8a" radius={[10, 10, 0, 0]} /> {/* Dark Blue */}
+                        <Bar dataKey="product" fill="#b91c1c" radius={[10, 10, 0, 0]} /> {/* Dark Red */}
+                        </BarChart>
+                    </ResponsiveContainer>
                 </div>
 
                 {/* Line Chart */}
-                <div className="bg-white rounded-2xl shadow-md p-4">
-                <h2 className="text-lg font-semibold mb-4">Revenue Trend (Line)</h2>
-                <ResponsiveContainer width="100%" height={300}>
-                    <LineChart data={salesData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="month" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Line type="monotone" dataKey="service" stroke="#1e3a8a" strokeWidth={3} /> {/* Dark Blue */}
-                    <Line type="monotone" dataKey="product" stroke="#b91c1c" strokeWidth={3} /> {/* Dark Red */}
-                    </LineChart>
-                </ResponsiveContainer>
+                <div className="bg-black/40 text-white border border-white/10 rounded-2xl shadow-md p-4">
+                    <h2 className="text-lg font-semibold mb-4">Revenue Trend (Line)</h2>
+                    <ResponsiveContainer width="100%" height={300}>
+                        <LineChart data={salesData}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="month" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Line type="monotone" dataKey="service" stroke="#1e3a8a" strokeWidth={3} /> {/* Dark Blue */}
+                        <Line type="monotone" dataKey="product" stroke="#b91c1c" strokeWidth={3} /> {/* Dark Red */}
+                        </LineChart>
+                    </ResponsiveContainer>
                 </div>
             </div>
 
             {/* 👥 Customers Per Hour Chart */}
-            <div className="bg-white rounded-2xl shadow-md p-4">
+            <div className="bg-black/40 text-white border border-white/10 rounded-2xl shadow-md p-4">
                 <h2 className="text-lg font-semibold mb-4">Customers Per Hour (9 AM - 9 PM)</h2>
                 <ResponsiveContainer width="100%" height={300}>
                 <LineChart data={peakHours}>

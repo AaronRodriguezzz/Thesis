@@ -9,7 +9,7 @@ const DashboardLoading = () => {
         {Array.from({ length: 4 }).map((_, i) => (
           <div
             key={i}
-            className="bg-white shadow-md rounded-2xl p-5 flex items-center gap-4"
+            className="bg-black/60 shadow-md rounded-2xl p-5 flex items-center gap-4"
           >
             <Skeleton variant="circular" width={50} height={50} />
 
@@ -25,26 +25,26 @@ const DashboardLoading = () => {
       {/* 📊 Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Bar Chart */}
-        <div className="bg-white rounded-2xl shadow-md p-4">
+        <div className="bg-black/60 rounded-2xl shadow-md p-4">
           <Skeleton variant="text" width="40%" height={30} className="mb-4" />
           <Skeleton variant="rectangular" width="100%" height={300} />
         </div>
 
         {/* Line Chart */}
-        <div className="bg-white rounded-2xl shadow-md p-4">
+        <div className="bg-black/60 rounded-2xl shadow-md p-4">
           <Skeleton variant="text" width="40%" height={30} className="mb-4" />
           <Skeleton variant="rectangular" width="100%" height={300} />
         </div>
       </div>
 
       {/* 👥 Customers Per Hour Chart */}
-      <div className="bg-white rounded-2xl shadow-md p-4">
+      <div className="bg-black/60 rounded-2xl shadow-md p-4">
         <Skeleton variant="text" width="40%" height={30} className="mb-4" />
         <Skeleton variant="rectangular" width="100%" height={300} />
       </div>
 
       {/* 📋 Sales Section */}
-      <div className="bg-white rounded-2xl shadow-md p-4">
+      <div className="bg-black/60 rounded-2xl shadow-md p-4">
         <Skeleton variant="text" width="30%" height={30} className="mb-4" />
         <Skeleton variant="rectangular" width="100%" height={200} />
       </div>

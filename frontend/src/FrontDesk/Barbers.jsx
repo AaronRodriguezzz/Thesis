@@ -11,7 +11,7 @@ import AssignmentLoading from "../../components/animations/AssignmentLoading";
 import { queueSocket } from "../../services/SocketMethods";
 import { useAuth } from "../../contexts/UserContext";
 
-const Appointments = () => {
+const Assignments = () => {
     const baseUrl =
         import.meta.env.MODE === "development"
         ? "http://localhost:4001"
@@ -107,10 +107,10 @@ const Appointments = () => {
     );
 
     return (
-        <div className="flex min-h-screen">
+        <div>
             <main className="flex flex-col justify-center items-center p-4 w-full">
                 {/* Header */}
-                <div className="w-[90%] md:w-[95%] lg:w-[80%] flex justify-between items-center leading-3 bg-gray-800 text-white p-4 my-2 shadow rounded">
+                <div className="w-full flex justify-between items-center leading-3 bg-black/40 text-white border border-white/10 p-4 my-2 shadow rounded">
                     <div>
                         <h1 className="text-s md:text-[20px] lg:text-[30px] tracking-tighter text-left my-4">
                             TOTO TUMBS STUDIO
@@ -125,47 +125,47 @@ const Appointments = () => {
                 </div>
 
                 {/* Stats */}
-                <div className="w-[90%] md:w-[95%] lg:w-[80%] flex gap-x-2 items-center justify-between leading-3 mb-4">
-                    <div className="w-[50%] flex items-center bg-white gap-8 p-4">
-                        <MdCalendarToday className="text-[40px] text-gray-800" />
+                <div className="w-full flex gap-x-2 items-center justify-between leading-3 mb-4">
+                    <div className="w-[50%] flex items-center bg-black/40 border border-white/10 text-white gap-8 p-4">
+                        <MdCalendarToday className="text-[40px]" />
                         <div>
-                        <h1 className="text-s md:text-[20px] lg:text-[25px] tracking-tighter text-left my-2">
-                            Appointment
-                        </h1>
-                        <p className="text-xs md:text-[20px] lg:text-[30px] font-extralight tracking-tighter text-left">
-                            {appointmentsByHour.filter((a) => a.status === "Booked").length}
-                        </p>
+                            <h1 className="text-s md:text-[20px] lg:text-[25px] tracking-tighter text-left my-2">
+                                Appointment
+                            </h1>
+                            <p className="text-xs md:text-[20px] lg:text-[30px] font-extralight tracking-tighter text-left">
+                                {appointmentsByHour.filter((a) => a.status === "Booked").length}
+                            </p>
                         </div>
                     </div>
 
-                    <div className="w-[50%] flex items-center justify-between bg-white gap-4 px-4 py-4">
+                    <div className="w-[50%] flex items-center justify-between bg-black/40 border border-white/10 text-white gap-4 px-4 py-4">
                         <div className="flex">
-                        <MdDirectionsWalk className="text-[50px] text-gray-800" />
-                        <div>
-                            <h1 className="text-s md:text-[20px] lg:text-[25px] tracking-tighter text-left my-2">
-                            Walk-In
-                            </h1>
-                            <p className="text-xs md:text-[20px] lg:text-[30px] font-extralight tracking-tighter text-left">
-                            {walkInList.length}
-                            </p>
-                        </div>
+                            <MdDirectionsWalk className="text-[50px]" />
+                            <div>
+                                <h1 className="text-s md:text-[20px] lg:text-[25px] tracking-tighter text-left my-2">
+                                Walk-In
+                                </h1>
+                                <p className="text-xs md:text-[20px] lg:text-[30px] font-extralight tracking-tighter text-left">
+                                {walkInList.length}
+                                </p>
+                            </div>
                         </div>
 
                         <button
-                        className="bg-black rounded-full py-2 px-4 text-white text-2xl font-semibold"
-                        onClick={() => setIsAddingWalkIn(true)}
+                            className="rounded-full py-2 px-4 text-white text-2xl font-semibold hover:bg-white hover:text-black transition"
+                            onClick={() => setIsAddingWalkIn(true)}
                         >
-                        +
+                            +
                         </button>
                     </div>
                 </div>
 
                 {/* Barber List */}
-                <div className="w-full h-full flex flex-row justify-center gap-4 xl:gap-8">
+                <div className="w-full flex flex-row justify-between gap-4">
                     {barberList.map((barber) => (
                         <div
                             key={barber._id}
-                            className="relative w-[30%] lg:w-[25%] h-[80%] flex flex-col items-center bg-white shadow-lg rounded-lg p-2 xl:p-4"
+                            className="relative w-[35%] md:h-[450px] lg:h-[480px] xl:h-[550px] flex flex-col items-center bg-black/40 border border-white/10 text-white shadow-lg rounded-lg p-2 xl:p-4"
                         >
                             {barber.imagePath ? (
                                 <img
@@ -174,13 +174,13 @@ const Appointments = () => {
                                     className="w-20 h-20 rounded-full object-cover"
                                 />
                             ) : (
-                                <FaUserCircle className="md:text-[90px] xl:text-[120px] text-black mb-2" />
+                                <FaUserCircle className="md:text-[90px] xl:text-[120px] mb-2" />
                             )}
 
-                            <h1 className="text-md xl:text-3xl font-semibold tracking-tight truncate max-w-[200px]">
+                            <h1 className=" text-md xl:text-3xl font-semibold tracking-tight truncate max-w-[200px]">
                                 {barber.fullName}
                             </h1>
-                            <p className="flex">
+                            <p className="flex space-x-2">
                                 <span className="hidden xl:block">Current Status:</span> 
                                 <span
                                     style={{
@@ -198,9 +198,9 @@ const Appointments = () => {
                                 </span>
                             </p>
 
-                            <div className="w-full flex flex-col space-y-3 mt-4 px-2 xl:px-8">
+                            <div className="w-full flex flex-col space-y-3 mt-4 px-2 xl:px-8 text-black">
                                 <button
-                                    className="w-full text-sm lg:text-md xl:text-lg bg-black hover:bg-green-400 text-white tracking-tight py-2 rounded-lg transition-colors ease-in-out"
+                                    className="w-full text-sm lg:text-md xl:text-lg bg-white hover:bg-green-400 tracking-tight py-2 rounded-lg transition-colors ease-in-out"
                                     onClick={() => {
                                         setIsAssigning(true);
                                         setBarberToUpdate(barber);
@@ -214,7 +214,7 @@ const Appointments = () => {
                                     Assign Customer
                                 </button>
                                 <button
-                                    className="w-full  text-sm lg:text-md xl:text-lg bg-black hover:bg-green-400 text-white tracking-tight py-2 rounded-lg transition-colors ease-in-out"
+                                    className="w-full  text-sm lg:text-md xl:text-lg bg-white hover:bg-green-400 tracking-tight py-2 rounded-lg transition-colors ease-in-out"
                                     onClick={() => {
                                         setIsCompleting(true);
                                         setBarberToUpdate(barber);
@@ -224,7 +224,7 @@ const Appointments = () => {
                                     Complete Barbering
                                 </button>
                                 <button
-                                    className="w-full  text-sm lg:text-md xl:text-lg bg-black hover:bg-orange-400 text-white tracking-tight py-2 rounded-lg transition-colors ease-in-out"
+                                    className="w-full  text-sm lg:text-md xl:text-lg bg-white hover:bg-orange-400 tracking-tight py-2 rounded-lg transition-colors ease-in-out"
                                     disabled={
                                         barber.status === "Unavailable" ||
                                         barber.status === "On-break" ||
@@ -300,4 +300,4 @@ const Appointments = () => {
     );
 };
 
-export default Appointments;
+export default Assignments;

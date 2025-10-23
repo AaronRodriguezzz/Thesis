@@ -47,7 +47,7 @@ export default function RegisterPage() {
         transition={{ duration: 1.5, ease: "easeInOut" }}
         animate={{ opacity: 1, y:0 }}
         onSubmit={handleSubmit}
-        className="w-[40%] min-w-[340px] max-w-[500px] flex flex-col items-center gap-y-4 md:shadow-lg shadow-white rounded-xl bg-black/40 text-white py-6"
+        className="w-[40%] min-w-[340px] max-w-[500px] flex flex-col items-center gap-y-4 border border-white/20 rounded-xl bg-black/40 text-white py-6"
       >
         <h1 className="font-extralight text-[40px] my-3">Create Account</h1>
 

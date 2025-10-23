@@ -4,7 +4,7 @@ import { useFetch } from '../../hooks/useFetch';
 import { motion } from 'motion/react';
 
 const Announcement = () => {
-  const { data, loading } = useFetch('/active-announcement');
+  const { data, loading } = useFetch('active-announcement');
 
   if (!data || loading) return null;
 

@@ -9,6 +9,7 @@ import ServiceSection from "./HomeSections/ServiceSection";
 import ProductSection from "./HomeSections/ProductSection";
 import FeedbackSection from "./HomeSections/FeedbackSection";
 import SubscribeSection from "./HomeSections/SubscribeSection";
+import ReviewFormSection from "./HomeSections/ReviewFormSection";
 
 export default function MainPage() {
   const container = "w-full max-w-7xl mx-auto px-4 md:px-6";
@@ -121,7 +122,7 @@ export default function MainPage() {
         <ServiceSection/>
       </div>
 
-      {/* Feedback Prompt */}
+      {/* Feedback Prompt
       <motion.div   
         ref={sectionRefs.feedback}
         initial={{ opacity: 0, x: -200 }}
@@ -139,8 +140,11 @@ export default function MainPage() {
             Feedback Form
           </button>
         </div>
-      </motion.div>
+      </motion.div> */}
 
+
+      <ReviewFormSection/>
+      
       <FeedbackSection/>
       <SubscribeSection/>
     </div>

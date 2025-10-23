@@ -50,7 +50,7 @@ export default function Login() {
         initial={{ opacity: 0, y: -50 }}
         transition={{ duration: 1.5, ease: "easeInOut" }}
         animate={{ opacity: 1, y:0 }}
-        className="w-[40%] min-w-[300px] max-w-[500px] flex flex-col items-center gap-y-4 rounded-md text-white bg-black/40 shadow-lg shadow-white bg-opacity-90" 
+        className="w-[40%] min-w-[300px] max-w-[500px] flex flex-col items-center gap-y-4 rounded-xl text-white bg-black/40 border border-white/20" 
         onSubmit={handle_submit}
       >
 

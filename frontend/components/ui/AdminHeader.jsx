@@ -30,20 +30,20 @@ export default function AdminHeader() {
     return null;
 
   return (
-    <div className="w-full">
+    <div className="w-full text-white">
       <div className="flex items-start sm:items-center justify-between px-4 lg:px-8 py-3 gap-2">
         {/* Title + Description */}
         <header>
-          <h1 className="text-xl sm:text-2xl lg:text-3xl font-semibold tracking-tight text-gray-800">
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-semibold tracking-tight">
             {currentTitle}
           </h1>
-          <p className="text-xs sm:text-sm text-gray-500">{description}</p>
+          <p className="text-xs sm:text-sm">{description}</p>
         </header>
 
         {/* Profile Display */}
 
         <div className="flex items-center gap-x-2"> 
-          <HiOutlineMegaphone className="w-7 h-7 text-gray-700 transform -scale-x-100 hover:text-blue-500 cursor-pointer" onClick={() => setSendAnnouncement(true)}/>
+          <HiOutlineMegaphone className="w-7 h-7 transform -scale-x-100 hover:text-blue-500 cursor-pointer" onClick={() => setSendAnnouncement(true)}/>
           <NotificationBell
             isOpen={notifOpen}
             onClick={() => setNotifOpen(!notifOpen)}
@@ -53,9 +53,9 @@ export default function AdminHeader() {
             onClick={() => navigate(path)}
           >
             <div className="rounded-full p-1.5 transition-colors">
-              <UserCircle className="w-7 h-7 text-gray-700 group-hover:text-blue-500" />
+              <UserCircle className="w-7 h-7 group-hover:text-blue-500" />
             </div>
-            <span className="font-medium text-gray-800 group-hover:text-blue-500 transition-colors">
+            <span className="font-medium group-hover:text-blue-500 transition-colors">
               {user?.fullName}
             </span>
           </div>
@@ -67,7 +67,10 @@ export default function AdminHeader() {
         onClose={() => setNotifOpen(false)}
       />
 
-      <AnnouncementModal isOpen={sendingAnnouncement} onClose={() => setSendAnnouncement(false)}/>
+      <AnnouncementModal 
+        isOpen={sendingAnnouncement} 
+        onClose={() => setSendAnnouncement(false)}
+      />
     </div>
   );
 }

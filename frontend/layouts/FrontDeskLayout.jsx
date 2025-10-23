@@ -9,8 +9,12 @@ const FrontDeskLayout = () => {
   
   return (
     <div className="flex">
+      <div className="fixed inset-0 -z-10 overflow-hidden">
+        <div className="absolute inset-0 bg-[url('/login.png')] bg-cover bg-center filter invert" />
+        <div className="absolute inset-0 bg-black/40" />
+      </div>
       <FrontDeskSideBar />
-      <main className="ml-42 p-6 h-screen w-full bg-gray-100 overflow-x-hidden">
+      <main className="pl-60 p-5 h-screen w-full overflow-x-hidden z-10">
         <AdminHeader/>
         <Outlet />
       </main>

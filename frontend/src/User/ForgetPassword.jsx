@@ -79,7 +79,7 @@ export default function ForgotPasswordUI() {
       </div>
 
       {/* Main Container */}
-      <div className="w-[400px] bg-black/40 shadow shadow-white p-6 rounded-xl text-white">
+      <div className="w-[400px] bg-black/40 border border-white/20 p-6 rounded-xl text-white">
         <h1 className="text-2xl mb-4 tracking-tight">Forgot Password</h1>
 
         {/* STEP 1: Email */}

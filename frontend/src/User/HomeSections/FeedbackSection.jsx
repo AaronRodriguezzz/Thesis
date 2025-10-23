@@ -7,7 +7,7 @@ import { useFetch } from '../../../hooks/useFetch';
 
 const FeedbackSection = () => {
     const { sectionRefs, inViews } = useSectionViews();
-    const { data, loading, error } = useFetch('/reviews', null, null, []);
+    const { data, loading, error } = useFetch('reviews', null, null, []);
     const navigate = useNavigate();
 
     return (
@@ -19,7 +19,7 @@ const FeedbackSection = () => {
                 </button>
             </div>
         
-            <div className="flex flex-wrap gap-4 justify-center" ref={sectionRefs.feedback}>
+            <div className="flex flex-wrap gap-4 justify-around" ref={sectionRefs.feedback}>
                 {data && data.reviews.slice(0,4).map((feeds, index) => (
                     <motion.div
                       key={index}

@@ -88,21 +88,21 @@ const Appointments = () => {
             <main className="p-4 w-full">
                 <div className="flex flex-col gap-6">
                     <div className="space-y-4">
-                        <div className="w-full bg-white p-4 rounded-lg shadow flex flex-col sm:flex-row justify-between items-center gap-4">
+                        <div className="w-full bg-black/40 border border-black/20 p-4 rounded-lg shadow flex flex-col sm:flex-row justify-between items-center gap-4">
                             
                             <div className="relative w-full sm:w-auto flex-grow">
                                 <input 
                                     type="text"
-                                    placeholder="Search employees (Name, Role, Email)..."
-                                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full text-sm tracking-tight focus:outline-none focus:ring-1 focus:ring-gray-500 focus:border-gray-500"
+                                    placeholder="Search appointments (Name, Service, Date)..."
+                                    className="w-full pl-10 pr-4 py-2 bg-black/20 rounded-full text-sm tracking-tight text-white placeholder-white/60 border border-white/20 focus:outline-none focus:ring-1 focus:ring-white/10 focus:border-white/60"
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
                                 />
-                                    <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                                    <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/60" />
                             </div>
                             
                             <button 
-                                className="flex items-center gap-2 bg-gray-700 py-2 px-4 text-white rounded-full tracking-tighter text-sm"
+                                className="flex items-center gap-2 bg-black/60 py-2 px-4 text-white rounded-full tracking-tighter text-sm border border-white/10 hover:bg-white hover:text-black transition"
                                 onClick={() => setAddingAppointment(true)}
                             > 
                                 <FaUserPlus /> 
@@ -110,50 +110,64 @@ const Appointments = () => {
                             </button>
                         </div>
 
-                        <div className="w-full bg-white p-6 rounded-lg shadow">
+                        <div className="w-full bg-black/40 p-6 rounded-lg">
 
                             <div className="flex justify-between items-center my-4 text-sm">
-                                <h2 className="text-xl font-semibold mb-4 tracking-tight">Appointment Table</h2>
+                                <h2 className="text-xl font-semibold mb-4 tracking-tight text-white">Appointment Table</h2>
 
                                 <Pagination
                                     count={paginationLimit}
                                     size="small"
                                     page={page}
                                     onChange={(event, value) => setPage(value)}
+                                    sx={{
+                                        "& .MuiPaginationItem-root": {
+                                        color: "white",
+                                        },
+                                        "& .Mui-selected": {
+                                        color: "white !important",
+                                        backgroundColor: "transparent !important",
+                                        fontWeight: "bold",
+                                        textDecoration: "underline",
+                                        },
+                                        "& .MuiPaginationItem-ellipsis": {
+                                        color: "white",
+                                        },
+                                    }}
                                 />
                             </div>
 
-                            <div className="overflow-x-auto h-[500px] w-full">
-                                <table className="min-w-full divide-y divide-gray-200">
-                                    <thead className="bg-gray-50">
-                                        <tr>
-                                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Appointment Date</th>
-                                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Appointment Time</th>
-                                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Appointment Code</th>
-                                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Client Name</th>
-                                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Barber</th>
-                                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Service</th>
-                                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Additional Service</th>
-                                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Status</th>
-                                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Action</th>
+                            <div className="overflow-x-auto h-[570px] w-full">
+                                <table className="min-w-full divide-y divide-black/20">
+                                    <thead className="bg-black/60 text-white">
+                                        <tr className="px-4 py-3 text-left text-xs font-medium uppercase tracking-tight">
+                                            <th>Appointment Date</th>
+                                            <th>Appointment Time</th>
+                                            <th>Appointment Code</th>
+                                            <th>Client Name</th>
+                                            <th>Barber</th>
+                                            <th>Service</th>
+                                            <th>Additional Service</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
-                                    <tbody className="bg-white divide-y divide-gray-200">
+                                    <tbody className="bg-black/40 divide-y divide-black/20">
                                         {filteredAppointments.map((appointment) => (
-                                            <tr key={appointment._id}>
-                                                <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{appointment?.scheduledDate?.split('T')[0]}</td>
-                                                <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{time.find(t => t.value === appointment?.scheduledTime)?.timeTxt || "—"}</td>
-                                                <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{appointment?.uniqueCode}</td>
-                                                <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{appointment?.customer?.lastName}, {appointment.customer?.firstName}</td>
-                                                <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{appointment.barber?.fullName?.trim() ? appointment.barber.fullName : "N/A"}</td>
-                                                <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{appointment?.service?.name}</td>
-                                                <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{appointment.additionalService?.name ? appointment?.additionalService?.name : "N/A"}</td>
+                                            <tr className="px-4 py-4 whitespace-nowrap text-sm text-white/90 tracking-tight" key={appointment._id}>
+                                                <td>{appointment?.scheduledDate?.split('T')[0]}</td>
+                                                <td>{time.find(t => t.value === appointment?.scheduledTime)?.timeTxt || "—"}</td>
+                                                <td>{appointment?.uniqueCode}</td>
+                                                <td>{appointment?.customer?.lastName}, {appointment.customer?.firstName}</td>
+                                                <td>{appointment.barber?.fullName?.trim() ? appointment.barber.fullName : "N/A"}</td>
+                                                <td>{appointment?.service?.name}</td>
+                                                <td>{appointment.additionalService?.name ? appointment?.additionalService?.name : "N/A"}</td>
                                                 <td className="px-4 py-4 whitespace-nowrap text-sm tracking-tight">
                                                     {currentlyUpdatingId === appointment._id ? (
                                                             <select
                                                                 value={newStatus}
                                                                 onChange={(e) => setNewStatus(e.target.value)}
-                                                                className="border px-2 py-1 rounded"
+                                                                className="border border-black/20 bg-black/20 text-white px-2 py-1 rounded"
                                                             >
                                                                 <option value="" disabled>Select Status</option>
                                                                 <option value="booked">Booked</option>
@@ -168,7 +182,7 @@ const Appointments = () => {
                                                                     ? 'green'
                                                                     : appointment.status === 'Cancelled' || appointment.status === 'No-Show'
                                                                     ? 'red'
-                                                                    : 'black',
+                                                                    : 'white',
                                                                 }}
                                                             >
                                                                 {appointment.status}
@@ -180,7 +194,7 @@ const Appointments = () => {
                                                     <div className="flex justify-center items-center gap-2">
                                                         {currentlyUpdatingId !== appointment._id ? (
                                                             <button
-                                                                className="text-gray-600 hover:text-gray-800"
+                                                                className="text-white/70 hover:text-white"
                                                                 onClick={() => setCurrentlyUpdatingId(appointment?._id)}
                                                             >
                                                                 <FaEdit size={17} />
@@ -188,13 +202,13 @@ const Appointments = () => {
                                                         ) : (
                                                             <>
                                                                 <button
-                                                                    className="text-green-600 hover:text-green-800"
-                                                                    onClick={() => handle_updateStatus(appointment?._id, appointment?.status)} // you define this function
+                                                                    className="text-green-400 hover:text-green-300"
+                                                                    onClick={() => handle_updateStatus(appointment?._id, appointment?.status)}
                                                                 >
                                                                     <FaCheck size={17} />
                                                                 </button>
                                                                 <button
-                                                                    className="text-red-600 hover:text-red-800"
+                                                                    className="text-red-400 hover:text-red-300"
                                                                     onClick={() => setCurrentlyUpdatingId(null)}
                                                                 >
                                                                     <FaTimes size={17} />

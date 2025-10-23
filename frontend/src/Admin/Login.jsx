@@ -32,43 +32,38 @@ export default function AdminLogin() {
   }
 
   return (
-    <div className="h-screen w-screen bg-[url('/login.png')] bg-cover bg-center flex items-center justify-center">
-      <form className="w-[40%] min-w-[340px] max-w-[500px] flex flex-col items-center gap-y-4 md:shadow-lg rounded-xl bg-white bg-opacity-90" onSubmit={handle_submit}>
-        {/* Optional header image */}
-        {/* <img
-          src="/my-image.png"
-          alt="Description"
-          width={500}
-          height={300}
-        /> */}
-
+    <div className="h-screen w-screen flex items-center justify-center">
+      <div className="fixed inset-0 -z-10 overflow-hidden">
+        <div className="absolute inset-0 bg-[url('/login.png')] bg-cover bg-center filter invert" />
+        <div className="absolute inset-0 bg-black/40" />
+      </div>
+      <form className="w-[40%] min-w-[340px] max-w-[500px] flex flex-col items-center gap-y-4 rounded-xl bg-black/40 text-white border border-white/20" onSubmit={handle_submit}>
         <h1 className="font-extralight text-[50px] my-5">TOTO TUMBS</h1>
 
-        <TextField
-          id="outlined-email"
-          label="Email"
-          variant="outlined"
+
+        <input
+          type="text"
+          placeholder="Email"
           value={credentials.email}
           onChange={(e) =>
             setCredentials({ ...credentials, email: e.target.value })
           }
-          sx={{ width: "80%" }}
+          className="w-[80%] max-w-sm px-3 py-2 rounded-md border border-white/20 text-white placeholder-white/60 focus:outline-none focus:border-white/40"
         />
 
-        <TextField
-          id="outlined-password"
-          label="Password"
-          variant="outlined"
+        <input
           type="password"
+          placeholder="Password"
           value={credentials.password}
           onChange={(e) =>
             setCredentials({ ...credentials, password: e.target.value })
           }
-          sx={{ width: "80%" }}
+          className="w-[80%] max-w-sm px-3 py-2 rounded-md border border-white/20 text-white placeholder-white/60 focus:outline-none focus:border-white/40"
         />
 
         <button 
-          className="w-[80%] bg-green-500 py-3 rounded-md text-white my-4 hover:bg-green-600 transition duration-200 ease-in-out"
+          className="w-[80%] max-w-sm bg-green-500 py-2 rounded-md text-white my-4 hover:bg-green-600 transition duration-200 ease-in-out disabled:bg-green-700/80 disabled:cursor-not-allowed"
+          disabled={!credentials.email || !credentials.password}
           type="submit"
         >
           LOG IN
