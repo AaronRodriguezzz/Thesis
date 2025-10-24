@@ -2,116 +2,218 @@ import React, { useEffect, useState, useMemo } from "react";
 import { FaSearch } from "react-icons/fa";
 import Pagination from "@mui/material/Pagination";
 import { get_data } from "../../services/GetMethod";
+import TableLoading from "../../components/animations/TableLoading";
 
 const Appointments = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [page, setPage] = useState(1);
     const [paginationLimit, setPaginationLimit] = useState(1);
     const [appointmentList, setAppointmentList] = useState([]);
-    const [dateFilter, setDateFilter] = useState('');
+    const [dateFilter, setDateFilter] = useState("");
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     const filteredAppointments = useMemo(() => {
-        return appointmentList && appointmentList.filter(appointment =>
-            appointment.customer?.lastName?.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
-            appointment.customer?.firstName?.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
-            appointment.service?.name?.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
-            appointment.additionalService?.name?.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
-            appointment.branch?.name?.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
-            appointment.barber?.fullName?.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
-            appointment.scheduledDate?.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
-            appointment.scheduledTime?.toString().toLowerCase().includes(searchTerm.toLowerCase())
+        return appointmentList?.filter(
+            (appointment) =>
+                appointment.customer?.lastName
+                    ?.toLowerCase()
+                    .includes(searchTerm.toLowerCase()) ||
+                appointment.customer?.firstName
+                    ?.toLowerCase()
+                    .includes(searchTerm.toLowerCase()) ||
+                appointment.service?.name
+                    ?.toLowerCase()
+                    .includes(searchTerm.toLowerCase()) ||
+                appointment.additionalService?.name
+                    ?.toLowerCase()
+                    .includes(searchTerm.toLowerCase()) ||
+                appointment.branch?.name
+                    ?.toLowerCase()
+                    .includes(searchTerm.toLowerCase()) ||
+                appointment.barber?.fullName
+                    ?.toLowerCase()
+                    .includes(searchTerm.toLowerCase()) ||
+                appointment.scheduledDate
+                    ?.toLowerCase()
+                    .includes(searchTerm.toLowerCase()) ||
+                appointment.scheduledTime
+                    ?.toLowerCase()
+                    .includes(searchTerm.toLowerCase())
         );
     }, [appointmentList, searchTerm]);
 
-
     useEffect(() => {
-        console.log(page);
-        const get_employees = async () => {
-            const data = await get_data(dateFilter !== '' ? `/all_appointments?date=${dateFilter}` : '/all_appointments' , page);
+        const getAppointments = async () => {
+            try {
+                const data = await get_data(
+                    dateFilter !== ""
+                        ? `/all_appointments?date=${dateFilter}`
+                        : "/all_appointments",
+                    page
+                );
 
-            //exclude the barber's password
-            if (data) {
-                setAppointmentList(data?.appointments || []);
-                setPaginationLimit(data?.pageCount || 1);
+                if (data) {
+                    setAppointmentList(data?.appointments || []);
+                    setPaginationLimit(data?.pageCount || 1);
+                }
+            } catch (err) {
+                setError("Error fetching appointments.");
+            } finally {
+                setLoading(false);
             }
         };
-        get_employees();
+
+        getAppointments();
     }, [page, dateFilter]);
 
-    return (
-        <div className="flex min-h-screen"> 
-            <main className="p-4 w-full">
+    if (loading) return <TableLoading />;
+    if (error) return <p className="p-4 text-red-500">{error}</p>;
 
+    return (
+        <div>
+            <main className="p-4 w-full">
                 <div className="flex flex-col gap-6">
                     <div className="space-y-4">
-                        <div className="w-full bg-white p-4 rounded-lg shadow flex flex-col sm:flex-row justify-between items-center gap-4">
-                        <div className="relative w-full sm:w-auto flex-grow">
-                            <input 
-                            type="text"
-                            placeholder="Search Appointment (Name, Date, Time)..."
-                            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full text-sm tracking-tight focus:outline-none focus:ring-1 focus:ring-gray-500 focus:border-gray-500"
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            />
-                            <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                        </div>
+                        {/* Search & Filter */}
+                        <div className="w-full bg-black/40 border border-black/20 p-4 rounded-lg shadow flex flex-col sm:flex-row justify-between items-center gap-4">
+                            <div className="relative w-full sm:w-auto flex-grow">
+                                <input
+                                    type="text"
+                                    placeholder="Search Appointment (Name, Date, Time)..."
+                                    className="w-full pl-10 pr-4 py-2 bg-black/20 rounded-full text-sm tracking-tight text-white placeholder-white/60 border border-white/20 focus:outline-none focus:ring-1 focus:ring-white/10 focus:border-white/60"
+                                    value={searchTerm}
+                                    onChange={(e) =>
+                                        setSearchTerm(e.target.value)
+                                    }
+                                />
+                                <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/60" />
+                            </div>
+
+                            <div className="flex items-center gap-x-2">
+                                <input
+                                    type="date"
+                                    className="bg-black/20 border border-white/20 text-white text-sm rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-white/10 focus:border-white/60"
+                                    value={dateFilter}
+                                    onChange={(e) =>
+                                        setDateFilter(e.target.value)
+                                    }
+                                />
+                                <button
+                                    className="text-xs bg-white/10 hover:bg-white/20 text-white px-3 py-1 rounded-md transition ease-in-out"
+                                    onClick={() => setDateFilter("")}
+                                >
+                                    CLEAR
+                                </button>
+                            </div>
                         </div>
 
-                        <div className="w-full bg-white p-6 rounded-lg shadow">
-                            <h2 className="text-xl font-semibold mb-4 tracking-tight">Appointment Table</h2>
-
+                        {/* Table Section */}
+                        <div className="w-full bg-black/40 p-6 rounded-lg shadow">
                             <div className="flex justify-between items-center my-4 text-sm">
+                                <h2 className="text-xl font-semibold mb-4 tracking-tight text-white">
+                                    Appointment Table
+                                </h2>
 
-                                <div className="flex gap-x-2">
-                                    <input 
-                                        type="date" 
-                                        class="w-48 border-1 p-2 rounded-md"
-                                        value={dateFilter}
-                                        onChange={(e) => setDateFilter(e.target.value)}
-                                    /> 
-                                    <button className="text-xs bg-gray-100 hover:bg-gray-300 px-2 rounded-md transition ease-in-out" onClick={() => setDateFilter('')}>CLEAR</button>
-                                </div>
-                               
                                 <Pagination
                                     count={paginationLimit}
                                     size="small"
                                     page={page}
                                     onChange={(event, value) => setPage(value)}
+                                    sx={{
+                                        "& .MuiPaginationItem-root": {
+                                            color: "white",
+                                        },
+                                        "& .Mui-selected": {
+                                            color: "white !important",
+                                            backgroundColor:
+                                                "transparent !important",
+                                            fontWeight: "bold",
+                                            textDecoration: "underline",
+                                        },
+                                        "& .MuiPaginationItem-ellipsis": {
+                                            color: "white",
+                                        },
+                                    }}
                                 />
                             </div>
 
-                            <div className="overflow-x-auto min-h-[400px] max-h-[600px] w-full">
-                                <table className="min-w-full divide-y divide-gray-200">
-                                    <thead className="bg-gray-50">
-                                        <tr>
-                                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Name</th>
-                                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Service</th>
-                                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Additional Service</th>
-                                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Branch</th>
-                                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Barber</th>
-                                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Date</th>
-                                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Time</th>
-                                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Status</th>
+                            {/* Table */}
+                            <div className="overflow-x-auto h-[570px] w-full">
+                                <table className="min-w-full divide-y divide-black/20">
+                                    <thead className="bg-black/60 text-white">
+                                        <tr className="text-left text-xs font-medium uppercase tracking-tight">
+                                            <th className="px-4 py-3">Name</th>
+                                            <th className="px-4 py-3">Service</th>
+                                            <th className="px-4 py-3">
+                                                Additional Service
+                                            </th>
+                                            <th className="px-4 py-3">Branch</th>
+                                            <th className="px-4 py-3">Barber</th>
+                                            <th className="px-4 py-3">Date</th>
+                                            <th className="px-4 py-3">Time</th>
+                                            <th className="px-4 py-3">Status</th>
                                         </tr>
                                     </thead>
-                                    <tbody className="bg-white divide-y divide-gray-200">
-                                        {filteredAppointments.map((appointment) => (
-                                            <tr key={appointment._id}>
-                                                <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{appointment.customer?.lastName}, {appointment.customer?.firstName}</td>
-                                                <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{appointment.service?.name}</td>
-                                                <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight text-center">{appointment.additionalService?.name ? appointment.barber?.fullName : "N/A"}</td>
-                                                <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{appointment.branch?.name}</td>
-                                                <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{appointment.barber?.fullName?.trim() ? appointment.barber.fullName : "N/A"}</td>
-                                                <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{appointment?.scheduledDate?.split('T')[0]}</td>
-                                                <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{appointment?.scheduledTime}</td>
-                                                <td 
-                                                    className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight" 
-                                                    style={appointment.status === 'booked' ? { color: 'green' } : appointment.status === 'cancelled' || 'no show' ? { color: 'red' } : '' }
-                                                >
-                                                    {appointment?.status}
-                                                </td>
-                                            </tr>
-                                        ))}
+
+                                    <tbody className="bg-black/40 divide-y divide-black/20 text-sm text-white/90 tracking-tight">
+                                        {filteredAppointments.map(
+                                            (appointment) => (
+                                                <tr key={appointment._id}>
+                                                    <td className="px-4 py-4 whitespace-nowrap">
+                                                        {appointment.customer
+                                                            ? `${appointment.customer.lastName}, ${appointment.customer.firstName}`
+                                                            : "N/A"}
+                                                    </td>
+                                                    <td className="px-4 py-4 whitespace-nowrap">
+                                                        {appointment.service
+                                                            ?.name || "N/A"}
+                                                    </td>
+                                                    <td className="px-4 py-4 whitespace-nowrap text-center">
+                                                        {appointment
+                                                            .additionalService
+                                                            ?.name || "N/A"}
+                                                    </td>
+                                                    <td className="px-4 py-4 whitespace-nowrap">
+                                                        {appointment.branch
+                                                            ?.name || "N/A"}
+                                                    </td>
+                                                    <td className="px-4 py-4 whitespace-nowrap">
+                                                        {appointment.barber
+                                                            ?.fullName?.trim()
+                                                            ? appointment.barber
+                                                                  .fullName
+                                                            : "N/A"}
+                                                    </td>
+                                                    <td className="px-4 py-4 whitespace-nowrap">
+                                                        {appointment?.scheduledDate?.split(
+                                                            "T"
+                                                        )[0] || "N/A"}
+                                                    </td>
+                                                    <td className="px-4 py-4 whitespace-nowrap">
+                                                        {appointment?.scheduledTime ||
+                                                            "N/A"}
+                                                    </td>
+                                                    <td
+                                                        className="px-4 py-4 whitespace-nowrap"
+                                                        style={{
+                                                            color:
+                                                                appointment.status ===
+                                                                "booked"
+                                                                    ? "lightgreen"
+                                                                    : appointment.status ===
+                                                                          "cancelled" ||
+                                                                      appointment.status ===
+                                                                          "no show"
+                                                                    ? "red"
+                                                                    : "white",
+                                                        }}
+                                                    >
+                                                        {appointment?.status}
+                                                    </td>
+                                                </tr>
+                                            )
+                                        )}
                                     </tbody>
                                 </table>
                             </div>

@@ -7,7 +7,10 @@ import ProductModal from "../../components/modal/AddProductModal";
 import ProductSale from "../../components/modal/ProductSale";
 
 const Products = () => {
-    const baseUrl = import.meta.env.MODE === 'development' ? 'http://localhost:4001' : 'https://tototumbs.onrender.com';
+    const baseUrl = import.meta.env.MODE === 'development'
+        ? 'http://localhost:4001'
+        : 'https://tototumbs.onrender.com';
+
     const [productList, setProductList] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [page, setPage] = useState(1);
@@ -20,34 +23,28 @@ const Products = () => {
 
     const filteredProducts = useMemo(() => {
         return productList && productList.filter(product =>
-            product?.name.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
-            product?.price.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
-            product?.description.toString().toLowerCase().includes(searchTerm.toLowerCase())
+            product?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            product?.price?.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
+            product?.description?.toLowerCase().includes(searchTerm.toLowerCase())
         );
-    }, [productList, searchTerm]);  
-
+    }, [productList, searchTerm]);
 
     const handle_delete = async (e, id) => {
         e.preventDefault();
-
         const data = await delete_data(id, '/delete_product');
-
         if (data.deleted) {
             setProductList(prev => prev.filter(product => product._id !== id));
         }
-    }
+    };
 
     const handle_update = (data) => {
         setOnUpdate(true);
         setUpdatingData(data);
-    }
-
+    };
 
     useEffect(() => {
         const get_products = async () => {
             const data = await get_data('/products', page);
-        
-            //exclude the barber's password
             if (data) {
                 setProductList(data.products);
                 setPaginationLimit(data.pageCount);
@@ -57,86 +54,102 @@ const Products = () => {
     }, [page]);
 
     return (
-        <div className="flex min-h-screen">
+        <div className="text-white">
             <main className="p-4 w-full">
                 <div className="flex flex-col gap-6">
                     <div className="space-y-4">
-                        <div className="w-full bg-white p-4 rounded-lg shadow flex flex-col sm:flex-row justify-between items-center gap-4">
+                        {/* Search + Add button */}
+                        <div className="w-full bg-black/40 p-4 rounded-lg shadow-lg flex flex-col sm:flex-row justify-between items-center gap-4 backdrop-blur-md">
                             <div className="relative w-full sm:w-auto flex-grow">
                                 <input 
                                     type="text"
-                                    placeholder="Search employees (Name, Role, Email)..."
-                                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full text-sm tracking-tight focus:outline-none focus:ring-1 focus:ring-gray-500 focus:border-gray-500"
+                                    placeholder="Search products (Name, Price, Description)..."
+                                    className="w-full pl-10 pr-4 py-2 border border-white/10 bg-white/10 rounded-full text-sm text-white placeholder-white/60 tracking-tight focus:outline-none focus:ring-1 focus:ring-white/40"
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
                                 />
-                                <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                                <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/60" />
                             </div>
 
                             <button 
-                                className="relative flex items-center gap-2 bg-gray-700 py-2 px-6 text-white rounded-full tracking-tighter text-sm"
+                                className="flex items-center gap-2 bg-white/10 hover:bg-white/20 transition-all py-2 px-6 rounded-full text-white text-sm tracking-tighter"
                                 onClick={() => setAddingProduct(true)}
                             >                          
-                                Add Product 
+                                <FaUserPlus /> Add Product 
                             </button>
                         </div>
 
-
-                        <div className="bg-white p-6 rounded-lg shadow">
+                        {/* Product Catalog */}
+                        <div className="bg-black/40 p-6 rounded-lg shadow-lg backdrop-blur-md">
                             <div className="flex flex-row justify-between mb-4">
-                                <h2 className="text-2xl font-semibold mb-4 tracking-tight">Product Catalog</h2>
+                                <h2 className="text-2xl font-semibold tracking-tight">Product Catalog</h2>
                                 <Pagination
                                     count={paginationLimit}
                                     size="small"
                                     page={page}
                                     onChange={(event, value) => setPage(value)}
+                                    sx={{
+                                        "& .MuiPaginationItem-root": {
+                                            color: "white",
+                                        },
+                                        "& .Mui-selected": {
+                                            backgroundColor: "rgba(255,255,255,0.2) !important",
+                                        },
+                                    }}
                                 />
                             </div>
 
+                            {/* Product Cards */}
                             <div className="min-h-[420px] w-full flex flex-row flex-wrap items-center justify-center gap-4">
                                 {filteredProducts.map((product) => (
-                                    <div className="flex flex-col bg-gray-100 items-center p-4 w-[220px] shadow-md rounded-lg" key={product._id}>
-                                        <img src={`${baseUrl}/${product.imagePath}`} alt="" className="w-[180px] h-[200px] rounded-lg mb-3 shadow-md"/>
+                                    <div 
+                                        key={product._id}
+                                        className="flex flex-col bg-white/10 items-center p-4 w-[220px] shadow-lg rounded-lg hover:bg-white/20 transition-all"
+                                    >
+                                        <img 
+                                            src={`${baseUrl}/${product.imagePath}`} 
+                                            alt={product.name} 
+                                            className="w-[180px] h-[200px] rounded-lg mb-3 shadow-md object-cover"
+                                        />
 
-                                        <div className="tracking-tighter" key={product._id}>
+                                        <div className="tracking-tighter text-center">
                                             <h1 className="text-sm font-bold">{product.name}</h1>
-                                            <h3 className="text-sm font-semibold">P {product.price}</h3>
-                                            <p className="text-xs">{product.description}</p>
+                                            <h3 className="text-sm font-semibold text-orange-400">₱ {product.price}</h3>
+                                            <p className="text-xs text-white/70 line-clamp-3">{product.description}</p>
 
-                                            <div className="flex mt-3 gap-2">
+                                            <div className="flex justify-center mt-3 gap-3">
                                                 <button
                                                     onClick={() => handle_update(product)}
-                                                    className="text-gray-500 hover:text-gray-800"
+                                                    className="text-white/70 hover:text-orange-400 transition-colors"
                                                 >       
-                                                    <FaEdit size={22} />
+                                                    <FaEdit size={20} />
                                                 </button>
                                                 <button
                                                     onClick={(e) => handle_delete(e, product._id)}
-                                                    className="text-gray-500 hover:text-gray-800"
+                                                    className="text-white/70 hover:text-red-400 transition-colors"
                                                 >
-                                                    <FaTrash size={22} />
+                                                    <FaTrash size={20} />
                                                 </button>
                                                 <button
                                                     onClick={() => {
-                                                        setProductSaleOpen(true)
-                                                        setProductToView(product._id)
+                                                        setProductSaleOpen(true);
+                                                        setProductToView(product._id);
                                                     }}
-                                                    className="text-gray-500 hover:text-gray-800"
+                                                    className="text-white/70 hover:text-blue-400 transition-colors"
                                                 >
-                                                    <FaClipboardList size={22} />
+                                                    <FaClipboardList size={20} />
                                                 </button>
                                             </div>
                                         </div>
                                     </div>
                                 ))}
-                                
                             </div>
                         </div>
-                        
                     </div>
                 </div>
             </main>
 
+            {/* Add Product Modal */}
             {addingProduct && 
                 <ProductModal 
                     setUpdatedData={setProductList}
@@ -146,6 +159,7 @@ const Products = () => {
                 />
             }
 
+            {/* Update Product Modal */}
             {onUpdate && updatingData &&
                 <ProductModal 
                     dataToUpdate={updatingData} 
@@ -155,6 +169,7 @@ const Products = () => {
                 />
             }
 
+            {/* View Sales */}
             <ProductSale 
                 onClose={() => setProductSaleOpen(false)} 
                 isOpen={productSaleOpen} 
