@@ -1,30 +1,27 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useState } from "react";
 import { FaSearch, FaEdit, FaBan } from "react-icons/fa";
 import Pagination from "@mui/material/Pagination";
-import { get_data } from "../../services/GetMethod";
 import { update_data } from "../../services/PutMethod";
+import { useFetch } from "../../hooks/useFetch";
+import { useDebounce } from "../../hooks/useDebounce";
 import CustomerUpdateModal from "../../components/modal/UpdateCustomerModal";
 import TableLoading from "../../components/animations/TableLoading";
 
 const Customers = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [page, setPage] = useState(1);
-    const [paginationLimit, setPaginationLimit] = useState(1);
-    const [customersList, setCustomersList] = useState([]);
     const [onUpdate, setOnUpdate] = useState(false);
     const [updatingData, setUpdatingData] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const debouncedSearch = useDebounce(searchTerm, 1000);
+    
+    const { data, loading, error, setData } = useFetch(
+        `/get_customers?search=${debouncedSearch}`,
+        page,
+        null,
+        [page, debouncedSearch]
+    );
 
-    const filteredCustomers = useMemo(() => {
-        return customersList.filter((customer) =>
-            customer?.lastName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            customer?.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            customer?.phone?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            customer?.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            customer?.status?.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-    }, [customersList, searchTerm]);
+    const paginationLimit = data?.pageCount || 1;
 
     const handle_disable = async (id) => {
         if (!window.confirm("Are you sure you want to disable this customer?")) return;
@@ -32,7 +29,7 @@ const Customers = () => {
         try {
             const data = await update_data(`/disable_customer/${id}`);
             if (data.customer) {
-                setCustomersList((prev) =>
+                setData((prev) =>
                     prev.map((customer) => (customer._id === id ? data.customer : customer))
                 );
             }
@@ -40,29 +37,6 @@ const Customers = () => {
             console.error("Error disabling customer:", error);
         }
     };
-
-    const handle_update = (data) => {
-        setOnUpdate(true);
-        setUpdatingData(data);
-    };
-
-    useEffect(() => {
-        const get_customers = async () => {
-            try {
-                const data = await get_data("/get_customers", page);
-                if (data) {
-                    setCustomersList(data.customers);
-                    setPaginationLimit(data.pageCount);
-                }
-            } catch (err) {
-                setError("Error fetching customers.");
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        get_customers();
-    }, [page]);
 
     if (loading) return <TableLoading />;
     if (error) return <p className="p-4 text-red-500">{error}</p>;
@@ -125,7 +99,7 @@ const Customers = () => {
                                     </thead>
 
                                     <tbody className="bg-black/40 divide-y divide-black/20 text-sm text-white/90 tracking-tight">
-                                        {filteredCustomers.map((customer) => (
+                                        {data && data.customers?.map((customer) => (
                                             <tr key={customer._id}>
                                                 <td className="px-4 py-4 whitespace-nowrap">
                                                     {customer?.lastName}, {customer?.firstName}
@@ -151,7 +125,10 @@ const Customers = () => {
                                                     <div className="flex justify-center items-center gap-3">
                                                         <button
                                                             className="text-white/70 hover:text-white"
-                                                            onClick={() => handle_update(customer)}
+                                                            onClick={() => {
+                                                                setOnUpdate(true);
+                                                                setUpdatingData(customer);
+                                                            }}
                                                         >
                                                             <FaEdit size={17} />
                                                         </button>
@@ -177,7 +154,7 @@ const Customers = () => {
                 <CustomerUpdateModal
                     currentData={updatingData}
                     onCancel={setOnUpdate}
-                    setUpdatedData={setCustomersList}
+                    setUpdatedData={setData}
                     route={"/update_customer"}
                 />
             )}

@@ -128,12 +128,41 @@ const delete_service = async (req, res) => {
  */
 const get_services = async (req, res) => {
     try {
+        console.log(req.query.search);
         const page = parseInt(req.query.page) || 1;
+        const search = req.query.search || '';
         const limit = 20;
         const skip = (page - 1) * limit;
 
-        const totalCount = await Service.countDocuments(); // Corrected from Request.countDocuments()
-        const services = await Service.find()
+        const searchCondition = search
+            ? {
+                $or: [
+                    { name: { $regex: search, $options: 'i' } },       
+                    { serviceType: { $regex: search, $options: 'i' } },
+                    {
+                        $expr: {
+                            $regexMatch: {
+                            input: { $toString: "$duration" },
+                            regex: search,
+                            options: "i"
+                            }
+                        }
+                    },
+                    {
+                        $expr: {
+                            $regexMatch: {
+                            input: { $toString: "$price" },
+                            regex: search,
+                            options: "i"
+                            }
+                        }
+                    }
+                ],
+            }
+        : {};
+
+        const totalCount = await Service.countDocuments();
+        const services = await Service.find(searchCondition)
             .sort({ createdAt: -1 })
             .skip(skip)
             .limit(limit);

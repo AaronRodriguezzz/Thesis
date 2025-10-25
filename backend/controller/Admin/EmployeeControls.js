@@ -9,8 +9,22 @@ const EmployeeAccount = require('../../models/EmployeeAccount');
 const get_employees = async (req, res) => {
     try {
 
+        const search = req.query?.search || '';
+
+        const searchCondition = search
+            ? {
+                $or: [
+                    { fullName: { $regex: search, $options: 'i' } },       
+                    { email: { $regex: search, $options: 'i' } },
+                    { branchAssigned: { $regex: search, $options: 'i' } },
+                    { role: { $regex: search, $options: 'i' } },
+                    { status: { $regex: search, $options: 'i' } },
+                ],
+            }
+        : {};
+
         // Fetch customers with pagination, sorted by most recent
-        const employees = await EmployeeAccount.find()
+        const employees = await EmployeeAccount.find(searchCondition)
             .select('-password') // Exclude password field
             .populate('branchAssigned')
             .sort({ createdAt: -1 })

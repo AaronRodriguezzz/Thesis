@@ -1,71 +1,28 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { FaSearch } from "react-icons/fa";
 import Pagination from "@mui/material/Pagination";
-import { get_data } from "../../services/GetMethod";
+import { useFetch } from "../../hooks/useFetch";
 import TableLoading from "../../components/animations/TableLoading";
+import { useDebounce } from "../../hooks/useDebounce"; // 👈 Import debounce hook
 
 const Appointments = () => {
     const [searchTerm, setSearchTerm] = useState("");
+    const debouncedSearch = useDebounce(searchTerm, 1000); 
     const [page, setPage] = useState(1);
-    const [paginationLimit, setPaginationLimit] = useState(1);
-    const [appointmentList, setAppointmentList] = useState([]);
     const [dateFilter, setDateFilter] = useState("");
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
 
-    const filteredAppointments = useMemo(() => {
-        return appointmentList?.filter(
-            (appointment) =>
-                appointment.customer?.lastName
-                    ?.toLowerCase()
-                    .includes(searchTerm.toLowerCase()) ||
-                appointment.customer?.firstName
-                    ?.toLowerCase()
-                    .includes(searchTerm.toLowerCase()) ||
-                appointment.service?.name
-                    ?.toLowerCase()
-                    .includes(searchTerm.toLowerCase()) ||
-                appointment.additionalService?.name
-                    ?.toLowerCase()
-                    .includes(searchTerm.toLowerCase()) ||
-                appointment.branch?.name
-                    ?.toLowerCase()
-                    .includes(searchTerm.toLowerCase()) ||
-                appointment.barber?.fullName
-                    ?.toLowerCase()
-                    .includes(searchTerm.toLowerCase()) ||
-                appointment.scheduledDate
-                    ?.toLowerCase()
-                    .includes(searchTerm.toLowerCase()) ||
-                appointment.scheduledTime
-                    ?.toLowerCase()
-                    .includes(searchTerm.toLowerCase())
-        );
-    }, [appointmentList, searchTerm]);
+    let endpoint = `/all_appointments?page=${page}`;
+    if (debouncedSearch) endpoint += `&search=${debouncedSearch}`;
+    if (dateFilter) endpoint += `&date=${dateFilter}`;
 
-    useEffect(() => {
-        const getAppointments = async () => {
-            try {
-                const data = await get_data(
-                    dateFilter !== ""
-                        ? `/all_appointments?date=${dateFilter}`
-                        : "/all_appointments",
-                    page
-                );
+    const { data, loading, error } = useFetch(
+        `/all_appointments?search=${debouncedSearch}&date=${dateFilter}`,
+        page,
+        null,
+        [page, debouncedSearch, dateFilter]
+    );
 
-                if (data) {
-                    setAppointmentList(data?.appointments || []);
-                    setPaginationLimit(data?.pageCount || 1);
-                }
-            } catch (err) {
-                setError("Error fetching appointments.");
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        getAppointments();
-    }, [page, dateFilter]);
+    const paginationLimit = useState(data?.pageCount || 1);
 
     if (loading) return <TableLoading />;
     if (error) return <p className="p-4 text-red-500">{error}</p>;
@@ -157,7 +114,7 @@ const Appointments = () => {
                                     </thead>
 
                                     <tbody className="bg-black/40 divide-y divide-black/20 text-sm text-white/90 tracking-tight">
-                                        {filteredAppointments.map(
+                                        {data && data.appointments?.map(
                                             (appointment) => (
                                                 <tr key={appointment._id}>
                                                     <td className="px-4 py-4 whitespace-nowrap">

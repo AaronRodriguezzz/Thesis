@@ -10,6 +10,7 @@ const getAllAppointments = async (req, res) => {
     try {
         console.log(req.query.page);
         const page = parseInt(req.query.page) || 1;
+        const search = req.query?.search || '';
         const date = req.query.date
         const limit = req.query.limit || 10;
         const skip = (page - 1) * limit;
@@ -39,7 +40,28 @@ const getAllAppointments = async (req, res) => {
             .skip(skip)
             .limit(limit);
 
-        res.status(200).json({ appointments, pageCount});
+        let filteredAppointments = appointments;
+
+        if (search) {
+            const lower = search.toLowerCase();
+            filteredAppointments = appointments.filter((a) => {
+
+                const customerName = a.customer?.name?.toLowerCase() || "";
+                const serviceName = a.service?.name?.toLowerCase() || "";
+                const status = a.status?.toLowerCase() || "";
+
+                return (
+                    customerName.includes(lower) ||
+                    serviceName.includes(lower) ||
+                    status.includes(lower) ||
+                    a.uniqueCode.includes(lower) ||
+                    a.paymentMethod.includes(lower) ||
+                    a.status.includes(lower)
+                );
+            });
+        }
+
+        res.status(200).json({ appointments: filteredAppointments, pageCount});
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Error fetching appointments', error: err.message });

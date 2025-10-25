@@ -1,150 +1,170 @@
-import React, { useEffect, useState, useMemo } from "react";
-import { FaUserPlus, FaSearch, FaEdit, FaTrash, FaClipboardList } from "react-icons/fa";
+import React, { useState } from "react";
+import { FaUserPlus, FaSearch, FaEdit, FaTrash } from "react-icons/fa";
 import Pagination from "@mui/material/Pagination";
-import { get_data } from "../../services/GetMethod";
 import { delete_data } from "../../services/DeleteMethod";
+import { useFetch } from "../../hooks/useFetch";
+import { useDebounce } from "../../hooks/useDebounce";
 import UpdateBranchModal from "../../components/modal/UpdateBranchModal";
 import NewBranch from "../../components/modal/AddBranchModal";
+import TableLoading from "../../components/animations/TableLoading";
 
 const Branches = () => {
-    const [branchList, setBranchList] = useState([]);
-    const [searchTerm, setSearchTerm] = useState("");
     const [page, setPage] = useState(1);
-    const [paginationLimit, setPaginationLimit] = useState(1);
     const [onUpdate, setOnUpdate] = useState(false);
     const [updatingData, setUpdatingData] = useState(null);
     const [addingBranch, setAddingBranch] = useState(false);
+    const [searchTerm, setSearchTerm] = useState("");
+    const debouncedSearch = useDebounce(searchTerm, 1000);
 
-    const filteredBranch = useMemo(() => {
-        return branchList && branchList.filter(branch =>
-            branch?.name.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
-            branch?.address.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
-            branch?.phone.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
-            branch?.numberOfBarber.toString().toLowerCase().includes(searchTerm.toLowerCase())
+    const { data, loading, error, setData } = useFetch(
+        `/get_branches?search=${debouncedSearch}`,
+        page,
+        null,
+        [page, debouncedSearch]
+    );
+
+    const paginationLimit = data?.pageCount || 1;
+
+    const handleDelete = async (id) => {
+        if (!window.confirm("Are you sure you want to delete this branch?")) return;
+        const res = await delete_data(id, "/delete_branch");
+        if (res?.deleted)
+            setData((prev) => prev.filter((branch) => branch._id !== id));
+    };
+
+    if (loading) return <TableLoading />;
+    if (error)
+        return (
+            <p className="p-4 text-red-500 font-medium">
+                Error loading data. Please try again later.
+            </p>
         );
-    }, [branchList, searchTerm]);  
-
-
-    const handle_delete = async (id) => {
-        const data = await delete_data(id, '/delete_branch');
-
-        if (data.deleted) {
-            setBranchList(prev => prev.filter(branch => branch._id !== id));
-        }
-    }
-
-    const handle_update = async (data) => {
-        setOnUpdate(true);
-        setUpdatingData(data);
-    }
-
-
-    useEffect(() => {
-        const get_branches = async () => {
-            const data = await get_data('/get_branches', page);
-        
-            //exclude the barber's password
-            if (data) {
-                setBranchList(data?.branches || []);
-                setPaginationLimit(data?.pageCount || 1);
-            }
-        };  
-        get_branches();
-    }, [page]);
 
     return (
         <div>
             <main className="p-4 w-full">
                 <div className="flex flex-col gap-6">
-                    <div className="space-y-4">
-                        <div className="w-full bg-white p-4 rounded-lg shadow flex flex-col sm:flex-row justify-between items-center gap-4">
-                            <div className="relative w-full sm:w-auto flex-grow">
-                                <input 
-                                    type="text"
-                                    placeholder="Search employees (Name, Role, Email)..."
-                                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full text-sm tracking-tight focus:outline-none focus:ring-1 focus:ring-gray-500 focus:border-gray-500"
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                />
-                                <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                            </div>
-
-                            <button 
-                                className="flex items-center gap-2 bg-gray-700 py-2 px-4 text-white rounded-full tracking-tighter text-sm"
-                                onClick={() => setAddingBranch(true)}
-                            > 
-                                <FaUserPlus /> 
-                                Add Branch 
-                            </button>
+                    {/* 🔍 Search + Add Button */}
+                    <div className="w-full bg-black/40 border border-white/10 p-4 rounded-lg flex flex-col sm:flex-row justify-between items-center gap-4 shadow">
+                        <div className="relative w-full sm:w-auto flex-grow">
+                            <input
+                                type="text"
+                                placeholder="Search branches (Name, Address, Phone)..."
+                                className="w-full pl-10 pr-4 py-2 bg-black/20 border border-white/20 rounded-full text-sm text-white placeholder-white/60 tracking-tight focus:outline-none focus:ring-1 focus:ring-white/30 focus:border-white/30"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                            <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/50" />
                         </div>
 
+                        <button
+                            onClick={() => setAddingBranch(true)}
+                            className="flex items-center gap-2 bg-white/10 hover:bg-white/20 py-2 px-4 text-white rounded-full tracking-tighter text-sm transition ease-in-out"
+                        >
+                            <FaUserPlus /> Add Branch
+                        </button>
+                    </div>
 
-                        <div className="bg-white p-6 rounded-lg shadow">
-                            <div className="flex flex-row justify-between mb-4">
-                                <h2 className="text-2xl font-semibold mb-4 tracking-tight">Branch Table</h2>
-                                <Pagination
-                                    count={paginationLimit}
-                                    size="small"
-                                    page={page}
-                                    onChange={(event, value) => setPage(value)}
-                                />
-                            </div>
+                    {/* 📋 Table Section */}
+                    <div className="w-full bg-black/40 border border-white/10 p-6 rounded-lg shadow text-white">
+                        <div className="flex justify-between items-center my-4 text-sm">
+                            <h2 className="text-xl font-semibold mb-4 tracking-tight">
+                                Branch Table
+                            </h2>
+                            <Pagination
+                                count={paginationLimit}
+                                size="small"
+                                page={page}
+                                onChange={(event, value) => setPage(value)}
+                            />
+                        </div>
 
-                            <div className="min-h-[550px] w-full flex flex-row flex-wrap items-start justify-center gap-4">
-                                <table className="min-w-full divide-y divide-gray-200">
-                                    <thead className="bg-gray-50">
+                        <div className="overflow-auto h-[570px] w-full">
+                            <table className="min-w-full divide-y divide-black/20">
+                                <thead className="bg-black/60 text-white">
+                                    <tr className="text-left text-xs font-medium uppercase tracking-tight">
+                                        <th className="px-4 py-3">Branch Name</th>
+                                        <th className="px-4 py-3">Address</th>
+                                        <th className="px-4 py-3">Phone</th>
+                                        <th className="px-4 py-3">Number of Barbers</th>
+                                        <th className="px-4 py-3 text-center">Action</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody className="bg-black/40 divide-y divide-black/20 text-sm text-white/90 tracking-tight">
+                                    {data && data.branches?.length > 0 ? (
+                                        data.branches.map((branch) => (
+                                            <tr
+                                                key={branch._id}
+                                                className="hover:bg-white/10 transition-colors"
+                                            >
+                                                <td className="px-4 py-4 whitespace-nowrap">
+                                                    {branch?.name}
+                                                </td>
+                                                <td className="px-4 py-4 whitespace-nowrap">
+                                                    {branch?.address}
+                                                </td>
+                                                <td className="px-4 py-4 whitespace-nowrap">
+                                                    {branch?.phone}
+                                                </td>
+                                                <td className="px-4 py-4 whitespace-nowrap text-center">
+                                                    {branch?.numberOfBarber || 0}
+                                                </td>
+                                                <td className="px-4 py-2 text-center">
+                                                    <div className="flex justify-center items-center gap-3">
+                                                        <button
+                                                            className="text-white/70 hover:text-white"
+                                                            onClick={() => {
+                                                                setOnUpdate(true);
+                                                                setUpdatingData(branch);
+                                                            }}
+                                                        >
+                                                            <FaEdit size={17} />
+                                                        </button>
+                                                        <button
+                                                            className="text-red-400 hover:text-red-300"
+                                                            onClick={() => handleDelete(branch._id)}
+                                                        >
+                                                            <FaTrash size={17} />
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))
+                                    ) : (
                                         <tr>
-                                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Branch Name</th>
-                                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Address</th>
-                                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Phone</th>
-                                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Number of Barbers</th>
-                                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-tight">Action</th>
+                                            <td
+                                                colSpan="5"
+                                                className="text-center py-6 text-white/70"
+                                            >
+                                                No branches found.
+                                            </td>
                                         </tr>
-                                     </thead>
-                                        <tbody className="bg-white divide-y divide-gray-200">
-                                            {filteredBranch.map((branch) => (
-                                                <tr key={branch._id}>
-                                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{branch?.name}</td>
-                                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{branch?.address} minutes</td>
-                                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight text-left">{branch?.phone}</td>
-                                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight text-left">{branch?.numberOfBarber} </td>
-                                                    <td className="px-4 py-2 text-center">
-                                                        <div className="flex justify-left items-center gap-2">
-                                                            <button className="text-gray-600 hover:text-gray-800" onClick={() => handle_update(branch)}>
-                                                                <FaEdit size={17} />
-                                                            </button>
-                                                            <button className="text-gray-600 hover:text-gray-800" onClick={() => handle_delete(branch?._id)}>
-                                                                <FaTrash size={17} />
-                                                            </button>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                            </div>
+                                    )}
+                                </tbody>
+                            </table>
                         </div>
-                        
                     </div>
                 </div>
             </main>
 
-            {onUpdate && updatingData && 
-                <UpdateBranchModal 
-                    currentData={updatingData} 
-                    onCancel={setOnUpdate} 
-                    setUpdatedData={setBranchList}
-                    route={'/update_branch'}
+            {/* 🧩 Modals */}
+            {onUpdate && updatingData && (
+                <UpdateBranchModal
+                    currentData={updatingData}
+                    onCancel={setOnUpdate}
+                    setUpdatedData={setData}
+                    route="/update_branch"
                 />
-            }
+            )}
 
-            {addingBranch && 
-                <NewBranch 
-                    setUpdatedData={setBranchList}
-                    onCancel={setAddingBranch} 
-                    route={'/new_branch'}
+            {addingBranch && (
+                <NewBranch
+                    setUpdatedData={setData}
+                    onCancel={setAddingBranch}
+                    route="/new_branch"
                 />
-            }
+            )}
         </div>
     );
 };

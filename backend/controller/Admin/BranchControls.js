@@ -8,20 +8,24 @@ const Branch = require('../../models/Branch');
 const get_branches = async (req, res) => {
     
     try {
-        // Get the current page number from the query; default to 1
         const page = parseInt(req.query.page) || 1;
-
-        // Set how many customers to return per page
+        const search = req.query?.search || '' 
         const limit = 10;
-
-        // Calculate how many customers to skip
         const skip = (page - 1) * limit;
- 
-        // Count total number of customers (for pagination calculation)
-        const totalCount = await Branch.countDocuments(); // ❗ Fixed: was mistakenly using Request
+        const totalCount = await Branch.countDocuments();
+
+        const searchCondition = search
+            ? {
+                $or: [
+                    { name: { $regex: search, $options: 'i' } },       
+                    { address: { $regex: search, $options: 'i' } },
+                    { status: { $regex: search, $options: 'i' } },
+                ],
+            }
+        : {};
 
         // Fetch customers with pagination, sorted by most recent
-        const branches = await Branch.find()
+        const branches = await Branch.find(searchCondition)
             .sort({ createdAt: -1 }) // Show latest first
             .skip(skip)
             .limit(limit);

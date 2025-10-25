@@ -1,119 +1,99 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useState } from "react";
 import { FaUserPlus, FaSearch, FaEdit, FaTrash } from "react-icons/fa";
 import Pagination from "@mui/material/Pagination";
-import { get_data } from "../../services/GetMethod";
 import { delete_data } from "../../services/DeleteMethod";
+import { useFetch } from "../../hooks/useFetch";
+import { useDebounce } from "../../hooks/useDebounce";
+import TableLoading from "../../components/animations/TableLoading";
 import UpdateEmployee from "../../components/modal/UpdateEmployeeModal";
 import NewEmployee from "../../components/modal/AddEmployeeModal";
-import TableLoading from "../../components/animations/TableLoading";
 
 const Employees = () => {
-    const [employeeList, setEmployeeList] = useState([]);
-    const [searchTerm, setSearchTerm] = useState("");
+    const [page, setPage] = useState(1);
     const [onUpdate, setOnUpdate] = useState(false);
     const [updatingData, setUpdatingData] = useState(null);
     const [addingEmployee, setAddingEmployee] = useState(false);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [searchTerm, setSearchTerm] = useState("");
+    const debouncedSearch = useDebounce(searchTerm, 1000);
 
-    const filteredEmployees = useMemo(() => {
-        if (!employeeList) return [];
-        const term = searchTerm.toLowerCase().trim();
-        if (!term) return employeeList;
+    // Use useFetch with search + pagination
+    const { data, loading, error, setData } = useFetch(
+        `/employees?search=${debouncedSearch}`,
+        page,
+        null,
+        [page, debouncedSearch]
+    );
 
-        return employeeList.filter((e) =>
-            [e?.email, e?.fullName, e?.branchAssigned?.name, e?.role].some(
-                (field) =>
-                    String(field || "").toLowerCase().includes(term)
-            )
-        );
-    }, [employeeList, searchTerm]);
+    const paginationLimit = data?.pageCount || 1;
 
-    const handle_delete = async (id) => {
+    const handleDelete = async (id) => {
         if (!window.confirm("Are you sure you want to delete this employee?")) return;
-        try {
-            const data = await delete_data(id, "/delete_employee");
-            if (data.deleted) {
-                setEmployeeList((prev) =>
-                    prev.filter((employee) => employee._id !== id)
-                );
-            }
-        } catch (err) {
-            console.error("Error deleting employee:", err);
-        }
+        const res = await delete_data(id, "/delete_employee");
+        if (res?.deleted) setData((prev) => prev.filter((e) => e._id !== id));
     };
-
-    const handle_update = (data) => {
-        setOnUpdate(true);
-        setUpdatingData(data);
-    };
-
-    useEffect(() => {
-        const get_employees = async () => {
-            try {
-                const data = await get_data("/employees");
-                if (data) {
-                    setEmployeeList(data.employees);
-                }
-            } catch (err) {
-                setError("Error fetching employees.");
-            } finally {
-                setLoading(false);
-            }
-        };
-        get_employees();
-    }, []);
 
     if (loading) return <TableLoading />;
-    if (error) return <p className="p-4 text-red-500">{error}</p>;
+    if (error)
+        return (
+            <p className="p-4 text-red-500 font-medium">
+                Error loading data. Please try again later.
+            </p>
+        );
 
     return (
         <div>
             <main className="p-4 w-full">
                 <div className="flex flex-col gap-6">
-                    <div className="space-y-4">
-                        {/* Search Bar + Add Button */}
-                        <div className="w-full bg-black/40 border border-black/20 p-4 rounded-lg shadow flex flex-col sm:flex-row justify-between items-center gap-4">
-                            <div className="relative w-full sm:w-auto flex-grow">
-                                <input
-                                    type="text"
-                                    placeholder="Search employees (Name, Role, Email)..."
-                                    className="w-full pl-10 pr-4 py-2 bg-black/20 rounded-full text-sm tracking-tight text-white placeholder-white/60 border border-white/20 focus:outline-none focus:ring-1 focus:ring-white/10 focus:border-white/60"
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                />
-                                <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/60" />
-                            </div>
-
-                            <button
-                                className="flex items-center gap-2 bg-white/10 hover:bg-white/20 py-2 px-4 text-white rounded-full tracking-tighter text-sm transition ease-in-out"
-                                onClick={() => setAddingEmployee(true)}
-                            >
-                                <FaUserPlus /> Add Employee
-                            </button>
+                    {/* 🔍 Search + Add */}
+                    <div className="w-full bg-black/40 border border-white/10 p-4 rounded-lg flex flex-col sm:flex-row justify-between items-center gap-4 shadow">
+                        <div className="relative w-full sm:w-auto flex-grow">
+                            <input
+                                type="text"
+                                placeholder="Search employees (Name, Role, Email)..."
+                                className="w-full pl-10 pr-4 py-2 bg-black/20 border border-white/20 rounded-full text-sm text-white placeholder-white/60 tracking-tight focus:outline-none focus:ring-1 focus:ring-white/30 focus:border-white/30"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                            <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/50" />
                         </div>
 
-                        {/* Table Section */}
-                        <div className="w-full bg-black/40 p-6 rounded-lg shadow">
-                            <div className="flex justify-between items-center my-4 text-sm">
-                                <h2 className="text-xl font-semibold mb-4 tracking-tight text-white">
-                                    Employees Table
-                                </h2>
-                            </div>
+                        <button
+                            onClick={() => setAddingEmployee(true)}
+                            className="flex items-center gap-2 bg-white/10 hover:bg-white/20 py-2 px-4 text-white rounded-full tracking-tighter text-sm transition ease-in-out"
+                        >
+                            <FaUserPlus /> Add Employee
+                        </button>
+                    </div>
 
-                            <div className="overflow-auto h-[550px] w-full">
-                                <table className="min-w-full divide-y divide-black/20">
-                                    <thead className="bg-black/60 text-white">
-                                        <tr className="text-left text-xs font-medium uppercase tracking-tight">
-                                            <th className="px-4 py-3">Full Name</th>
-                                            <th className="px-4 py-3">Email</th>
-                                            <th className="px-4 py-3">Branch Assigned</th>
-                                            <th className="px-4 py-3">Role</th>
-                                            <th className="px-4 py-3 text-center">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="bg-black/40 divide-y divide-black/20 text-sm text-white/90 tracking-tight">
-                                        {filteredEmployees.map((employee) => (
+                    {/* 📋 Employees Table */}
+                    <div className="w-full bg-black/40 border border-white/10 p-6 rounded-lg shadow text-white">
+                        <div className="flex justify-between items-center my-4 text-sm">
+                            <h2 className="text-xl font-semibold mb-4 tracking-tight">
+                                Employees Table
+                            </h2>
+                            <Pagination
+                                count={paginationLimit}
+                                size="small"
+                                page={page}
+                                onChange={(event, value) => setPage(value)}
+                            />
+                        </div>
+
+                        <div className="overflow-auto h-[550px] w-full">
+                            <table className="min-w-full divide-y divide-black/20">
+                                <thead className="bg-black/60 text-white">
+                                    <tr className="text-left text-xs font-medium uppercase tracking-tight">
+                                        <th className="px-4 py-3">Full Name</th>
+                                        <th className="px-4 py-3">Email</th>
+                                        <th className="px-4 py-3">Branch Assigned</th>
+                                        <th className="px-4 py-3">Role</th>
+                                        <th className="px-4 py-3 text-center">Action</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody className="bg-black/40 divide-y divide-black/20 text-sm text-white/90 tracking-tight">
+                                    {data && data.employees?.length > 0 ? (
+                                        data.employees.map((employee) => (
                                             <tr
                                                 key={employee._id}
                                                 className="hover:bg-white/10 transition-colors"
@@ -132,8 +112,8 @@ const Employees = () => {
                                                     style={{
                                                         color:
                                                             employee?.role === "Barber"
-                                                                ? "lightgreen"
-                                                                : "lightblue",
+                                                                ? "#22c55e"
+                                                                : "#3b82f6",
                                                     }}
                                                 >
                                                     {employee?.role || "N/A"}
@@ -142,14 +122,17 @@ const Employees = () => {
                                                     <div className="flex justify-center items-center gap-3">
                                                         <button
                                                             className="text-white/70 hover:text-white"
-                                                            onClick={() => handle_update(employee)}
+                                                            onClick={() => {
+                                                                setOnUpdate(true);
+                                                                setUpdatingData(employee);
+                                                            }}
                                                         >
                                                             <FaEdit size={17} />
                                                         </button>
                                                         <button
                                                             className="text-red-400 hover:text-red-300"
                                                             onClick={() =>
-                                                                handle_delete(employee._id)
+                                                                handleDelete(employee._id)
                                                             }
                                                         >
                                                             <FaTrash size={17} />
@@ -157,30 +140,38 @@ const Employees = () => {
                                                     </div>
                                                 </td>
                                             </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td
+                                                colSpan="5"
+                                                className="text-center py-6 text-white/70"
+                                            >
+                                                No employees found.
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
             </main>
 
-            {/* Modals */}
             {onUpdate && updatingData && (
                 <UpdateEmployee
                     currentData={updatingData}
                     onCancel={setOnUpdate}
-                    setUpdatedData={setEmployeeList}
-                    route={"/update_employee"}
+                    setUpdatedData={setData}
+                    route="/update_employee"
                 />
             )}
 
             {addingEmployee && (
                 <NewEmployee
-                    setUpdatedData={setEmployeeList}
+                    setUpdatedData={setData}
                     onCancel={setAddingEmployee}
-                    route={"/new_employee"}
+                    route="/new_employee"
                 />
             )}
         </div>

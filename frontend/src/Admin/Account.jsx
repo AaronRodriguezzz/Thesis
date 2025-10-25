@@ -5,7 +5,7 @@ import { CustomAlert } from "../../components/modal/CustomAlert";
 import { LogOut, User, Lock, Edit3, Save } from "lucide-react";
 
 const AdminProfilePage = () => {
-  const { user, setUser, logout } = useAuth();
+  const { user, setUser } = useAuth();
   const [editMode, setEditMode] = useState(false);
   const [changingPassMode, setChangingPassMode] = useState(false);
   const [loading, setLoading] = useState(false);
