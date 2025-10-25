@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import Pagination from "@mui/material/Pagination";
 import { useFetch } from "../../hooks/useFetch";
