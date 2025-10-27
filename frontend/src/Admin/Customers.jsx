@@ -43,7 +43,7 @@ const Customers = () => {
 
     return (
         <div className="flex">
-            <main className="p-4 w-full">
+            <main className="px-2 w-full">
                 <div className="flex flex-col gap-6">
                     <div className="space-y-4">
                         {/* Search Bar */}

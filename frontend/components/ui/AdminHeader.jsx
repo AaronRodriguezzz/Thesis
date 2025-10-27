@@ -31,7 +31,7 @@ export default function AdminHeader() {
 
   return (
     <div className="w-full text-white">
-      <div className="flex items-start sm:items-center justify-between px-4 lg:px-8 py-3 gap-2">
+      <div className="flex items-start sm:items-center justify-between px-4 py-3 gap-2">
         {/* Title + Description */}
         <header>
           <h1 className="text-xl sm:text-2xl lg:text-3xl font-semibold tracking-tight">
@@ -55,7 +55,7 @@ export default function AdminHeader() {
             <div className="rounded-full p-1.5 transition-colors">
               <UserCircle className="w-7 h-7 group-hover:text-blue-500" />
             </div>
-            <span className="font-medium group-hover:text-blue-500 transition-colors">
+            <span className="w-[80px] truncate font-medium group-hover:text-blue-500 transition-colors">
               {user?.fullName}
             </span>
           </div>

@@ -22,14 +22,13 @@ const queueSocketHandler = (io) => {
     });
   });
   
-  global.sendQueueUpdate = (branchId, state) => {
-    console.log(`Sending queue update to branch ${branchId}:`, state);
-    io.of("/queue").to(branchId).emit("queueUpdate", {
+  const sendQueueUpdate = (branchId, state) => {
+    console.log('info', branchId, 'hi', state);
+    queueNamespace.to(branchId.toString()).emit("queueUpdate", {
       branchId,
       ...state,
     });
   };
-
 
   global.sendQueueUpdate = sendQueueUpdate;
 };

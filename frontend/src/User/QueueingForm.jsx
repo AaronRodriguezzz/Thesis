@@ -3,17 +3,19 @@ import { MdCalendarToday, MdDirectionsWalk } from "react-icons/md";
 import { useQueueData } from "../../hooks/useQueueData";
 import { FaUserCircle } from 'react-icons/fa';
 import { timeFormat } from "../../utils/formatDate";
-
+import { useFetch } from '../../hooks/useFetch'
+import AssignmentLoading from '../../components/animations/AssignmentLoading';
+ 
 export default function BarberStatusPage() {
   const branchId = '6862a4bed08d2b82975b2ac6'
-  
+
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [currentHour, setCurrentHour] = useState(0);
+  const [currentBranch, setCurrentBranch] = useState(branchId)
 
-
-  const { barberList, appointments, walkIns } = useQueueData(branchId);
-
+  const { barberList, appointments, walkIns } = useQueueData(currentBranch);
+  const { data, loading, error } = useFetch('/get_data/branch', null, null, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -34,14 +36,26 @@ export default function BarberStatusPage() {
     setTime(timeFormat(today));
   }, []);
 
+  if (loading) return <AssignmentLoading />;
+  if (error) return (
+    <div className="flex items-center justify-center h-screen">
+      <p className="text-red-600">{error}</p>
+    </div>
+  );
+
   return (
     <div className="w-screen h-screen overflow-x-hidden">
       <main className="h-full w-full flex flex-col items-center">
         <div className="w-[90%] md:w-[95%] lg:w-[75%] flex justify-between items-center leading-3 bg-black/40 text-white p-4 my-2 md:my-4 shadow  shadow-white rounded">
           <div className="leading-0.2">
-            <select className="text-s md:text-[20px] lg:text-[30px] tracking-tighter text-left my-2">
-              <option value="">TOTO TUMBS STUDIO</option>
-              <option value="">TOTO TUMBS HAGONOY</option>
+            <select 
+              value={currentBranch}
+              onChange={(e) => setCurrentBranch(e.target.value)}
+              className="text-s md:text-[20px] lg:text-[30px] tracking-tighter bg-black/40 text-left my-2"
+            >
+              {data && data.map(branch => (
+                <option value={branch._id}>{branch.name}</option>
+              ))}
             </select>
             <p className="text-xs md:text-[20px]">119 Ballecer South Signal Taguig City</p>
           </div>

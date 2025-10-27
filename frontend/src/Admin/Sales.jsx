@@ -57,7 +57,7 @@ const Sales = ({ isExtended = false, sSales = [], pSales = [] }) => {
 
     return (
         <div>
-            <main>
+            <main className="p-4">
                 <div className="flex flex-col gap-6">
                     <div className="space-y-4">
                         <div className="w-full bg-black/40 border border-white/10 p-4 rounded-lg flex flex-col sm:flex-row justify-between items-center gap-4">
@@ -81,7 +81,7 @@ const Sales = ({ isExtended = false, sSales = [], pSales = [] }) => {
                                     <select 
                                         name="filter" 
                                         value={filterValue} 
-                                        className="p-2 w-[200px] border border-white rounded-md outline-0 tracking-tight text-xs"
+                                        className="p-2 w-[200px] border border-white bg-black rounded-md outline-0 tracking-tight text-xs"
                                         onChange={(e) => setFilterValue(e.target.value)}
                                     >
                                         <option value="Product">Product</option>
@@ -100,10 +100,10 @@ const Sales = ({ isExtended = false, sSales = [], pSales = [] }) => {
                                 />}
                             </div>
 
-                            <div className="overflow-auto h-[570px] w-full">
+                            <div className="overflow-auto h-[530px] w-full custom-scrollbar">
                                 {filterValue === 'Service' ?  (
                                     <table className="min-w-full divide-y divide-black/20">
-                                        <thead className="bg-black/60 text-white">
+                                        <thead className="bg-black/60 text-white py-3">
                                             <tr className="px-4 py-3 text-xs font-medium uppercase tracking-tight">
                                                 <th>Service Name</th>
                                                 <th>Branch</th>
@@ -114,21 +114,21 @@ const Sales = ({ isExtended = false, sSales = [], pSales = [] }) => {
                                                 <th>Recorded By</th>
                                             </tr>
                                         </thead>
-                                        <tbody className="bg-white divide-y divide-gray-200">
-                                            {serviceSales && serviceSales.map((service) => (
-                                                <tr key={service._id}>
-                                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{service?.customer || 'N/A'}</td>
-                                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{service.branch?.name}</td>
-                                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{service.service?.name}</td>
-                                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight text-left">₱ {service?.price}.00</td>
+                                        <tbody className="bg-black/40 divide-y divide-black/20 text-white">
+                                            {serviceSales && serviceSales.map((service, index) => (
+                                                <tr className="px-4 py-4 whitespace-nowrap text-sm text-white tracking-tight text-center" key={index}>
+                                                    <td>{service?.customer || 'N/A'}</td>
+                                                    <td>{service.branch?.name}</td>
+                                                    <td>{service.service?.name}</td>
+                                                    <td>₱ {service?.price}.00</td>
                                                     <td 
-                                                        className='px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight'
+                                                        className='px-4 py-4 whitespace-nowrap text-sm tracking-tight'
                                                         style={{ color: service?.paymentMethod === 'Cash' ? '#22c55e' : '#3b82f6'}}
                                                     >
                                                         {service?.paymentMethod}
                                                     </td>
-                                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{service?.dateOfSale.toString().split('T')[0]}</td>
-                                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 tracking-tight">{service.recordedBy?.fullName}</td>
+                                                    <td>{service?.dateOfSale.toString().split('T')[0]}</td>
+                                                    <td>{service.recordedBy?.fullName}</td>
                                                 </tr>
                                             ))}
                                         </tbody>
@@ -136,18 +136,18 @@ const Sales = ({ isExtended = false, sSales = [], pSales = [] }) => {
                                 ) : (
                                     <table className="min-w-full divide-y divide-black/20">
                                         <thead className="bg-black/60 text-white py-3">
-                                            <tr>
-                                                <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-tight">Sales Date</th>
-                                                <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-tight">Sold By</th>
-                                                <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-tight">Products/Qty</th>
-                                                <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-tight">Branch</th>
-                                                <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-tight">Total Price</th>
-                                                <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-tight">Action</th>
+                                            <tr className="px-4 py-3 text-xs font-medium uppercase tracking-tight">
+                                                <th>Sales Date</th>
+                                                <th>Sold By</th>
+                                                <th>Products/Qty</th>
+                                                <th>Branch</th>
+                                                <th>Total Price</th>
+                                                <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody className="bg-black/40 divide-y divide-black/20 text-white">
                                             {productSales && productSales.map((sales, index) => (
-                                                <tr className="px-4 py-4 whitespace-nowrap text-sm text-white tracking-tight" key={index}>
+                                                <tr className="px-4 py-4 whitespace-nowrap text-sm text-white tracking-tight text-center" key={index}>
                                                     <td>{sales?.createdAt.split('T')[0]}</td>
                                                     <td >{sales.soldBy?.fullName}</td>
                                                     <td className="truncate max-w-[200px]">

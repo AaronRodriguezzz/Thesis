@@ -37,7 +37,6 @@ const Assignments = () => {
         loading
     );
 
-
     const update_barberStatus = async (barber, newStatus) => {
         try {
             await update_data("/updateBarberStatus", { ...barber, status: newStatus });
@@ -46,7 +45,6 @@ const Assignments = () => {
         }
     };
 
-    // Show loading / error states
     if (loading) return <AssignmentLoading />;
     if (error) return (
         <div className="flex items-center justify-center h-screen">
@@ -55,75 +53,75 @@ const Assignments = () => {
     );
 
     return (
-        <div>
-        <PageHeader today={today} time={time} />
+        <div className="px-4">
+            <PageHeader today={today} time={time} />
 
-        {/* Stats */}
-        <div className="w-full flex gap-x-2 mb-4">
-            <AssignmentsCard
-                icon={MdCalendarToday}
-                label="Appointment"
-                value={appointments.filter((a) => a.status === "Booked").length}
-            />
-            <AssignmentsCard
-                icon={MdDirectionsWalk}
-                label="Walk-In"
-                value={walkIns.length}
-                onAdd={() => setIsAddingWalkIn(true)}
-            />
-        </div>
-
-        {/* Barber Cards */}
-        <div className="w-full flex justify-center gap-2">
-            {barberList.map((barber) => (
-                <BarberCard
-                    key={barber._id}
-                    barber={barber}
-                    baseUrl={baseUrl}
-                    onAssign={() => {
-                    setIsAssigning(true);
-                    setBarberToUpdate(barber);
-                    }}
-                    onComplete={() => {
-                    setIsCompleting(true);
-                    setBarberToUpdate(barber);
-                    }}
-                    onBreak={() => update_barberStatus(barber, "On-break")}
-                    onToggle={() =>
-                    update_barberStatus(
-                        barber,
-                        barber.status === "Unavailable" || barber.status === "On-break"
-                        ? "Available"
-                        : "Unavailable"
-                    )
-                    }
+            {/* Stats */}
+            <div className="w-full flex gap-x-2 mb-4">
+                <AssignmentsCard
+                    icon={MdCalendarToday}
+                    label="Appointment"
+                    value={appointments.filter((a) => a.status === "Booked").length}
                 />
-            ))}
-        </div>
+                <AssignmentsCard
+                    icon={MdDirectionsWalk}
+                    label="Walk-In"
+                    value={walkIns.length}
+                    onAdd={() => setIsAddingWalkIn(true)}
+                />
+            </div>
 
-        {/* Modals */}
-        {isAssigning && (
-            <AssignCustomer
-            onCancel={setIsAssigning}
-            appointments={appointments}
-            walkIn={walkIns}
-            barber={barberToUpdate}
-            />
-        )}
+            {/* Barber Cards */}
+            <div className="w-full flex justify-center gap-2">
+                {barberList.map((barber) => (
+                    <BarberCard
+                        key={barber._id}
+                        barber={barber}
+                        baseUrl={baseUrl}
+                        onAssign={() => {
+                        setIsAssigning(true);
+                        setBarberToUpdate(barber);
+                        }}
+                        onComplete={() => {
+                        setIsCompleting(true);
+                        setBarberToUpdate(barber);
+                        }}
+                        onBreak={() => update_barberStatus(barber, "On-break")}
+                        onToggle={() =>
+                        update_barberStatus(
+                            barber,
+                            barber.status === "Unavailable" || barber.status === "On-break"
+                            ? "Available"
+                            : "Unavailable"
+                        )
+                        }
+                    />
+                ))}
+            </div>
 
-        {isAddingWalkIn && (
-            <NewWalkInCustomer
-            onCancel={setIsAddingWalkIn}
-            barbers={barberList}
-            />
-        )}
+            {/* Modals */}
+            {isAssigning && (
+                <AssignCustomer
+                    onCancel={setIsAssigning}
+                    appointments={appointments}
+                    walkIn={walkIns}
+                    barber={barberToUpdate}
+                />
+            )}
 
-        {isCompleting && (
-            <ServiceCompleteModal
-            onCancel={setIsCompleting}
-            barber={barberToUpdate}
-            />
-        )}
+            {isAddingWalkIn && (
+                <NewWalkInCustomer
+                    onCancel={setIsAddingWalkIn}
+                    barbers={barberList}
+                />
+            )}
+
+            {isCompleting && (
+                <ServiceCompleteModal
+                    onCancel={setIsCompleting}
+                    barber={barberToUpdate}
+                />
+            )}
         </div>
     );
 };

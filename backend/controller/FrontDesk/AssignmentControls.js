@@ -35,9 +35,11 @@ const assignCustomer = async (req, res) => {
 
   const modelMap = { "Walk-In": WalkIn, Appointment };
   const Model = modelMap[customerType];
+  
   if (!Model) return res.status(400).json({ message: "Invalid customer type" });
 
   try {
+
     const [updatedCustomer, updatedBarber] = await Promise.all([
       Model.findByIdAndUpdate(customer.id, { barber: customer.barberId, status: "Assigned" }, { new: true }),
       Employee.findByIdAndUpdate(customer.barberId, { status: "Barbering", customerTypeAssigned: customerType }, { new: true }),
@@ -47,6 +49,7 @@ const assignCustomer = async (req, res) => {
     const { barbers, appointments, walkIns } = global.queueState[branchId];
 
     updateQueueState(branchId, {
+
       barbers: barbers.map(b => (b._id.equals(updatedBarber._id) ? updatedBarber : b)),
       appointments: customerType === "Appointment"
         ? appointments.filter(a => !a._id.equals(updatedCustomer._id))
@@ -54,9 +57,11 @@ const assignCustomer = async (req, res) => {
       walkIns: customerType === "Walk-In"
         ? walkIns.filter(w => !w._id.equals(updatedCustomer._id))
         : walkIns,
+
     });
 
     res.status(200).json({ message: "Customer Assigned Successfully", updatedInfo: updatedCustomer });
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Error assigning customer", error: err.message });
@@ -88,7 +93,6 @@ const updateBarberStatus = async (req, res) => {
 
         // Ensure queue state for branch exists
         if (!global.queueState[branchId]) {
-            console.log('hello/d');
             global.queueState[branchId] = {
                 barbers: [],
                 appointments: [],
@@ -180,7 +184,27 @@ const completeAssignment = async (req, res) => {
             return res.status(404).json({ message: 'Completing Service Error' });
         }   
 
-        
+        const branchId = barber.branchAssigned;
+
+        // Ensure queue state for branch exists
+        if (!global.queueState[branchId]) {
+            global.queueState[branchId] = {
+                barbers: [],
+                appointments: [],
+                walkIns: [],
+            };
+        }
+
+        const currentQueue = global.queueState[branchId];
+
+        const updatedBarbers = currentQueue.barbers.map((b) =>
+            b._id.equals(barber._id) ? barber : b
+        );
+
+        updateQueueState(branchId, {
+            ...currentQueue,
+            barbers: updatedBarbers,
+        });
 
         return res.status(200).json({ message: 'Service Completed Successfully', updatedInfo: customer });
         

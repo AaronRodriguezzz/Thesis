@@ -24,21 +24,27 @@ export const useQueueData = (branchId, loading = false) => {
     };
 
     fetchInitialData();
-
+    
     queueSocket.emit("joinBranch", branchId);
 
-    queueSocket.on("queueUpdate", (data) => {
+    const handleQueueUpdate = (data) => {
       if (data.branchId !== branchId) {
-        console.log("Received queue update:", data)
-        return
+        console.log("Received update for different branch:", data.branchId);
+        return;
       }
+
+      console.log("✅ Queue update received:", data);
       setBarberList(data?.barbers || []);
       setAppointments(data?.appointments || []);
       setWalkIns(data?.walkIns || []);
-    });
+    };
 
+    // Attach the listener
+    queueSocket.on("queueUpdate", handleQueueUpdate);
+
+    // Cleanup specific handler only
     return () => {
-      queueSocket.off("queueUpdate");
+      queueSocket.off("queueUpdate", handleQueueUpdate);
     };
   }, [branchId, loading]);
 

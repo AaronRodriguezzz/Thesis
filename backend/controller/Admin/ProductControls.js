@@ -39,15 +39,13 @@ const get_branchProduct = async (req, res) => {
     }
 
     try {
-        const products = await Product.find({ branch: branchId });
+        const products = await Product.find();
 
         const filtered = products.filter(p => {
-            const index = p.branch.findIndex(b => b.toString() === branchId);
+            const index = p.branch.findIndex(b => b.toString() !== branchId);
             return index !== -1 && p.stock[index] > 0;
         });    
 
-
-        console.log(filtered);
 
         return res.status(200).json({ products: filtered });
     } catch (err) {

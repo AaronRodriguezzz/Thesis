@@ -8,10 +8,9 @@ const cron = require('node-cron');
  */
 const getAllAppointments = async (req, res) => {
     try {
-        console.log(req.query.page);
         const page = parseInt(req.query.page) || 1;
         const search = req.query?.search || '';
-        const date = req.query.date
+        const date = req.query.date;
         const limit = req.query.limit || 10;
         const skip = (page - 1) * limit;
 
@@ -76,19 +75,20 @@ const getAllAppointments = async (req, res) => {
  */
 const branchAppointments = async (req, res) => {
     const branchId = req.params.branchId;
-
-    console.log('id', req.params);
     
+    if(!branchId) res.status(400).json({ message: 'Branch Id Missing'})
+
     try {
         
         const page = parseInt(req.query.page) || 1;
         const limit = 10;
         const skip = (page - 1) * limit;
 
-        const totalCount = await Appointment.countDocuments();
+        const query = { branch: branchId }
+        const totalCount = await Appointment.countDocuments(query);
         const pageCount = Math.ceil(totalCount / limit);
 
-        const appointments = await Appointment.find({branch: branchId})
+        const appointments = await Appointment.find(query)
             .populate('customer')
             .populate('service')
             .populate('additionalService')

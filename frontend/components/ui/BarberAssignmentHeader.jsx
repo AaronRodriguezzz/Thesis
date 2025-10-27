@@ -1,5 +1,5 @@
 const PageHeader = ({ today, time }) => (
-    <div className="w-full flex justify-between items-center bg-black/40 text-white border border-white/10 p-4 my-2 shadow rounded">
+    <div className="flex justify-between items-center bg-black/40 text-white border border-white/10 p-4 my-2 shadow rounded">
         <div>
         <h1 className="text-[20px] lg:text-[30px] tracking-tighter my-2">
             TOTO TUMBS STUDIO

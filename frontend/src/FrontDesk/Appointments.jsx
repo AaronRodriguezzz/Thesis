@@ -84,9 +84,9 @@ const Appointments = () => {
     if (error) return <p className="p-4 text-red-500">Error loading data</p>;
 
     return (
-        <div className="flex">
-            <main className="p-4 w-full">
-                <div className="flex flex-col gap-6">
+        <div>
+            <main className="px-2 w-full">
+                <div>
                     <div className="space-y-4">
                         <div className="w-full bg-black/40 border border-black/20 p-4 rounded-lg shadow flex flex-col sm:flex-row justify-between items-center gap-4">
                             

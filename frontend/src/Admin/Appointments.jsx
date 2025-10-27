@@ -3,9 +3,11 @@ import { FaSearch } from "react-icons/fa";
 import Pagination from "@mui/material/Pagination";
 import { useFetch } from "../../hooks/useFetch";
 import TableLoading from "../../components/animations/TableLoading";
-import { useDebounce } from "../../hooks/useDebounce"; // 👈 Import debounce hook
+import { useDebounce } from "../../hooks/useDebounce"; 
+import { useAuth } from "../../contexts/UserContext";
 
 const Appointments = () => {
+    const { user } = useAuth();
     const [searchTerm, setSearchTerm] = useState("");
     const debouncedSearch = useDebounce(searchTerm, 1000); 
     const [page, setPage] = useState(1);
@@ -14,15 +16,16 @@ const Appointments = () => {
     let endpoint = `/all_appointments?page=${page}`;
     if (debouncedSearch) endpoint += `&search=${debouncedSearch}`;
     if (dateFilter) endpoint += `&date=${dateFilter}`;
+    if (user?.branchAssigned) endpoint += `&branch=${user.branchAssigned}`
 
     const { data, loading, error } = useFetch(
-        `/all_appointments?search=${debouncedSearch}&date=${dateFilter}`,
+        endpoint,
         page,
         null,
         [page, debouncedSearch, dateFilter]
     );
 
-    const paginationLimit = useState(data?.pageCount || 1);
+    const paginationLimit = data?.pageCount || 1;
 
     if (loading) return <TableLoading />;
     if (error) return <p className="p-4 text-red-500">{error}</p>;

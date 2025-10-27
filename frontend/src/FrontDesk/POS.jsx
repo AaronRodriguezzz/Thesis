@@ -3,18 +3,26 @@ import { FaSearch } from "react-icons/fa";
 import { update_data } from "../../services/PutMethod";
 import { useUser } from "../../hooks/userProtectionHooks";
 import { useFetch } from "../../hooks/useFetch";
+import { useAuth } from '../../contexts/UserContext';
 import POSLoading from "../../components/animations/POSLoading";
 
+const baseUrl = import.meta.env.MODE === 'development' ? 'http://localhost:4001' : 'https://tototumbs.onrender.com';
+
 const POS = () => {
-    const user = useUser();
-    const baseUrl = import.meta.env.MODE === 'development' ? 'http://localhost:4001' : 'https://tototumbs.onrender.com';
+    const { user } = useAuth();
     const [searchTerm, setSearchTerm] = useState("");
     const [checkOutList, setCheckOutList] = useState([]);
     const [totalSummary, setTotalSummary] = useState(0)
 
+    const branchId = user?.branchAssigned;
+
+    console.log('branchId', branchId);
+
     const { data, loading, error, setData } = useFetch(
-        user ? `/products/${user.branchAssigned}` : null, 
-        [user?.branchAssigned]
+        branchId ? `/products/${branchId}` : null, 
+        null,
+        null,
+        []
     );
 
     const productList = data?.products || [];
@@ -28,6 +36,7 @@ const POS = () => {
         )
         : [];
     }, [productList, searchTerm]);
+
 
     const addTo_checkOutList = (item) => {
 
@@ -105,7 +114,7 @@ const POS = () => {
         setTotalSummary(totalAmount);
     },[checkOutList])
 
-    // if(loading) return <POSLoading />;
+    if(loading) return <POSLoading />;
     if (error) return <p className="p-4 text-red-500">Error loading data</p>;
 
     return (
@@ -132,7 +141,7 @@ const POS = () => {
                                 <h2 className="text-2xl font-semibold mb-4 tracking-tight">Product Catalog</h2>
                             </div>
 
-                            <div className="h-[600px] w-full flex flex-row flex-wrap items-center justify-center gap-4 overflow-x-auto custom-scrollbar">
+                            <div className="h-[570px] w-full flex flex-row flex-wrap items-center justify-center gap-4 overflow-x-auto custom-scrollbar">
                                 {filteredProducts.map((product) => (
                                     <div className="flex flex-col bg-white/10 text-white items-start p-4 w-[200px] shadow-md rounded-lg" key={product._id}>
                                         <img src={`${baseUrl}/${product.imagePath}`} alt="" className="w-[180px] h-[180px] rounded-lg mb-3 shadow-md"/>
@@ -157,7 +166,7 @@ const POS = () => {
                         </div>
                     </div>
 
-                    <div className="h-[800px] flex-1 bg-black/40 border border-white/10 text-white space-y-5 rounded-md p-4 shadow">
+                    <div className="relative h-[775px] flex-1 bg-black/40 border border-white/10 text-white space-y-5 rounded-md p-4 shadow">
                         <h1 className="font-semibold text-2xl tracking-tight py-2">Check Out Summary</h1>
 
                         <div className="h-[580px] overflow-y-auto space-y-4 custom-scrollbar">
@@ -215,16 +224,19 @@ const POS = () => {
 
                             ))}
                         </div>
+
+                        <div className="space-y-2">
+                            <h1 className="text-xl font-semibold tracking-tight">Total Price: ₱{totalSummary || 0}.00</h1>
+                            
+                            <button 
+                                disabled={checkOutList.length === 0}
+                                className="w-full bg-green-400 text-white py-2 rounded-lg tracking-wide hover:bg-green-700 transition ease-in-out disabled:cursor-not-allowed"
+                                onClick={handle_finish}
+                            >
+                                FINISH
+                            </button>
+                        </div>
                         
-                        <h1 className="text-xl font-semibold tracking-tight">Total Price: ₱{totalSummary || 0}.00</h1>
-                        
-                        <button 
-                            disabled={checkOutList.length === 0}
-                            className="w-full bg-green-400 text-white py-2 rounded-lg tracking-wide hover:bg-green-700 transition ease-in-out disabled:cursor-not-allowed"
-                            onClick={handle_finish}
-                        >
-                            FINISH
-                        </button>
                     </div>  
                 </div>
             </main>

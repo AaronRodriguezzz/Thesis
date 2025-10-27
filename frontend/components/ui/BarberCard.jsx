@@ -2,8 +2,10 @@ import { FaUserCircle } from "react-icons/fa";
 
 const BarberCard = ({ barber, baseUrl, onAssign, onComplete, onBreak, onToggle }) => {
     const statusColor =
-        barber.status === "Available" || barber.status === "Barbering"
-        ? "green"
+        barber.status === "Available" 
+        ? "green" 
+        :  barber.status === "Barbering" 
+        ? "yellow"
         : barber.status === "On-break"
         ? "orange"
         : "red";
