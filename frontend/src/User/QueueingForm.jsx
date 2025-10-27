@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { MdCalendarToday, MdDirectionsWalk } from "react-icons/md";
-import { queueSocket } from "../../services/SocketMethods";
-import { get_data } from "../../services/GetMethod";
+import { useQueueData } from "../../hooks/useQueueData";
 import { FaUserCircle } from 'react-icons/fa';
 import { timeFormat } from "../../utils/formatDate";
 
 export default function BarberStatusPage() {
+  const branchId = '6862a4bed08d2b82975b2ac6'
   
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [currentHour, setCurrentHour] = useState(0);
-  const [barberList, setBarberList] = useState(null);
-  const [appointments, setAppointments] = useState(null);
-  const [walkInList, setWalkInList] = useState(null);
+
+
+  const { barberList, appointments, walkIns } = useQueueData(branchId);
+
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -26,47 +27,6 @@ export default function BarberStatusPage() {
   
     return () => clearInterval(interval); 
   }, [currentHour]);
-
-
-  useEffect(() => {
-    const branchId = '6862a4bed08d2b82975b2ac6';
-    
-    const fetchInitialData = async () => {
-  
-      if(!branchId) return
-  
-      try {
-        const response = await get_data(`/initialBarberAssignment/${branchId}`);
-
-        setBarberList(response?.barbers || []);
-        setAppointments(response?.appointments || []);
-        setWalkInList(response?.walkIns || []);
-  
-      } catch (err) {
-        console.error("Error fetching initial data:", err);
-      } 
-    };
-  
-    fetchInitialData();
-  
-    queueSocket.on("connect", () => {
-      console.log("Connected to queueing namespace");
-    });
-  
-    queueSocket.emit("joinBranch", branchId);
-    
-    queueSocket.on("queueUpdate", (data) => {
-      console.log('new data', data);
-      setBarberList(data[branchId]?.barbers || []);
-      setAppointments(data[branchId]?.appointments || []);
-      setWalkInList(data[branchId]?.walkIns || []);
-    });
-  
-    return () => {
-      queueSocket.off("connect");
-      queueSocket.off("queueUpdate");
-    };
-  }, []);
 
   useEffect(() => {
     const today = new Date();
@@ -112,7 +72,7 @@ export default function BarberStatusPage() {
                 Walk-In
               </h1>
               <p className="text-xs md:text-[20px] lg:text-[30px] font-extralight tracking-tighter text-left">
-                 {walkInList && walkInList.length || 0}  
+                 {walkIns.length || 0}  
               </p>
             </div>
           </div>                 

@@ -21,9 +21,9 @@ export default function AdminLogin() {
     try{
       const response = await post_data(credentials, '/auth/admin_login');
 
-      if(response.employee){
-        setUser(response.employee);
-        navigate(response.employee.role === 'Admin' ? '/admin/dashboard': '/front-desk/dashboard')
+      if(response.user){
+        setUser(response.user);
+        navigate(response.user.role === 'Admin' ? '/admin/dashboard': '/front-desk/dashboard')
       }
       
     }catch(err){

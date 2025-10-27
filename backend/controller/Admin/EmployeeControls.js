@@ -138,23 +138,6 @@ const update_admin_account = async (req, res) => {
             return res.status(404).json({ message: 'Account not found or update failed' });
         }
 
-
-        if(account.role === 'Barber'){
-            const branchId = account.branchAssigned.toString();
-            if (branchId in global.queueState) {
-                const barbers = global.queueState[branchId].barbers.map(b =>
-                    b._id.toString() === account._id.toString() ? account : b
-                );
-
-                global.queueState[branchId].barbers = barbers;
-                
-                console.log('new state', global.queueState);
-                // Emit updated state
-                global.sendQueueUpdate(branchId, global.queueState);
-            }
-        }
-   
-
         return res.status(200).json({ message: 'Update successful.', updatedInfo: account });
     } catch (err) {
         console.error(err);

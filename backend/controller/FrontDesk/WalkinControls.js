@@ -1,49 +1,30 @@
 const WalkIn = require('../../models/WalkIn');
-
+const { updateQueueState } = require("../../utils/updateQueueState");
 
 const newWalkIn = async (req, res) => {
-
-    const { barber, additionalService, branch} = req.body;
+  const { branch, barber, additionalService } = req.body;
     
-    try{
-        const walkIn = new WalkIn({
-            ...req.body, 
-            additionalService: additionalService ? additionalService : undefined,
-            barber: barber?.trim() ? barber : undefined,
-        });
+  try {
+    const walkIn = new WalkIn({
+      ...req.body,
+      additionalService: additionalService || undefined,
+      barber: barber?.trim() ? barber : undefined,
+    });
 
-        const newWalkIn = await walkIn.save();
+    const saved = await walkIn.save();
+    const populated = await saved.populate(["service", "additionalService", "barber", "recordedBy"]);
 
-        if(!newWalkIn){
-            return res.status(400).json({message: 'New Walk In Adding Failed'})
-        }
+    if (!global.queueState[branch]) global.queueState[branch] = { appointments: [], walkIns: [], barbers: [] };
 
-        const populatedWalkIn = await newWalkIn.populate([
-            { path: 'service' },
-            { path: 'additionalService' },
-            { path: 'barber' },
-            { path: 'recordedBy' },
-        ]);
+    updateQueueState(branch, {
+      walkIns: [...global.queueState[branch].walkIns, populated.toObject()],
+    });
 
-        const branchId = req.body?.branch;
-        console.log('outside if',  global.queueState)
-        if (branchId in global.queueState) {
-            global.queueState[branchId].walkIns = [
-                ...global.queueState[branchId].walkIns,
-                populatedWalkIn.toObject()
-            ] 
-            
-            console.log('inside if',  global.queueState)
-
-            global.sendQueueUpdate(branchId, global.queueState);
-        }   
-
-        return res.status(200).json({message: 'New Walk In Added Successfully', walkIn})
-    }catch(err){
-        console.log(err);
-        return res.status(500).json({message: err})
-    }
-}   
+    res.status(200).json({ message: "New Walk-In Added", walkIn: populated });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
 
 const getWalkInByBranch = async (req,res) => {
     const branchId = req.params.branchId

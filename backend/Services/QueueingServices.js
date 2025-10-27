@@ -21,11 +21,15 @@ const queueSocketHandler = (io) => {
       console.log("Client disconnected from queue");
     });
   });
+  
+  global.sendQueueUpdate = (branchId, state) => {
+    console.log(`Sending queue update to branch ${branchId}:`, state);
+    io.of("/queue").to(branchId).emit("queueUpdate", {
+      branchId,
+      ...state,
+    });
+  };
 
-  // ✅ Emit updates to a specific branch room
-  function sendQueueUpdate(branchId, data) {
-    queueNamespace.to(branchId).emit("queueUpdate", data);
-  }
 
   global.sendQueueUpdate = sendQueueUpdate;
 };

@@ -32,14 +32,11 @@ const admin_login = async (req, res) => {
         const adminObj = user.toObject();
         const { password: _, ...employee } = adminObj;
         
-        console.log('employee in the controller', employee);
         generateToken(res, employee)
 
         // Send success response
-        return res.status(200).json({
-            message: 'Login successful',
-            employee
-        });
+        res.status(200.).json({ message: 'Access granted', user: employee });
+
 
     } catch (err) {
         console.error(err);

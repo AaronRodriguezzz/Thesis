@@ -10,7 +10,6 @@ import { motion } from "motion/react"
 export default function Login() {
   useLoginDisabling();
   
-  const { setUser } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from || "/";
@@ -27,7 +26,6 @@ export default function Login() {
       const response = await post_data(credentials, '/auth/user_login');
 
       if(response){
-        setUser(response.user);
         navigate(from, { replace: true });
       }
       
