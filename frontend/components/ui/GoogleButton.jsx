@@ -34,7 +34,12 @@ const GoogleButton = () => {
     }
 
     return (
-        <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+        <GoogleOAuthProvider
+            clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}
+            onScriptLoadSuccess={() => {
+                google.accounts.id.disableAutoSelect();
+            }}
+        >            
             <div className="w-[80%] mb-7">
                 <GoogleLogin
                     onSuccess={credentialResponse => handleSuccess(credentialResponse)}
