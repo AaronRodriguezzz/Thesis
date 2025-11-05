@@ -11,7 +11,6 @@ import Box from '@mui/material/Box';
 const ReviewFormSection = () => {
     const { sectionRefs, inViews } = useSectionViews();
     const isMobile = useIsMobile();
-    const navigate = useNavigate();
     const user = useUser();
 
     const [formData, setFormData] = useState({
@@ -29,14 +28,39 @@ const ReviewFormSection = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true);
-        const response = await post_data(formData, '/submit_review');
-        setLoading(false);
 
-        if (response) {
-        navigate('/');
+        if (!formData.rating) {
+            CustomAlert("error", "Please provide a rating");
+            return;
+        }
+        if (!formData.comment.trim()) {
+            CustomAlert("error", "Comment cannot be empty");
+            return;
+        }
+
+        try {
+            setLoading(true);
+
+            const response = await post_data(formData, "/submit_review");
+
+            if (response) {
+                setFormData({
+                    customer: user?._id || null,
+                    rating: 0,
+                    comment: '',
+                });
+                setCharCount(0);
+
+            }
+
+        } catch (err) {
+            console.error("Submit review error:", err);
+            CustomAlert("error", err.message || "Something went wrong, try again.");
+        } finally {
+            setLoading(false);
         }
     };
+
 
     return (
         <motion.div   
@@ -80,6 +104,7 @@ const ReviewFormSection = () => {
                         setCharCount(e.target.value.length);
                     }}
                     placeholder="Write your feedback here..."
+                    value={formData.value}
                     className="w-full px-3 py-2 rounded mb-1 resize-none shadow shadow-white"
                     rows={4}
                     maxLength={100}

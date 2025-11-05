@@ -25,6 +25,7 @@ const AssignCustomer = ({
             });
 
             if(response) {
+                onCancel(false);
 
                 selectedCategory === 'Appointments' ? 
                 setUpdatedAppointments(prev => prev.map(a => 
@@ -39,7 +40,6 @@ const AssignCustomer = ({
 
                 setUpdatedBarber(prev => prev.map(a => a._id === barber._id ? { ...a, status: 'Barbering' } : a));
                 
-                onCancel(false);
             }
 
         }catch(err) {

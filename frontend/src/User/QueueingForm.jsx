@@ -8,6 +8,7 @@ import AssignmentLoading from '../../components/animations/AssignmentLoading';
  
 export default function BarberStatusPage() {
   const branchId = '6862a4bed08d2b82975b2ac6'
+  const baseUrl = import.meta.env.MODE === 'development' ? 'http://localhost:4001' : 'https://tototumbs.onrender.com';
 
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
@@ -16,7 +17,7 @@ export default function BarberStatusPage() {
 
   const { barberList, appointments, walkIns } = useQueueData(currentBranch);
   const { data, loading, error } = useFetch('/get_data/branch', null, null, []);
-
+baseUrl 
   useEffect(() => {
     const interval = setInterval(() => {
       const hourNow = new Date().getHours();

@@ -143,27 +143,11 @@ const completeAssignment = async (req, res) => {
             return res.status(400).json({ message: 'Invalid customer type' });
         }
 
-        const csToFinish = await Model.findOne({ barber: barberId, status: 'Assigned' });
+        let csToFinish = await Model.findOne({ barber: barberId, status: 'Assigned' });
 
-        console.log('FINISH', csToFinish);
-
-        if(customerType === 'Appointment'){
-            csToFinish.populate('customer')
+        if (customerType === 'Appointment') {
+            csToFinish = await csToFinish.populate('customer');
         }
-
-        const sales = new ServiceSales({
-            service: csToFinish.service,
-            additionalService: csToFinish?.additionalService ? csToFinish.additionalService : undefined,
-            customer: csToFinish.customer?.firstName || csToFinish.customerName || null,
-            barber: barberId,
-            branch: csToFinish.branch,
-            dateOfSale: new Date(),
-            price: csToFinish.totalAmount,
-            paymentMethod,
-            recordedBy
-        })
-
-        await sales.save();
 
         const [customer, barber] = await Promise.all([
             
@@ -184,9 +168,22 @@ const completeAssignment = async (req, res) => {
             return res.status(404).json({ message: 'Completing Service Error' });
         }   
 
+        const sales = new ServiceSales({
+            service: csToFinish.service,
+            additionalService: csToFinish?.additionalService ? csToFinish.additionalService : undefined,
+            customer: csToFinish.customer?.firstName || csToFinish.customerName || null,
+            barber: barberId,
+            branch: csToFinish.branch,
+            dateOfSale: new Date(),
+            price: csToFinish.totalAmount,
+            paymentMethod,
+            recordedBy
+        })
+
+        await sales.save();
+
         const branchId = barber.branchAssigned;
 
-        // Ensure queue state for branch exists
         if (!global.queueState[branchId]) {
             global.queueState[branchId] = {
                 barbers: [],

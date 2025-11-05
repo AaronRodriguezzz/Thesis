@@ -61,7 +61,7 @@ const Assignments = () => {
                 <AssignmentsCard
                     icon={MdCalendarToday}
                     label="Appointment"
-                    value={appointments.filter((a) => a.status === "Booked").length}
+                    value={appointments.filter((a) => a.status === "Booked" && a.scheduledTime === today.getHours() && a.scheduledDate === today ).length}
                 />
                 <AssignmentsCard
                     icon={MdDirectionsWalk}
