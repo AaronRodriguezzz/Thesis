@@ -17,7 +17,9 @@ export default function BarberStatusPage() {
 
   const { barberList, appointments, walkIns } = useQueueData(currentBranch);
   const { data, loading, error } = useFetch('/get_data/branch', null, null, []);
-baseUrl 
+
+  console.log(data);
+ 
   useEffect(() => {
     const interval = setInterval(() => {
       const hourNow = new Date().getHours();
@@ -108,15 +110,15 @@ baseUrl
                 key={index}
                 className="h-full w-[90%] md:w-[35%] lg:w-[25%] flex flex-col items-center justify-center rounded-lg bg-black/40 text-white shadow shadow-white p-4"
               >
-                {barber?.imagePath ? (
+                {/* {barber?.imagePath ? (
                   <img
                     src={`${baseUrl}/${barber.imagePath}`}
                     alt={`${barber.fullName} profile`}
                     className="w-20 h-20 rounded-full object-cover mb-3"
                   />
-                ) : (
+                ) : ( */}
                   <FaUserCircle className="text-[80px] md:text-[120px mb-3" />
-                )}
+                {/* )} */}
 
                 <h1 className="text-[30px] font-semibold tracking-tight text-center">
                   {barber.fullName}
