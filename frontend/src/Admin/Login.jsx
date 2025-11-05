@@ -34,7 +34,7 @@ export default function AdminLogin() {
   return (
     <div className="h-screen w-screen flex items-center justify-center">
       <div className="fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/login.png')] bg-cover bg-center filter invert" />
+        <div className="absolute inset-0 bg-[url('https://res.cloudinary.com/dk3bbinj9/image/upload/login_h4ifyf')] bg-cover bg-center filter invert" />
         <div className="absolute inset-0 bg-black/40" />
       </div>
       <form className="w-[40%] min-w-[340px] max-w-[500px] flex flex-col items-center gap-y-4 rounded-xl bg-black/40 text-white border border-white/20" onSubmit={handle_submit}>
