@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion } from "motion/react"
-import { SlideTxt } from "../../components/animations/TextAnimation";
 import { useSectionViews } from "../../hooks/HomeRef";
 import { useIsMobile } from "../../hooks/useIsInMobile";
-import branchImages from '../../data/branchImages';
+import { motion } from "motion/react"
+import { SlideTxt } from "../../components/animations/TextAnimation";
 import ServiceSection from "./HomeSections/ServiceSection";
 import ProductSection from "./HomeSections/ProductSection";
 import FeedbackSection from "./HomeSections/FeedbackSection";
@@ -13,6 +12,7 @@ import ReviewFormSection from "./HomeSections/ReviewFormSection";
 
 export default function MainPage() {
   const container = "w-full max-w-7xl mx-auto px-4 md:px-6";
+  const branchImages = ["./lower_bicutan.png", "./toto_studio.JPG", "./totobg.JPG"];
   const { sectionRefs, inViews } = useSectionViews();
   const isMobile = useIsMobile(); 
   const navigate = useNavigate();
@@ -30,7 +30,7 @@ export default function MainPage() {
       {/* Hero Section */}
       <motion.div
         id="Home"
-        ref={sectionRefs.home}
+        ref={sectionRefs.home}  
         initial={{ opacity: 0 }}
         transition={{ type: "spring", duration: 2, ease: "easeInOut" }}
         animate={inViews.home ? { opacity: 1, y: 0 } : {}}
@@ -91,8 +91,8 @@ export default function MainPage() {
       </motion.div>
 
 
-  {/* About Us */}
-  <div id="About Us" ref={sectionRefs.about} className={`relative h-[90vh] ${container} flex flex-col md:flex-row items-center justify-center py-10 gap-6`}>
+      {/* About Us */}
+      <div id="About Us" ref={sectionRefs.about} className={`relative h-[90vh] ${container} flex flex-col md:flex-row items-center justify-center py-10 gap-6`}>
         <motion.div 
           initial={{ opacity: 0, x: -100 }}
           transition={{ duration: 1, ease: "easeInOut"}}
