@@ -82,7 +82,7 @@ export default function HaircutForm() {
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-2xl p-8 w-full max-w-2xl text-center"
+          className="bg-black/40 text-white shadow shadow-white rounded-2xl p-8 w-full max-w-2xl text-center"
         >
           {loading ? (
             <p>Loading...</p>
@@ -94,7 +94,7 @@ export default function HaircutForm() {
                 className="w-full rounded-xl shadow-md mb-6"
               />
               <h2 className="text-2xl font-bold mb-3">{haircutInfo.name}</h2>
-              <p className="text-gray-700">{haircutInfo.description}</p>
+              <p className="text-sm md:text-lg">{haircutInfo.description}</p>
 
               <div className="flex gap-x-2 mt-6 justify-center">
                 <button
@@ -180,7 +180,7 @@ export default function HaircutForm() {
           </section>
 
           {/* Hair Type */}
-          <section>
+          <section>x
             <h2 className="text-xl font-semibold mb-3">Hair Type</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {["straight", "wavy", "curly", "coily"].map((type) => (
@@ -331,7 +331,7 @@ export default function HaircutForm() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-white text-black py-3 rounded-lg hover:bg-black font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-white text-black border-1 border-white/10 py-3 rounded-lg hover:bg-green-500 hover:text-white font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? "Processing..." : "Submit"}
           </button>

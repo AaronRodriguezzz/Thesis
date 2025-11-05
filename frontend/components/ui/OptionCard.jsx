@@ -7,9 +7,9 @@ const OptionCard = ({ field, value, label, description, selected, handleSelect }
     <motion.div
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.97 }}
-      className={` text-white  p-4 border rounded-xl shadow-md cursor-pointer transition  
+      className={`p-4 border rounded-xl shadow-md cursor-pointer transition  
         ${selected 
-          ? "border-2 border-green-600 bg-green-100 shadow-lg shadow-green-200" 
+          ? " bg-white text-black shadow-lg shadow-green-500" 
           : " bg-black/40 hover:border-green-400"
         }`}
       onClick={() => handleSelect(field, value)}
