@@ -36,19 +36,19 @@ export default function MainPage() {
         animate={inViews.home ? { opacity: 1, y: 0 } : {}}
         className="relative h-screen w-full flex flex-col justify-center items-center text-white px-4 md:px-20 bg-cover bg-center transition ease-in-out"
       >
-  <div className={`relative text-center space-y-2 mb-5 z-20 ${container}`}>
+        <div className={`relative text-center space-y-2 mb-5 z-20 ${container}`}>
           <SlideTxt
             text="Where Tradition Meets Precision"
             enable={inViews.home}
             speed={5}
-            className="font-bold text-2xl md:text-4xl lg:text-5xl"
+            className="font-bold text-3xl md:text-4xl lg:text-5xl"
           />
           
           <SlideTxt
             text="Book an appointment now and experience the art of grooming"
             enable={inViews.home}
             speed={5}
-            className="text-sm md:text-md lg:text-lg font-extralight mt-[-4px]"
+            className="w-full text-sm md:text-md lg:text-lg font-extralight mt-[-4px]"
           />
           <motion.button
             initial={{ opacity: 0, x: -100 }}
