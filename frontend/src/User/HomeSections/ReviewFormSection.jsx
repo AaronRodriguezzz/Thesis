@@ -41,10 +41,10 @@ const ReviewFormSection = () => {
     return (
         <motion.div   
             ref={sectionRefs.feedback}
-            initial={isMobile ? { opacity: 0 } : { opacity: 0, x: -200 }}
-            animate={inViews.feedback ? isMobile ? {  opacity: 1 } : { opacity: 1, x: 0 } : {}}
+            initial={isMobile ? false : { opacity: 0, x: -200 }}
+            animate={isMobile ? { opacity: 1 } : inViews.feedback ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: .7, ease: "easeInOut" }}
-            className={`w-full max-w-7xl mx-auto px-4 md:px-6 flex flex-col md:flex-row items-center justify-center gap-8 py-10 md:py-20 z-20`}
+            className="w-full max-w-7xl mx-auto px-4 md:px-6 flex flex-col md:flex-row items-center justify-center gap-8 py-10 md:py-20 z-20"
         >
             <div className="w-full md:w-1/2 flex flex-col justify-center items-start p-6 md:p-10 text-white">
                 <h1 className="text-3xl md:text-5xl font-semibold">Give us your feedback!</h1>
