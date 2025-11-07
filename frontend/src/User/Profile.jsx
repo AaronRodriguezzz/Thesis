@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/UserContext";
+import { useCustomerPageProtection } from "../../hooks/userProtectionHooks";
 import ChangePassword from "../../components/ui/ChangePassword";
 import ProfileUpdate from "../../components/ui/ProfileUpdate";
-import { useCustomerPageProtection } from "../../hooks/userProtectionHooks";
 
 const ProfilePage = () => {
   useCustomerPageProtection();
@@ -13,7 +13,7 @@ const ProfilePage = () => {
   const [changingPassMode, setChangingPassMode] = useState(false);  
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center p-4">
+    <div id="Profile" className="min-h-screen w-full flex items-center justify-center p-4">
       <div className="w-full max-w-7xl mx-auto px-4">
         <div className="w-full max-w-3xl p-8 bg-black/40 rounded-xl shadow shadow-white text-white mx-auto">
         {/* Title */}

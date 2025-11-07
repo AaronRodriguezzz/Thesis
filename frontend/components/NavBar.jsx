@@ -48,9 +48,6 @@ export default function Navigation() {
           <p className="text-[20px] md:text-[30px] tracking-wider md:tracking-[8px]">BARBERSHOP</p>
         </div>
 
-        {/* <img src="/shop_logo.png" alt="shop_logo" className="block lg:hidden w-20 h-20"/> */}
-
-        {/* Nav links (mobile sidebar or desktop inline) */}
       <nav>
         <ul
           className={`
@@ -100,7 +97,7 @@ export default function Navigation() {
         <div className="flex gap-x-2">
           <FiUser
             size={30}
-            onClick={() => navigate("/profile")}
+            onClick={() => navClicked("Profile", "/profile")}
             className="text-white cursor-pointer"
           />
         </div>

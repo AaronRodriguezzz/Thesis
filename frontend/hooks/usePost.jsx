@@ -1,24 +1,26 @@
 // hooks/usePost.js
 import { useState } from "react";
-import axios from "axios";
+import { post_data } from "../services/PostMethod";
 import { CustomAlert } from "../components/modal/CustomAlert";
 
 export const usePost = () => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [postLoading, setLoading] = useState(false);
+  const [postError, setError] = useState(null);
 
-  const postData = async (url, payload, config = {}) => {
+  const postData = async (e, url, payload, onSuccessAction) => {
+    e.preventDefault();
     setLoading(true);
     setError(null);
 
     try {
-      const response = await axios.post(url, payload, config);
-      CustomAlert('success',  response.data.message || 'Successful');
-      return response.data;
+      const response = await post_data(payload, url)
+
+      if(response){
+        onSuccessAction()
+      }
 
     } catch (err) {
       const message = err.response.data.message || err.response.data.error || 'Unknown error';
-      CustomAlert('error', message);
       setError(message);
       throw err;
     } finally {
@@ -26,5 +28,5 @@ export const usePost = () => {
     }
   };
 
-  return { postData, loading, error };
+  return { postData, postLoading, postError };
 };

@@ -47,7 +47,7 @@ export default function BarberStatusPage() {
   );
 
   return (
-    <div className="w-screen h-screen overflow-x-hidden">
+    <div id='Queueing'  className="w-screen h-screen overflow-x-hidden">
       <main className="h-full w-full flex flex-col items-center">
         <div className="w-[90%] md:w-[95%] lg:w-[75%] flex justify-between items-center leading-3 bg-black/40 text-white p-4 my-2 md:my-4 shadow  shadow-white rounded">
           <div className="leading-0.2">

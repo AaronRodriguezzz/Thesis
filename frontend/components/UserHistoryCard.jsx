@@ -26,7 +26,11 @@ export const HistoryCard = ({
         <span className="font-semibold">Date:</span>{" "}
         {date}
       </div>
-      <div>
+      <div className="mb-2">
+        <span className="font-semibold">Time:</span>{" "}
+        {date}
+      </div>
+      <div> 
         <span className="font-semibold">Status:</span>{" "}
         <span
           className={`font-medium px-2 py-1 rounded-full text-sm ${

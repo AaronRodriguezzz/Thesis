@@ -18,6 +18,35 @@
   background: #555;
 }
 
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #111; /* dark background */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #555; /* gray thumb */
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #888;
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #555 #111;
+}
+
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: sepia(1) saturate(5) hue-rotate(330deg);
+  }
+
 html {
   scroll-padding-top: 100px;
 } 
+
