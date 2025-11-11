@@ -16,7 +16,6 @@ const fadeIn = (delay = 0.3) => ({
 });
 
 const AppointmentPage = () => {
-  // Page protection
   useCustomerPageProtection();
 
   const { branchId } = useParams();
@@ -84,10 +83,10 @@ const AppointmentPage = () => {
 
   // Loading & Error States
   if (loading)
-    return <p className="text-center text-white mt-10">Loading appointment info...</p>;
+    return <p className="h-screen text-center text-white mt-10">Loading appointment info...</p>;
   if (error || postError)
     return (
-      <p className="text-center text-red-500 mt-10">
+      <p className="h-screen text-center text-red-500 mt-10">
         Failed to load data. Please try again.
       </p>
     );

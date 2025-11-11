@@ -47,6 +47,7 @@ export const useCustomerPageProtection = () => {
     const navigate = useNavigate();
     const { user, loading } = useAuth();
 
+    console.log(user);
     useEffect(() => {
         if (!loading) {
             if (!user) {
