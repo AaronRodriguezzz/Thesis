@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { HistoryCard } from "../../components/UserHistoryCard";
 import { useCustomerPageProtection } from '../../hooks/userProtectionHooks';
 import { update_data } from '../../services/PutMethod';

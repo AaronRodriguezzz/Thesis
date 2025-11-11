@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { FaChevronLeft,  FaChevronRight} from 'react-icons/fa';
 import { useSectionViews } from '../../../hooks/HomeRef';
 import { useFetch } from '../../../hooks/useFetch';

@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
-import Rating from '@mui/material/Rating'
+import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useFetch } from '../../hooks/useFetch'
+import Rating from '@mui/material/Rating'
 
 const FeedbackPage = () => {
     

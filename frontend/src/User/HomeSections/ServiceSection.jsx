@@ -1,4 +1,3 @@
-import React from 'react'
 import { useFetch } from '../../../hooks/useFetch'
 import { motion } from 'framer-motion';
 import { useSectionViews } from '../../../hooks/HomeRef';

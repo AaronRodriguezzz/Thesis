@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import { FaChevronLeft,  FaChevronRight} from 'react-icons/fa';
 import { get_data } from "../../services/GetMethod";
 import { motion } from "framer-motion";

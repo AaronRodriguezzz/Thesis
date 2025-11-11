@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { FaSearch, FaEdit, FaBan } from "react-icons/fa";
-import Pagination from "@mui/material/Pagination";
 import { update_data } from "../../services/PutMethod";
 import { useFetch } from "../../hooks/useFetch";
 import { useDebounce } from "../../hooks/useDebounce";
 import CustomerUpdateModal from "../../components/modal/UpdateCustomerModal";
 import TableLoading from "../../components/animations/TableLoading";
+import Pagination from "@mui/material/Pagination";
 
 const Customers = () => {
     const [searchTerm, setSearchTerm] = useState("");

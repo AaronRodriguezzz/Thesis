@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { usePost } from "../../hooks/usePost";
 import { update_data } from "../../services/PutMethod";
 import { useNavigate } from "react-router-dom";

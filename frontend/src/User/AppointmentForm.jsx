@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { AnimatedDropDown } from "../../components/animations/DropDownAnimaton";
 import { useCustomerPageProtection, useUser } from "../../hooks/userProtectionHooks";
 import { useFetch } from "../../hooks/useFetch";
 import { usePost } from "../../hooks/usePost";
-import TermsModal from "../../components/modal/TermsAndConditionModal";
 import { notificationsSocket } from "../../services/SocketMethods";
 import { time } from "../../data/TimeData";
+import TermsModal from "../../components/modal/TermsAndConditionModal";
 
 const fadeIn = (delay = 0.3) => ({
   initial: { opacity: 0, x: 200 },

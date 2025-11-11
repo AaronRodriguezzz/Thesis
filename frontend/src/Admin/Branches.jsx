@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { FaUserPlus, FaSearch, FaEdit, FaTrash } from "react-icons/fa";
-import Pagination from "@mui/material/Pagination";
 import { delete_data } from "../../services/DeleteMethod";
 import { useFetch } from "../../hooks/useFetch";
 import { useDebounce } from "../../hooks/useDebounce";
 import UpdateBranchModal from "../../components/modal/UpdateBranchModal";
 import NewBranch from "../../components/modal/AddBranchModal";
 import TableLoading from "../../components/animations/TableLoading";
+import Pagination from "@mui/material/Pagination";
 
 const Branches = () => {
     const [page, setPage] = useState(1);

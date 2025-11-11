@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { update_data } from "../../services/PutMethod";
 import { useAuth } from "../../contexts/UserContext";
 import { CustomAlert } from "../../components/modal/CustomAlert";
-import { LogOut, User, Lock, Edit3, Save } from "lucide-react";
+import { Lock, Edit3, Save } from "lucide-react";
 
 const AdminProfilePage = () => {
   const { user, setUser } = useAuth();

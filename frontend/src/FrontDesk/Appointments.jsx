@@ -1,13 +1,12 @@
-import React, { useEffect, useState, useMemo } from "react";
-import { FaUserPlus, FaSearch, FaEdit, FaTimes, FaCheck } from "react-icons/fa";
-import Pagination from "@mui/material/Pagination";
-import { get_data } from "../../services/GetMethod";
+import { useState } from "react";
+import { FaUserPlus, FaSearch } from "react-icons/fa";
 import { time } from "../../data/TimeData";
-import ThreeLayerModal from "../../components/modal/WalkinAppointment";
-import { update_data } from "../../services/PutMethod";
 import { useUser} from "../../hooks/userProtectionHooks";
 import { useFetch } from "../../hooks/useFetch";
 import TableLoading from "../../components/animations/TableLoading";
+import Pagination from "@mui/material/Pagination";
+import ThreeLayerModal from "../../components/modal/WalkinAppointment";
+
 
 const Appointments = () => {
     const user = useUser();

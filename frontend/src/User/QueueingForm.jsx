@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { MdCalendarToday, MdDirectionsWalk } from "react-icons/md";
 import { useQueueData } from "../../hooks/useQueueData";
 import { FaUserCircle } from 'react-icons/fa';

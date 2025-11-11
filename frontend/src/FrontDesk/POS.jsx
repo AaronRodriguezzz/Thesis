@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { FaSearch } from "react-icons/fa";
 import { update_data } from "../../services/PutMethod";
-import { useUser } from "../../hooks/userProtectionHooks";
 import { useFetch } from "../../hooks/useFetch";
 import { useAuth } from '../../contexts/UserContext';
 import POSLoading from "../../components/animations/POSLoading";

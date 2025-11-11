@@ -1,4 +1,3 @@
-import React from 'react'
 import Rating from "@mui/material/Rating";
 import { useNavigate } from 'react-router-dom';
 import { useSectionViews } from '../../../hooks/HomeRef';

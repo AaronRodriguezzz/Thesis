@@ -1,10 +1,10 @@
-import React, { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { FaUserPlus, FaSearch, FaEdit, FaTrash, FaClipboardList } from "react-icons/fa";
-import Pagination from "@mui/material/Pagination";
 import { get_data } from "../../services/GetMethod";
 import { delete_data } from "../../services/DeleteMethod";
 import ProductModal from "../../components/modal/AddProductModal";
 import ProductSale from "../../components/modal/ProductSale";
+import Pagination from "@mui/material/Pagination";
 
 const Products = () => {
     const baseUrl = import.meta.env.MODE === 'development'

@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { FaUserPlus, FaSearch, FaEdit, FaTrash } from "react-icons/fa";
-import Pagination from "@mui/material/Pagination";
 import { delete_data } from "../../services/DeleteMethod";
 import { useFetch } from "../../hooks/useFetch";
 import { useDebounce } from "../../hooks/useDebounce";
 import TableLoading from "../../components/animations/TableLoading";
 import UpdateEmployee from "../../components/modal/UpdateEmployeeModal";
 import NewEmployee from "../../components/modal/AddEmployeeModal";
+import Pagination from "@mui/material/Pagination";
 
 const Employees = () => {
     const [page, setPage] = useState(1);

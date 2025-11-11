@@ -1,6 +1,5 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { post_data } from '../../../services/PostMethod';
-import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../../hooks/userProtectionHooks';
 import { useIsMobile } from '../../../hooks/useIsInMobile';
 import { useSectionViews } from '../../../hooks/HomeRef';

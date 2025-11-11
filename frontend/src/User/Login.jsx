@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import GoogleButton from "../../components/ui/GoogleButton";
+import { useState } from "react";
 import { post_data } from '../../services/PostMethod';
 import { useNavigate } from "react-router-dom";
 import { useLoginDisabling } from "../../hooks/userProtectionHooks";
 import { useLocation } from "react-router-dom";
 import { motion } from "motion/react"
+import GoogleButton from "../../components/ui/GoogleButton";
 
 export default function Login() {
   useLoginDisabling();

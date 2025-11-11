@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { MdCalendarToday, MdDirectionsWalk } from "react-icons/md";
 import { timeFormat } from "../../utils/formatDate";
 import { update_data } from "../../services/PutMethod";
@@ -14,8 +14,6 @@ import BarberCard from "../../components/ui/BarberCard";
 import PageHeader from "../../components/ui/BarberAssignmentHeader";
 import AssignmentsCard from "../../components/ui/BarberAssignmentCard";
 
-
-// ---------------------- Main Component ----------------------
 
 const Assignments = () => {
     const baseUrl =

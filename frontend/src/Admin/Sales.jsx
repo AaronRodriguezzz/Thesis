@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { FaSearch, FaEye } from "react-icons/fa";
 import Pagination from "@mui/material/Pagination";
 import { get_data } from "../../services/GetMethod";

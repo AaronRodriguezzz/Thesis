@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSectionViews } from "../../hooks/HomeRef";
 import { useIsMobile } from "../../hooks/useIsInMobile";

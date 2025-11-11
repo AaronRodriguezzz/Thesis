@@ -1,4 +1,3 @@
-import React from 'react';
 import {faqs} from '../../data/Questions';
 import {motion} from 'motion/react';
 import { SlideTxt } from '../../components/animations/TextAnimation';

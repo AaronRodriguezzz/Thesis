@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { FaSearch, FaEdit, FaTrash, FaUserPlus } from "react-icons/fa";
-import Pagination from "@mui/material/Pagination";
 import { delete_data } from "../../services/DeleteMethod";
 import { useFetch } from "../../hooks/useFetch";
 import { useDebounce } from "../../hooks/useDebounce";
 import TableLoading from "../../components/animations/TableLoading";
 import NewService from "../../components/modal/AddServiceModal";
 import UpdateService from "../../components/modal/UpdateServiceModal";
+import Pagination from "@mui/material/Pagination";
 
 const Services = () => {
     const [page, setPage] = useState(1);
