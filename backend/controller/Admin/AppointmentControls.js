@@ -1,4 +1,6 @@
 const Appointment = require('../../models/Appointment'); // Adjust the path if needed
+const Customers = require('../../models/CustomerAccount');
+const Services = require('../../models/Services');
 const cron = require('node-cron');
 
 /**
@@ -80,11 +82,44 @@ const branchAppointments = async (req, res) => {
 
     try {
         
+        const search = req.query.search || '';
         const page = parseInt(req.query.page) || 1;
         const limit = 10;
         const skip = (page - 1) * limit;
 
-        const query = { branch: branchId }
+
+        let query = {}
+        if (search) {
+            const customers = await Customers.find({
+                $or: [
+                { firstName: { $regex: search, $options: 'i' } },
+                { lastName: { $regex: search, $options: 'i' } },
+                { email: { $regex: search, $options: 'i' } },
+                { phone: { $regex: search, $options: 'i' } },
+                ],
+            }).select('_id');
+
+            const services = await Services.find({
+                name: { $regex: search, $options: 'i' },
+            }).select('_id');
+
+            const customerIds = customers.map(c => c._id);
+            const serviceIds = services.map(s => s._id);
+
+            // Step 2: filter appointments that match
+            query = {
+                branch: branchId,
+                $or: [
+                { customer: { $in: customerIds } },
+                { service: { $in: serviceIds } },
+                { uniqueCode: { $regex: search, $options: 'i' } },
+                { status: { $regex: search, $options: 'i' } },
+                ],
+            };
+        } else {
+            query = { branch: branchId };
+        }
+
         const totalCount = await Appointment.countDocuments(query);
         const pageCount = Math.ceil(totalCount / limit);
 

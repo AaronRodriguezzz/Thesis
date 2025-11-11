@@ -12,46 +12,45 @@ import TableLoading from "../../components/animations/TableLoading";
 const Appointments = () => {
     const user = useUser();
     const [searchTerm, setSearchTerm] = useState("");
+    const [searchQuery, setSearchQuery] = useState("");
     const [page, setPage] = useState(1);
     const [addingAppointment, setAddingAppointment] = useState(false);
-    const [newStatus, setNewStatus] = useState('');
-    const [currentlyUpdatingId, setCurrentlyUpdatingId] = useState('');
     
     const { data, loading, error, setData } = useFetch(
-        user ? `/branch_appointments/${user?.branchAssigned}` : null,
+        user ? `/branch_appointments/${user?.branchAssigned}?search=${searchQuery}` : null,
         page,
         null, 
-        [page, user]
+        [page, user, searchQuery]
     );
     
     const appointmentList = data?.appointments || [];
     const paginationLimit = data?.pageCount || 1;
 
-    const sortOrder = {
-        'Booked': 1, 
-        'Assigned': 2, 
-        'Completed': 3, 
-        'Cancelled': 4, 
-        'No-Show': 5,
-    }
+    // const sortOrder = {
+    //     'Booked': 1, 
+    //     'Assigned': 2, 
+    //     'Completed': 3, 
+    //     'Cancelled': 4, 
+    //     'No-Show': 5,
+    // }
 
-    const filteredAppointments = useMemo(() => {
-        if (!appointmentList) return [];
+    // const filteredAppointments = useMemo(() => {
+    //     if (!appointmentList) return [];
 
-        return [...appointmentList] // <-- make a copy
-            .sort((a, b) => sortOrder[a.status] - sortOrder[b.status])
-            .filter((appointment) =>
-            appointment.customer?.lastName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            appointment.customer?.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            appointment.service?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            appointment.additionalService?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            appointment.branch?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            appointment.barber?.fullName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            appointment.scheduledDate?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            appointment.scheduledTime?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            appointment.status?.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-    }, [appointmentList, searchTerm]);
+    //     return [...appointmentList] // <-- make a copy
+    //         .sort((a, b) => sortOrder[a.status] - sortOrder[b.status])
+    //         .filter((appointment) =>
+    //         appointment.customer?.lastName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    //         appointment.customer?.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    //         appointment.service?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    //         appointment.additionalService?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    //         appointment.branch?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    //         appointment.barber?.fullName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    //         appointment.scheduledDate?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    //         appointment.scheduledTime?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    //         appointment.status?.toLowerCase().includes(searchTerm.toLowerCase())
+    //     );
+    // }, [appointmentList, searchTerm]);
 
     if (loading) return <TableLoading />;
     if (error) return <p className="p-4 text-red-500">Error loading data</p>;
@@ -69,9 +68,24 @@ const Appointments = () => {
                                     placeholder="Search appointments (Name, Service, Date)..."
                                     className="w-full pl-10 pr-4 py-2 bg-black/20 rounded-full text-sm tracking-tight text-white placeholder-white/60 border border-white/20 focus:outline-none focus:ring-1 focus:ring-white/10 focus:border-white/60"
                                     value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    onChange={(e) => {
+                                        const value = e.target.value
+                                        setSearchTerm(value)
+
+                                        if(value.trim() === '') {
+                                            setPage(1);
+                                            setSearchQuery('');
+                                        }
+                                    }} 
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                            e.preventDefault();
+                                            setPage(1);
+                                            setSearchQuery(searchTerm)
+                                        }
+                                    }}
                                 />
-                                    <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/60" />
+                                <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/60" />
                             </div>
                             
                             <button 
@@ -125,7 +139,7 @@ const Appointments = () => {
                                         </tr>
                                     </thead>
                                     <tbody className="bg-black/40 divide-y divide-black/20">
-                                        {filteredAppointments.map((appointment) => (
+                                        {appointmentList.map((appointment) => (
                                             <tr className="px-4 py-4 whitespace-nowrap text-sm text-white/90 tracking-tight" key={appointment._id}>
                                                 <td>{appointment?.scheduledDate?.split('T')[0]}</td>
                                                 <td>{time.find(t => t.value === appointment?.scheduledTime)?.timeTxt || "—"}</td>
