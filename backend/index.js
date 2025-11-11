@@ -48,19 +48,19 @@ app.use("/uploads/branches", express.static("uploads/branches"));
 global.queueState = {};
 
 app.get('/api/protected', (req, res) => {
-    const token = req.cookies.user; 
-    
-    if (!token) {
-      return res.status(401).json({ message: 'No token found' });
-    }
-    
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  const token = req.cookies.user || req.cookies.admin || req.cookies.frontdesk;
 
-        res.json({ message: 'Access granted', user: decoded });
-    } catch (err) {
-        res.status(403).json({ message: err.message });
-    }
+  if (!token) {
+    return res.status(401).json({ message: 'No token found' });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    res.json({ message: 'Access granted', user: decoded });
+  } catch (err) {
+    res.status(403).json({ message: 'Invalid or expired token' });
+  }
 });
 
 app.post("/api/logout", (req, res) => {
@@ -93,7 +93,7 @@ app.use(AdminAuth);
 app.use(BranchRoutes);
 app.use(AnnouncementRoutes);
 app.use(AssignmentRoutes);
-app.use(verifyAdminToken, [
+app.use(
   AppointmentRoutes,
   CustomerRoutes,
   DashboardRoutes,
@@ -103,7 +103,7 @@ app.use(verifyAdminToken, [
   ServiceRoutes,
   WalkInRoutes,
   POSRoutes
-]);
+);
 
 
 const dirname = path.resolve();

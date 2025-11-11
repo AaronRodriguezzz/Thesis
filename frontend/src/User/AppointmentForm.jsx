@@ -12,8 +12,8 @@ import { time } from "../../data/TimeData";
 const AppointmentPage = () => {
   useCustomerPageProtection();
 
-  const navigate = useNavigate();
   const { branchId } = useParams();
+  const navigate = useNavigate();
   const user = useUser();
 
   const today = new Date();

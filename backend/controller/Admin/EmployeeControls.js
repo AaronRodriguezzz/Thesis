@@ -30,13 +30,13 @@ const get_employees = async (req, res) => {
             .sort({ createdAt: -1 })
 
         // Send customers and pagination info to frontend
-        return res.status(200).json({
+        res.status(200).json({
             employees,
         });
 
     } catch (err) {
         console.error(err);
-        return res.status(500).json({ message: 'Server error fetching customers.' });
+        res.status(500).json({ message: 'Server error fetching customers.' });
     }
 };
 
@@ -50,10 +50,6 @@ const get_Barbers = async (req, res) => {
     
     const branchId = req.params.branchId;
 
-    if (!branchId) {
-        return res.status(400).json({ message: 'Branch Missing' });
-    }
-
     try {
 
         const barbers = await EmployeeAccount.find({ 
@@ -61,11 +57,11 @@ const get_Barbers = async (req, res) => {
             role: 'Barber' 
         });
 
-        return res.status(200).json({ barbers });
+        res.status(200).json({ barbers });
 
     } catch (err) {
         console.error(err);
-        return res.status(500).json({ message: 'Server error fetching customers.' });
+        res.status(500).json({ message: 'Server error fetching customers.' });
     }
 };
 
@@ -79,7 +75,7 @@ const new_admin = async (req, res) => {
 
     // Basic input validation
     if (!email || !fullName || !role || !password ) {
-        return res.status(400).json({ message: 'All fields are required' });
+        res.status(400).json({ message: 'All fields are required' });
     }
 
     try {
@@ -89,7 +85,7 @@ const new_admin = async (req, res) => {
         });
 
         if (user) {
-            return res.status(409).json({ message: 'Account already exists' });
+            res.status(409).json({ message: 'Account already exists' });
         }
 
         // Hash the password
@@ -104,16 +100,12 @@ const new_admin = async (req, res) => {
             password: encryptedPassword,
         });
 
-        const adminSaved = await newAdmin.save();
+        await newAdmin.save();
 
-        if (!adminSaved) {
-            return res.status(500).json({ message: 'Adding user unsuccessful' });
-        }
-
-        return res.status(200).json({ message: 'New user added', added: true, user: adminSaved });
+        res.status(200).json({ message: 'New user added', added: true, user: adminSaved });
     } catch (err) {
         console.error(err);
-        return res.status(500).json({ message: err });
+        res.status(500).json({ message: err });
     }
 };
 
@@ -125,23 +117,17 @@ const new_admin = async (req, res) => {
 const update_admin_account = async (req, res) => {
     const id = req.body.newData._id;
 
-    if(!id) {
-        return res.status(400).json({message: 'Id missing'});
-    }
-
     try {
-
-        // Update the account
         const account = await EmployeeAccount.findByIdAndUpdate(id, req.body.newData, { new: true });
 
         if (!account) {
-            return res.status(404).json({ message: 'Account not found or update failed' });
+            res.status(404).json({ message: 'Account not found or update failed' });
         }
 
-        return res.status(200).json({ message: 'Update successful.', updatedInfo: account });
+        res.status(200).json({ message: 'Update successful.', updatedInfo: account });
     } catch (err) {
         console.error(err);
-        return res.status(500).json({ message: 'Server error' });
+        res.status(500).json({ message: 'Server error' });
     }
 };
 
@@ -149,7 +135,7 @@ const updatePassword = async (req,res) => {
     const { id, currentPassword, newPassword } = req.body.newData;
 
     if(!id || !currentPassword || !newPassword) {
-        return res.status(400).json({ message: 'Illegal Payload'})
+        res.status(400).json({ message: 'Illegal Payload'})
     }
 
     try{
@@ -157,24 +143,24 @@ const updatePassword = async (req,res) => {
         const user = await EmployeeAccount.findById(id).select('password');
 
         if(!user){
-            return res.status(404).json({message: 'User does not exist'})
+            res.status(404).json({message: 'User does not exist'})
         }
 
         const passwordMatch = await bcrypt.compare(currentPassword, user.password);
 
         if(!passwordMatch){
-            return res.status(400).json({message: 'User does not exist'})
+            res.status(400).json({message: 'User does not exist'})
         }
 
         const encryptedPassword = await bcrypt.hash(newPassword, 10);
         user.password = encryptedPassword;  
         await user.save();
 
-        return res.status(200).json({ updated: true, message: 'Password Updated Successfully'})
+        res.status(200).json({ updated: true, message: 'Password Updated Successfully'})
 
     }catch(err){
         console.log(err);
-        return res.status(500).json({ message: err?.message || 'Internal server error'})
+        res.status(500).json({ message: err?.message || 'Internal server error'})
     }
 }
 
@@ -186,19 +172,19 @@ const updatePassword = async (req,res) => {
 const delete_employee = async (req, res) => {
     const { id } = req.params;
 
-    if(!id) return res.status(404).json({message: 'Id Required'})
+    if(!id) res.status(404).json({message: 'Id Required'})
         
     try {
         const deletedEmployee = await EmployeeAccount.findByIdAndDelete(id);
 
         if (!deletedEmployee) {
-            return res.status(404).json({ message: 'Employee not found or already deleted' });
+            res.status(404).json({ message: 'Employee not found or already deleted' });
         }
 
-        return res.status(200).json({ message: 'Deletion successful', deleted: true });
+        res.status(200).json({ message: 'Deletion successful', deleted: true });
     } catch (err) {
         console.error(err);
-        return res.status(500).json({ message: err });
+        res.status(500).json({ message: err });
     }
 };
 

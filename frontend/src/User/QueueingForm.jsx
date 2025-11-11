@@ -8,7 +8,6 @@ import AssignmentLoading from '../../components/animations/AssignmentLoading';
  
 export default function BarberStatusPage() {
   const branchId = '6862a4bed08d2b82975b2ac6'
-  const baseUrl = import.meta.env.MODE === 'development' ? 'http://localhost:4001' : 'https://tototumbs.onrender.com';
 
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
@@ -17,8 +16,6 @@ export default function BarberStatusPage() {
 
   const { barberList, appointments, walkIns } = useQueueData(currentBranch);
   const { data, loading, error } = useFetch('/get_data/branch', null, null, []);
-
-  console.log(data);
  
   useEffect(() => {
     const interval = setInterval(() => {
@@ -110,20 +107,10 @@ export default function BarberStatusPage() {
                 key={index}
                 className="h-full w-[90%] md:w-[35%] lg:w-[25%] flex flex-col items-center justify-center rounded-lg bg-black/40 text-white shadow shadow-white p-4"
               >
-                {/* {barber?.imagePath ? (
-                  <img
-                    src={`${baseUrl}/${barber.imagePath}`}
-                    alt={`${barber.fullName} profile`}
-                    className="w-20 h-20 rounded-full object-cover mb-3"
-                  />
-                ) : ( */}
-                  <FaUserCircle className="text-[80px] md:text-[120px mb-3" />
-                {/* )} */}
-
+                <FaUserCircle className="text-[80px] md:text-[120px mb-3" />
                 <h1 className="text-[30px] font-semibold tracking-tight text-center">
                   {barber.fullName}
                 </h1>
-
                 <span
                   className={`block w-[80%] text-center text-lg font-medium px-2 py-1 mx-auto rounded-full ${statusColor}`}
                 >

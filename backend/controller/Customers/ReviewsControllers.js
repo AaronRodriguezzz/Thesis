@@ -40,8 +40,6 @@ const getReviews = async (req, res) => {
       .limit(limit)
       .sort({ createdAt: -1 });
 
-      console.log(reviews);
-
     return res.status(200).json({ reviews, maxPage });
 
   } catch (err) {

@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { post_data } from "../../services/PostMethod";
-import { useUserProtection } from "../../hooks/userProtectionHooks";
+import { useLoginDisabling, useUserProtection } from "../../hooks/userProtectionHooks";
 import { motion } from "framer-motion";
 
 export default function RegisterPage() {
   useUserProtection();
+  useLoginDisabling();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({

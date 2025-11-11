@@ -8,6 +8,7 @@ const timeData = require('../../public/timeData');
 const cardDataControls = async (req, res) => {
     const branchId = req.params.branchId
 
+    console.log('log');
     try{
         const startOfToday = new Date();
         startOfToday.setHours(0, 0, 0, 0);

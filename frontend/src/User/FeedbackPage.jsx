@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useFetch } from '../../hooks/useFetch'
 
 const FeedbackPage = () => {
+    
     const [page, setPage] = useState(1)
     const { data, loading, error } = useFetch('/reviews', null, null, [page])
 

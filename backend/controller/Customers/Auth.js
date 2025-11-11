@@ -24,13 +24,13 @@ const user_login = async (req, res) => {
         }
 
         if(!passwordVerification(password, user.password)){
-            res.status(401).json({ message: 'Invalid credentials' });
+            res.status(401).json({ message: 'Invalid credential' });
         }
 
         const adminObj = user.toObject();
         const { password: _, ...customer } = adminObj;
 
-        generateToken(res, customer)
+        generateToken(res, customer, 'user')
 
         return res.status(200).json({ message: 'Log In Successful', user });
 
@@ -70,7 +70,7 @@ const googleLogin = async (req, res) => {
             });
         }
 
-        generateToken(res, user.toObject());
+        generateToken(res, user.toObject(), 'user');
 
         return res.status(200).json({ message: "Log In Successful", user });
 

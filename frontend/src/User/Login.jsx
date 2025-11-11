@@ -3,7 +3,6 @@ import GoogleButton from "../../components/ui/GoogleButton";
 import { post_data } from '../../services/PostMethod';
 import { useNavigate } from "react-router-dom";
 import { useLoginDisabling } from "../../hooks/userProtectionHooks";
-import { useAuth } from "../../contexts/UserContext";
 import { useLocation } from "react-router-dom";
 import { motion } from "motion/react"
 

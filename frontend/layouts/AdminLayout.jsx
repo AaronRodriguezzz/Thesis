@@ -2,12 +2,13 @@ import React from "react";
 import AdminSidebar from "../components/AdminSideBar";
 import PopUpNotification from "../components/NotifPopup";
 import { Outlet } from "react-router-dom";
-import { useUserProtection, useAdminPageProtection} from "../hooks/userProtectionHooks";
 import AdminHeader from "../components/ui/AdminHeader";
+import { useAdminPageProtection, useUserProtection } from "../hooks/userProtectionHooks";
 
 const AdminLayout = () => {
   useAdminPageProtection();
-
+  useUserProtection();
+  
   return (
     <div className="flex">
       <div className="fixed inset-0 -z-10 overflow-hidden">

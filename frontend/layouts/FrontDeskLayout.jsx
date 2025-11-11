@@ -1,12 +1,13 @@
 import React from "react";
 import FrontDeskSideBar from "../components/FrontDeskSideBar";
 import { Outlet } from "react-router-dom";
-import { useAdminPageProtection } from "../hooks/userProtectionHooks";
 import AdminHeader from "../components/ui/AdminHeader";
+import { useAdminPageProtection, useUserProtection } from "../hooks/userProtectionHooks";
 
 const FrontDeskLayout = () => {
   useAdminPageProtection();
-  
+  useUserProtection();
+
   return (
     <div className="flex">
       <div className="fixed inset-0 -z-10 overflow-hidden">

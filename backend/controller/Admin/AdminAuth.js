@@ -1,42 +1,40 @@
 const EmployeeAccount = require('../../models/EmployeeAccount');
 const bcrypt = require('bcrypt');
 const generateToken = require('../../utils/tokenCreation');
+const passwordVerification = require('../../utils/passwordVerification');
+
 /**
  * @desc Logs in an admin/employee
  * @route POST /api/auth/login
  * @access Public
  */
 const admin_login = async (req, res) => {
+
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        res.status(400).json({ message: 'Email and password are required' });
+    }
+
     try {
-        const { email, password } = req.body;
+        const admin = await EmployeeAccount.findOne({ email }).select("+password");
 
-        // Validate input
-        if (!email || !password) {
-            return res.status(400).json({ message: 'Email and password are required' });
-        }
-
-        // Check if account exists
-        const user = await EmployeeAccount.findOne({ email }).select("+password");
-
-        if (!user) {
+        if (!admin) {
             return res.status(404).json({ message: 'Sorry, account does not exist' });
         }
 
-        // Compare passwords using bcrypt
-        const password_compare = await bcrypt.compare(password, user.password);
-        if (!password_compare) {
-            return res.status(401).json({ message: 'Invalid credentials' });
+        if(!passwordVerification(password, admin.password)){
+            res.status(401).json({ message: 'Invalid credential' });
         }
 
-        // Convert Mongoose document to plain object and remove password
-        const adminObj = user.toObject();
-        const { password: _, ...employee } = adminObj;
+        const adminObj = admin.toObject();
+        const { password: _, ...payload } = adminObj;
         
-        generateToken(res, employee)
+        const tokenName = payload.role === 'Admin' ? 'admin' : 'frontdesk'
+        console.log(tokenName);
+        generateToken(res, payload, tokenName)
 
-        // Send success response
-        res.status(200.).json({ message: 'Access granted', user: employee });
-
+        res.status(200).json({ message: 'Access granted', user: admin });
 
     } catch (err) {
         console.error(err);

@@ -9,7 +9,7 @@ router.post('/api/auth/user_login', Auth.user_login);
 router.post('/api/auth/google_login', Auth.googleLogin);
 router.post('/api/user_registration', Auth.account_registration);
 router.get('/api/auth/user_check', Auth.checkAuth);
-router.put('/api/auth/update_user', verifyToken, Auth.update_account);
-router.put('/api/auth/update_user_password', verifyToken, Auth.updatePassword);
+router.put('/api/auth/update_user', verifyToken('user'), Auth.update_account);
+router.put('/api/auth/update_user_password', verifyToken('user'), Auth.updatePassword);
 
 module.exports = router;
