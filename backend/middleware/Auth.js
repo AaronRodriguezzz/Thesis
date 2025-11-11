@@ -13,7 +13,6 @@ const verifyEmployeeToken = (req, res, next) => {
   try {
     const token = adminToken || frontDeskToken;
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log('decoded admin', decoded)
 
     if (!["Admin", "Front Desk"].includes(decoded.role)) {
       return res.status(403).json({ message: "Access denied. Unauthorized role." });

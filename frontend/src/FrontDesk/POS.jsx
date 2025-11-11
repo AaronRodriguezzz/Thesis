@@ -54,7 +54,6 @@ const POS = () => {
 
     const removeItem = (id) => {
         const updatedList = checkOutList.filter(product => product._id !== id);
-
         setCheckOutList(updatedList);
     }
 
@@ -74,7 +73,6 @@ const POS = () => {
     };
 
     const handle_finish = async () => {
-
         const checkOutPayload = {
             product: [...checkOutList],
             soldBy: user?._id,
@@ -96,7 +94,6 @@ const POS = () => {
                     }),
                 }));
             }
-
         }catch(err){
             console.log(err);
         }
