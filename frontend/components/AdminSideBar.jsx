@@ -54,7 +54,7 @@ const AdminSidebar = () => {
 
       <div className="p-4">
         <button
-          onClick={logout}
+          onClick={() => logout('admin')}
           className="flex items-center w-full px-4 py-2 bg-red-600 hover:bg-red-700 rounded disabled:cursor-not-allowed"
           disabled={loading}
         >

@@ -54,7 +54,6 @@ const AppointmentPage = () => {
   const barbers = data?.barbers || [];
   const appointments = data?.appointmentRecord || [];
 
-  // Handlers
   const handleChange = (field) => (e) =>
     setFormData((prev) => ({ ...prev, [field]: e.target.value }));
 

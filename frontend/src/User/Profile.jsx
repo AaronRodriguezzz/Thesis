@@ -71,7 +71,7 @@ const ProfilePage = () => {
           <div className="flex justify-end mt-8">
             <button
               className="bg-red-500 hover:bg-red-600 text-white text-md py-1 px-4 rounded-full transition"
-              onClick={logout}
+              onClick={() => logout('user')}
             >
               LOG OUT
             </button>

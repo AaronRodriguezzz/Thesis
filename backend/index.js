@@ -63,8 +63,10 @@ app.get('/api/protected', (req, res) => {
   }
 });
 
-app.post("/api/logout", (req, res) => {
-  res.clearCookie("user", {
+app.post("/api/logout/:role", (req, res) => {
+  const role = req.params.role;
+
+  res.clearCookie(role, {
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",

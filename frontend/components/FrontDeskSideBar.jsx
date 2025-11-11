@@ -50,7 +50,7 @@ const FrontDeskSideBar = () => {
 
       <div className="p-4">
         <button
-          onClick={logout}
+          onClick={() => logout('frontdesk')}
           className="flex items-center w-full px-4 py-2 bg-red-600 hover:bg-red-700 rounded disabled:cursor-not-allowed transition-shadow shadow-sm hover:shadow-md"
           disabled={loading}
 

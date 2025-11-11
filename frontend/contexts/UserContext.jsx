@@ -27,9 +27,9 @@ export const AuthProvider = ({ children }) => {
         return () => clearInterval(interval);
     }, []);
 
-    const logout = async () => {
+    const logout = async (role) => {
         try {
-            const res = await axios.post("/api/logout", {}, { withCredentials: true });
+            const res = await axios.post(`/api/logout/${role}`, {}, { withCredentials: true });
             
             if (res.status === 200) {
                 setUser(null);
