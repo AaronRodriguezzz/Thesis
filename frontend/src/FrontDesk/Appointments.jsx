@@ -53,33 +53,6 @@ const Appointments = () => {
         );
     }, [appointmentList, searchTerm]);
 
-    const handle_updateStatus = async () => {
-        if (!currentlyUpdatingId || !newStatus) return;
-
-        const payload = {
-            currentlyUpdatingId,
-            newStatus,
-        };
-
-        try {
-            const response = await update_data('/update_appointment', payload);
-
-            if (response?.appointmentUpdate) {
-                setData((prevList) =>
-                    prevList.map((item) =>
-                        item._id === currentlyUpdatingId ? { ...item, status: newStatus } : item
-                    )
-                );
-                setCurrentlyUpdatingId(null); // close the edit mode
-                setNewStatus(''); // reset the select
-            }
-
-        } catch (err) {
-            console.error("Error updating appointment status:", err);
-        }
-    };
-
-
     if (loading) return <TableLoading />;
     if (error) return <p className="p-4 text-red-500">Error loading data</p>;
 
@@ -149,7 +122,6 @@ const Appointments = () => {
                                             <th>Service</th>
                                             <th>Additional Service</th>
                                             <th>Status</th>
-                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody className="bg-black/40 divide-y divide-black/20">
@@ -163,59 +135,18 @@ const Appointments = () => {
                                                 <td>{appointment?.service?.name}</td>
                                                 <td>{appointment.additionalService?.name ? appointment?.additionalService?.name : "N/A"}</td>
                                                 <td className="px-4 py-4 whitespace-nowrap text-sm tracking-tight">
-                                                    {currentlyUpdatingId === appointment._id ? (
-                                                            <select
-                                                                value={newStatus}
-                                                                onChange={(e) => setNewStatus(e.target.value)}
-                                                                className="border border-black/20 bg-black/20 text-white px-2 py-1 rounded"
-                                                            >
-                                                                <option value="" disabled>Select Status</option>
-                                                                <option value="booked">Booked</option>
-                                                                <option value="cancelled">Cancelled</option>
-                                                                <option value="no-show">No Show</option>
-                                                            </select>
-                                                        ) : (
-                                                            <span
-                                                                style={{
-                                                                color:
-                                                                    appointment.status === 'Booked'
-                                                                    ? 'green'
-                                                                    : appointment.status === 'Cancelled' || appointment.status === 'No-Show'
-                                                                    ? 'red'
-                                                                    : 'white',
-                                                                }}
-                                                            >
-                                                                {appointment.status}
-                                                            </span>
-                                                        )
-                                                    }
-                                                </td>
-                                                <td className="px-4 py-2 text-center">
-                                                    <div className="flex justify-center items-center gap-2">
-                                                        {currentlyUpdatingId !== appointment._id ? (
-                                                            <button
-                                                                className="text-white/70 hover:text-white"
-                                                                onClick={() => setCurrentlyUpdatingId(appointment?._id)}
-                                                            >
-                                                                <FaEdit size={17} />
-                                                            </button>
-                                                        ) : (
-                                                            <>
-                                                                <button
-                                                                    className="text-green-400 hover:text-green-300"
-                                                                    onClick={() => handle_updateStatus(appointment?._id, appointment?.status)}
-                                                                >
-                                                                    <FaCheck size={17} />
-                                                                </button>
-                                                                <button
-                                                                    className="text-red-400 hover:text-red-300"
-                                                                    onClick={() => setCurrentlyUpdatingId(null)}
-                                                                >
-                                                                    <FaTimes size={17} />
-                                                                </button>
-                                                            </>
-                                                        )}
-                                                    </div>
+                                                    <span
+                                                        style={{
+                                                            color:
+                                                                appointment.status === 'Booked'
+                                                                ? 'orange'
+                                                                : appointment.status === 'Cancelled' || appointment.status === 'No-Show'
+                                                                ? 'red'
+                                                                : 'green',
+                                                        }}
+                                                    >
+                                                        {appointment.status}
+                                                    </span>
                                                 </td>
                                             </tr>
                                         ))}

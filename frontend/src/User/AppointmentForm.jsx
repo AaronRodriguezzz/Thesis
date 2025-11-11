@@ -66,6 +66,8 @@ const AppointmentPage = () => {
   useEffect(() => {
     const mainPrice = services.find((s) => s._id === formData.service)?.price || 0;
     const extraPrice = services.find((s) => s._id === formData.additionalService)?.price || 0;
+
+    console.log(mainPrice)
     setFormData((prev) => ({ ...prev, totalAmount: mainPrice + extraPrice }));
   }, [formData.service, formData.additionalService, services]);
 

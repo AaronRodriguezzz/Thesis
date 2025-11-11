@@ -19,13 +19,14 @@ const ThreeLayerModal = ({ onClose, setNewData }) => {
         password: '',
     });
     
-    const [formData, setAppointmentData] = useState({
+    const [formData, setFormData] = useState({
         customer: '',
         branch: '',
         scheduledDate: '',
         scheduledTime: '',
         service: '',
         additionalService: '',
+        totalAmount: 0
     });
 
     const [branch, setBranches] = useState(null);
@@ -49,7 +50,7 @@ const ThreeLayerModal = ({ onClose, setNewData }) => {
         if(form === 'registration') {
             setCustomerData({ ...customerData, [field]: e.target.value });
         }else{
-            setAppointmentData({ ...formData, [field]: e.target.value });
+            setFormData({ ...formData, [field]: e.target.value });
         }
     };
 
@@ -66,7 +67,7 @@ const ThreeLayerModal = ({ onClose, setNewData }) => {
         const response = await post_data(customerData, "/user_registration");
         
         if (response) {
-            setAppointmentData({ ...formData, customer: response?.user?._id});
+            setFormData({ ...formData, customer: response?.user?._id});
             setHasAccount(true)
             handleNext();
         }
@@ -83,8 +84,6 @@ const ThreeLayerModal = ({ onClose, setNewData }) => {
         if (response.appointment) {
             setNewData(prev => [...prev, response?.appointment]);
             onClose(false); 
-            window.location.reload(); // <- This will reload the whole page
-
         }
     }
 
@@ -96,11 +95,19 @@ const ThreeLayerModal = ({ onClose, setNewData }) => {
         const response = await get_data(`/get_customer/${existingUserInput}`);
         
         if (response) {
-            setAppointmentData({ ...formData, customer: response?.user?._id});
+            setFormData({ ...formData, customer: response?.user?._id});
             setHasAccount(true)
             handleNext();
         }
     }
+
+    useEffect(() => {
+        if (!services || services.length === 0) return;
+
+        const mainPrice = services.find((s) => s._id === formData.service)?.price;
+        const extraPrice = services.find((s) => s._id === formData.additionalService)?.price;
+        setFormData((prev) => ({ ...prev, totalAmount: Number(mainPrice) + Number(extraPrice) }));
+    }, [formData.service, formData.additionalService, services]);
 
 
     useEffect(() => {
@@ -314,7 +321,7 @@ const ThreeLayerModal = ({ onClose, setNewData }) => {
                                         (service) =>
                                             service.serviceType === 'Package Service' && (
                                                 <option key={service._id} value={service._id}>
-                                                {service.name}
+                                                    {service.name}
                                                 </option>
                                             )
                                         )

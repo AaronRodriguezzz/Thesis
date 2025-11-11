@@ -21,6 +21,7 @@ const appointment_creation = async (req, res) => {
         scheduledTime,
         totalAmount
     } = req.body;
+    
 
     try {
 
