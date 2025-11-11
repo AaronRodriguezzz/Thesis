@@ -9,22 +9,32 @@ import TermsModal from "../../components/modal/TermsAndConditionModal";
 import { notificationsSocket } from "../../services/SocketMethods";
 import { time } from "../../data/TimeData";
 
+const fadeIn = (delay = 0.3) => ({
+  initial: { opacity: 0, x: 200 },
+  animate: { opacity: 1, x: 0 },
+  transition: { duration: 0.5, ease: "easeInOut", delay },
+});
+
 const AppointmentPage = () => {
+  // Page protection
   useCustomerPageProtection();
 
   const { branchId } = useParams();
   const navigate = useNavigate();
   const user = useUser();
 
+  // Date range
   const today = new Date();
   const oneMonthAhead = new Date(today);
   oneMonthAhead.setMonth(today.getMonth() + 1);
 
+  // UI states
   const [termsChecked, setTermsChecked] = useState(false);
   const [viewTerms, setViewTerms] = useState(false);
 
+  // Form data
   const [formData, setFormData] = useState({
-    customer: user?._id || "",
+    customer: "",
     branch: branchId || "",
     barber: "",
     scheduledDate: "",
@@ -34,43 +44,54 @@ const AppointmentPage = () => {
     totalAmount: 0,
   });
 
-  const { postData, postLoading, postError } = usePost();
+  // Hooks
   const { data, loading, error } = useFetch("/initialize_appointment_info");
+  const { postData, postLoading, postError } = usePost();
 
+  // Data destructuring
   const branches = data?.branches || [];
   const services = data?.services || [];
   const barbers = data?.barbers || [];
   const appointments = data?.appointmentRecord || [];
 
-  const handleChange = (field) => (e) => {
+  // Handlers
+  const handleChange = (field) => (e) =>
     setFormData((prev) => ({ ...prev, [field]: e.target.value }));
-  };
 
   const handleSubmit = async (e) => {
-    await postData(e, "/new_appointment", formData, () => {
-      navigate("/queueing");
-    });
+    e.preventDefault();
+    const payload = { ...formData, customer: user._id };
+    await postData(e, "/new_appointment", payload, () => navigate("/queueing"));
   };
 
+  // Calculate total price
   useEffect(() => {
-    const main = services.find((s) => s._id === formData.service)?.price || 0;
-    const extra = services.find((s) => s._id === formData.additionalService)?.price || 0;
-    setFormData((prev) => ({ ...prev, totalAmount: main + extra }));
+    const mainPrice = services.find((s) => s._id === formData.service)?.price || 0;
+    const extraPrice = services.find((s) => s._id === formData.additionalService)?.price || 0;
+    setFormData((prev) => ({ ...prev, totalAmount: mainPrice + extraPrice }));
   }, [formData.service, formData.additionalService, services]);
 
+  // Socket connection
   useEffect(() => {
-    notificationsSocket.on("connect", () => {
-      console.log("Connected to notifications namespace at Appointment Form Page");
-    });
+    notificationsSocket.on("connect", () =>
+      console.log("Connected to notifications namespace at Appointment Form Page")
+    );
 
     return () => {
       notificationsSocket.off("connect");
       notificationsSocket.off("newAppointment");
     };
-  }, [])
+  }, []);
 
-  if (loading) return <p className="text-center text-white mt-10">Loading appointment info...</p>;
-  if (error || postError) return <p className="text-center text-red-500 mt-10">Failed to load data. Please try again.</p>;
+  // Loading & Error States
+  if (loading)
+    return <p className="text-center text-white mt-10">Loading appointment info...</p>;
+  if (error || postError)
+    return (
+      <p className="text-center text-red-500 mt-10">
+        Failed to load data. Please try again.
+      </p>
+    );
 
   return (
     <div className="w-screen h-screen overflow-x-hidden pt-10">
@@ -88,7 +109,7 @@ const AppointmentPage = () => {
           className="hidden md:block rounded-md w-[350px] h-auto"
         />
 
-        {/* Form */}
+        {/* Appointment Form */}
         <form className="flex flex-col p-4 w-full md:w-1/3" onSubmit={handleSubmit}>
           <motion.h1
             initial={{ opacity: 0 }}
@@ -99,7 +120,7 @@ const AppointmentPage = () => {
             APPOINTMENT FORM
           </motion.h1>
 
-          {/* Branch */}
+          {/* Branch Selection */}
           <AnimatedDropDown
             label="Select Branch"
             id="branch"
@@ -116,19 +137,12 @@ const AppointmentPage = () => {
             ))}
           </AnimatedDropDown>
 
-          {/* Date Input (custom calendar icon possible here) */}
-          <motion.label
-            htmlFor="scheduledDate"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.5 }}
-          >
+          {/* Date Input */}
+          <motion.label htmlFor="scheduledDate" {...fadeIn(0.5)}>
             Date
           </motion.label>
           <motion.input
-            initial={{ opacity: 0, x: 200 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.5 }}
+            {...fadeIn(0.5)}
             type="date"
             id="scheduledDate"
             min={today.toISOString().split("T")[0]}
@@ -138,7 +152,7 @@ const AppointmentPage = () => {
             className="border px-3 py-2 rounded mb-3 bg-black/90"
           />
 
-          {/* Barber */}
+          {/* Barber Selection */}
           <AnimatedDropDown
             label="Barber Selection"
             id="barber"
@@ -158,7 +172,7 @@ const AppointmentPage = () => {
               ))}
           </AnimatedDropDown>
 
-          {/* Time */}
+          {/* Time Selection */}
           <AnimatedDropDown
             label="Time"
             id="scheduledTime"
@@ -175,7 +189,7 @@ const AppointmentPage = () => {
                 new Date(formData.scheduledDate).toDateString() === today.toDateString();
               const hasPassed = isToday && today.getHours() >= slotHour;
 
-              const matchingAppointments = appointments.filter(
+              const sameDayAppointments = appointments.filter(
                 (a) =>
                   a.branch === formData.branch &&
                   a.scheduledTime === slotHour &&
@@ -184,8 +198,8 @@ const AppointmentPage = () => {
               );
 
               const isAvailable =
-                matchingAppointments.length < 3 &&
-                !matchingAppointments.some((a) => a.barber === formData.barber);
+                sameDayAppointments.length < 3 &&
+                !sameDayAppointments.some((a) => a.barber === formData.barber);
 
               if (!hasPassed && isAvailable) {
                 return (
@@ -198,7 +212,7 @@ const AppointmentPage = () => {
             })}
           </AnimatedDropDown>
 
-          {/* Service Type */}
+          {/* Main Service */}
           <AnimatedDropDown
             label="Service Type"
             id="service"
@@ -236,54 +250,46 @@ const AppointmentPage = () => {
               ))}
           </AnimatedDropDown>
 
+          {/* Terms Agreement */}
           <div className="flex gap-x-2 items-center mt-3">
             <motion.input
-              initial={{ opacity: 0, x: 200 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, ease: "easeInOut", delay: 1.5 }}
+              {...fadeIn(1.5)}
               type="checkbox"
               checked={termsChecked}
               onChange={() => setTermsChecked(!termsChecked)}
               className="w-5 h-5 accent-green-500 rounded"
             />
             <span className="space-x-1">
-              <motion.span
-                onClick={() => setViewTerms(true)}
-                initial={{ opacity: 0, x: 200 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, ease: "easeInOut", delay: 1.5 }}
-              >
+              <motion.span {...fadeIn(1.5)} onClick={() => setViewTerms(true)}>
                 I agree to the
               </motion.span>
               <motion.a
-                initial={{ opacity: 0, x: 200 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, ease: "easeInOut", delay: 1.5 }}
+                {...fadeIn(1.5)}
                 onClick={() => setViewTerms(true)}
-                className="text-blue-500 hover:underline hover:cursor-pointer"
+                className="text-blue-500 hover:underline cursor-pointer"
               >
-                Terms And Conditions
+                Terms and Conditions
               </motion.a>
             </span>
           </div>
 
-          {/* ✅ Fixed Submit Button */}
+          {/* Submit Button */}
           <motion.button
-            initial={{ opacity: 0, x: 200 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, ease: "easeInOut", delay: 1.5 }}
+            {...fadeIn(1.5)}
             type="submit"
             disabled={postLoading || !termsChecked}
-            className={`py-2 my-4 rounded-md text-black text-lg text-center w-full 
-              ${postLoading ? "bg-white/80 cursor-not-allowed" : "bg-white"} 
-              disabled:cursor-not-allowed disabled:bg-white/80`}
+            className={`py-2 my-4 rounded-md text-black text-lg w-full ${
+              postLoading
+                ? "bg-white/80 cursor-not-allowed"
+                : "bg-white hover:bg-gray-200 transition"
+            } disabled:cursor-not-allowed`}
           >
             {postLoading ? "Submitting..." : "SUBMIT"}
           </motion.button>
-
         </form>
       </main>
 
+      {/* Terms Modal */}
       <TermsModal
         isOpen={viewTerms}
         onClose={() => setViewTerms(false)}

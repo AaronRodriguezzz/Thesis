@@ -42,7 +42,7 @@ const verifyToken = (roleName) => {
       if (roleName === "frontdesk" && decoded.role !== "Front Desk") {
         return res.status(403).json({ message: "Access denied." });
       }
-      if (roleName === "user" && !("role" in decoded)) {
+      if (roleName === "user" && ("role" in decoded)) {
         return res.status(403).json({ message: "Access denied." });
       }
 

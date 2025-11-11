@@ -24,6 +24,8 @@ const appointment_creation = async (req, res) => {
 
     try {
 
+        console.log(req.body);
+
         const uniqueCode = Math.floor(100000 + Math.random() * 900000).toString();
 
         // Create new appointment
