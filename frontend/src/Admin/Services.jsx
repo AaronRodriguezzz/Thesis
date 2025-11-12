@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { FaSearch, FaEdit, FaTrash, FaUserPlus } from "react-icons/fa";
-import { delete_data } from "../../services/DeleteMethod";
+import { FaSearch, FaEdit, FaCheck, FaUserPlus, FaBan } from "react-icons/fa";
+import { update_data } from "../../services/PutMethod";
 import { useFetch } from "../../hooks/useFetch";
 import { useDebounce } from "../../hooks/useDebounce";
 import TableLoading from "../../components/animations/TableLoading";
@@ -25,10 +25,21 @@ const Services = () => {
 
     const paginationLimit = data?.pageCount || 1
 
-    const handleDelete = async (id) => {
-        if (!window.confirm("Are you sure you want to delete this service?")) return;
-        const res = await delete_data(id, "/delete_service");
-        if (res?.deleted) setData((prev) => prev.filter((s) => s._id !== id));
+    const handleDisable = async (id, status) => {
+        if (!window.confirm("Are you sure you want to disabled this service?")) return;
+        
+        const newStatus = status === 'Active' ? 'Disabled' : 'Active';
+
+        const res = await update_data(`/disable_service/${id}?status=${newStatus}`);
+        
+        if(res.updatedInfo) {
+            setData((prev) => ({
+                pageCount: prev.pageCount,
+                services: prev.services.map((item) =>
+                    item._id === id ? res.updatedInfo : item
+                )
+            }));
+        }
     };
 
     if (loading) return <TableLoading />;
@@ -86,6 +97,7 @@ const Services = () => {
                                         <th className="px-4 py-3">Duration</th>
                                         <th className="px-4 py-3">Price</th>
                                         <th className="px-4 py-3">Service Type</th>
+                                        <th className="px-4 py-3">Status</th>
                                         <th className="px-4 py-3 text-center">Action</th>
                                     </tr>
                                 </thead>
@@ -118,6 +130,12 @@ const Services = () => {
                                                 >
                                                     {service?.serviceType}
                                                 </td>
+                                                <td 
+                                                    className="px-4 py-4 whitespace-nowrap"
+                                                    style={{ color: service.status === 'Active' ? 'green' : 'red'}}
+                                                >
+                                                    {service?.status}
+                                                </td>
                                                 <td className="px-4 py-2 text-center">
                                                     <div className="flex justify-center items-center gap-3">
                                                         <button
@@ -130,12 +148,18 @@ const Services = () => {
                                                             <FaEdit size={17} />
                                                         </button>
                                                         <button
-                                                            className="text-red-400 hover:text-red-300"
-                                                            onClick={() =>
-                                                                handleDelete(service._id)
-                                                            }
+                                                            className={`${
+                                                                service.status === "Disabled"
+                                                                ? "text-green-400 hover:text-green-300"
+                                                                : "text-red-400 hover:text-red-300"
+                                                            }`}
+                                                            onClick={() => handleDisable(service._id, service.status)}
                                                         >
-                                                            <FaTrash size={17} />
+                                                            {service.status === "Disabled" ? (
+                                                                <FaCheck size={17} /> 
+                                                            ) : (
+                                                                <FaBan size={17} />
+                                                            )}
                                                         </button>
                                                     </div>
                                                 </td>

@@ -104,17 +104,22 @@ const update_service = async (req, res) => {
  * @desc Deletes a service by ID
  * @route DELETE /api/services/:id
  */
-const delete_service = async (req, res) => {
-    const { id } = req.params;
+const disableService = async (req, res) => {
+    const id = req.params.id;
+    const status = req.query.status;
 
     try {
-        const deletedService = await Service.findByIdAndDelete(id);
+        const disabledService = await Service.findByIdAndUpdate(
+            id,
+            { status },
+            { new: true }
+        );
 
-        if (!deletedService) {
+        if (!disabledService) {
             return res.status(404).json({ message: 'Service not found.' });
         }
 
-        return res.status(200).json({ message: 'Service deleted successfully.', deleted: true});
+        return res.status(200).json({ message: 'Service disabled successfully.', updatedInfo: disabledService});
 
     } catch (err) {
         console.error(err);
@@ -180,6 +185,6 @@ const get_services = async (req, res) => {
 module.exports = {
     new_service,
     update_service,
-    delete_service,
+    disableService,
     get_services
 };

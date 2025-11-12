@@ -18,6 +18,11 @@ const ServiceSchema = new mongoose.Schema({
     required: true,
     min: 0
   },
+  status: {
+    type: String, 
+    required: true,
+    default: 'Active'
+  },
   serviceType: {
     type: String,
     required: true,
