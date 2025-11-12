@@ -43,21 +43,23 @@ export default function AdminHeader() {
         {/* Profile Display */}
 
         <div className="flex items-center gap-x-2"> 
-          <HiOutlineMegaphone className="w-7 h-7 transform -scale-x-100 hover:text-blue-500 cursor-pointer" onClick={() => setSendAnnouncement(true)}/>
+          {user?.role === 'Admin' && (
+            <HiOutlineMegaphone
+              className="w-7 h-7 -scale-x-100 hover:text-blue-500 cursor-pointer"
+              onClick={() => setSendAnnouncement(true)}
+            />
+          )}
           <NotificationBell
             isOpen={notifOpen}
             onClick={() => setNotifOpen(!notifOpen)}
           />
           <div
-            className="flex items-center justify-end gap-x-2 group cursor-pointer"
+            className="group cursor-pointer"
             onClick={() => navigate(path)}
           >
             <div className="rounded-full p-1.5 transition-colors">
               <UserCircle className="w-7 h-7 group-hover:text-blue-500" />
             </div>
-            <span className="w-[80px] truncate font-medium group-hover:text-blue-500 transition-colors">
-              {user?.fullName}
-            </span>
           </div>
         </div>
       </div>
