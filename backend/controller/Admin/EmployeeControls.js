@@ -102,7 +102,7 @@ const new_admin = async (req, res) => {
 
         await newAdmin.save();
 
-        res.status(200).json({ message: 'New user added', added: true, user: adminSaved });
+        res.status(200).json({ message: 'New user added', added: true, user: newAdmin });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: err });
@@ -115,10 +115,14 @@ const new_admin = async (req, res) => {
  * @access Admin
  */
 const update_admin_account = async (req, res) => {
-    const id = req.body.newData._id;
-
+    const id = req.body.newData.id;
+    
     try {
-        const account = await EmployeeAccount.findByIdAndUpdate(id, req.body.newData, { new: true });
+        const account = await EmployeeAccount.findByIdAndUpdate(
+            id, 
+            req.body.newData, 
+            { new: true }
+        ).populate('branchAssigned');
 
         if (!account) {
             res.status(404).json({ message: 'Account not found or update failed' });

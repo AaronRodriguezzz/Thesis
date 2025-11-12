@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { update_data } from '../../services/PutMethod';
-import { get_data } from '../../services/GetMethod';
+import { useState } from 'react';
 import { post_data } from '../../services/PostMethod';
+import { useFetch } from '../../hooks/useFetch';
 
 const NewEmployee = ({  onCancel, route, setUpdatedData}) => {
-    const [branches, setBranches] = useState([]);
     const [newEmployee, setNewEmployee] = useState({
         email: '',
         fullName: '',
@@ -13,6 +11,8 @@ const NewEmployee = ({  onCancel, route, setUpdatedData}) => {
         role: ''
     })
 
+    const { data } = useFetch('/get_data/branch', null, null, [])
+
     const add_clicked = async (e) => {
         e.preventDefault();
         const response = await post_data(newEmployee, route)
@@ -20,21 +20,9 @@ const NewEmployee = ({  onCancel, route, setUpdatedData}) => {
 
         if(response.added){
             onCancel(false);
-            setUpdatedData(prev => [...prev, response.user]);
+            setUpdatedData(prev => ({ employees: [...prev, response.user]}));
         }
     }
-
-    useEffect(() => {
-        const get_branches = async () => {
-            const data = await get_data('/get_data/branch')
-
-            if(data){
-                setBranches(data);      
-            }
-        }
-
-        get_branches();
-    },[])
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
@@ -92,7 +80,7 @@ const NewEmployee = ({  onCancel, route, setUpdatedData}) => {
                                 className='border-1 border-gray-200 px-3 py-2 rounded-md focus:border-gray-300'
                             >
                                 <option value='' disabled>Select Branch</option>
-                                {branches && branches.map(branch => (
+                                {data && data.map(branch => (
                                     <option key={branch?._id} value={branch?._id}>{branch?.name}</option>
                                 ))}
                             </select>

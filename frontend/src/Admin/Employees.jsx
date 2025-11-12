@@ -23,6 +23,7 @@ const Employees = () => {
         null,
         [page, debouncedSearch]
     );
+    console.log(data);
 
     const paginationLimit = data?.pageCount || 1;
 
@@ -163,7 +164,6 @@ const Employees = () => {
                     currentData={updatingData}
                     onCancel={setOnUpdate}
                     setUpdatedData={setData}
-                    route="/update_employee"
                 />
             )}
 

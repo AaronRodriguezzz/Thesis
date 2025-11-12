@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { update_data } from '../../services/PutMethod';
 import { get_data } from '../../services/GetMethod';
 
-const UpdateEmployee = ({ currentData, onCancel, setUpdatedData, route}) => {
+const UpdateEmployee = ({ currentData, onCancel, setUpdatedData }) => {
     const [branches, setBranches] = useState(null);
     const [newState, setNewState] = useState({  
         id: currentData?._id,
@@ -13,19 +13,15 @@ const UpdateEmployee = ({ currentData, onCancel, setUpdatedData, route}) => {
     })
   
     const update_Clicked = async () => {
-        if (newState) {
-            const info = await update_data(route, newState)
+        const info = await update_data("/update_employee", newState)
 
-            setUpdatedData((prev) =>
-                prev.map((item) =>
-                    item._id === info?.updatedInfo?._id ? info.updatedInfo : item
-                )
-            );
+        setUpdatedData((prev) => ({
+            employees: prev.employees.map((item) =>
+                item._id === info.updatedInfo._id ? info.updatedInfo : item
+            )
+        }));
 
-            onCancel(false);
-        } else {
-            alert('Please select a new status.');
-        }
+        onCancel(false);
     };
 
     useEffect(() => {
