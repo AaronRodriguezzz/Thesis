@@ -10,9 +10,7 @@ const UpdateService = ({ currentData, onCancel, setUpdatedData, route}) => {
         duration: currentData?.duration, 
         description: currentData?.description,
         serviceType: currentData?.serviceType
-    })
-    const [debouncedInput, setDebouncedInput] = useState(newState);
-    
+    })    
   
     const update_Clicked = async (e) => {
         e.preventDefault();
@@ -20,11 +18,12 @@ const UpdateService = ({ currentData, onCancel, setUpdatedData, route}) => {
             
             const info = await update_data(route, newState)
 
-            setUpdatedData((prev) =>
-                prev.map((item) =>
+            setUpdatedData((prev) => ({
+                pageCount: prev.pageCount,
+                services: prev.services.map((item) =>
                     item._id === info?.updatedInfo?._id ? info.updatedInfo : item
                 )
-            );
+            }));
 
             onCancel(false);
         } else {
@@ -32,13 +31,6 @@ const UpdateService = ({ currentData, onCancel, setUpdatedData, route}) => {
         }
     };
 
-     useEffect(() => {
-            const handler = setTimeout(() => {
-                setDebouncedInput(newState);
-            }, 300);
-        
-            return () => clearTimeout(handler);
-        }, [newState]);
     
     return (
         <div className='h-screen w-screen flex items-center justify-center bg-transparent fixed top-0 left-0 z-50'>
@@ -83,8 +75,8 @@ const UpdateService = ({ currentData, onCancel, setUpdatedData, route}) => {
                         required
                     >
                         <option value='' disabled>Select Service Type</option>
-                        <option value="Front Desk">Package Service</option>
-                        <option value="Barber">Additional Service</option>
+                        <option value="Package Service">Package Service</option>
+                        <option value="Additional Service">Additional Service</option>
                     </select>
 
                     <h1 className='mt-2'>Service Description</h1>
