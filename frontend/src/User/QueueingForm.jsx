@@ -8,15 +8,14 @@ import AssignmentLoading from '../../components/animations/AssignmentLoading';
  
 export default function BarberStatusPage() {
   const branchId = '6862a4bed08d2b82975b2ac6'
-
-  const [date, setDate] = useState("");
-  const [time, setTime] = useState("");
+  const today = new Date();
+  
   const [currentHour, setCurrentHour] = useState(0);
   const [currentBranch, setCurrentBranch] = useState(branchId)
 
   const { barberList, appointments, walkIns } = useQueueData(currentBranch);
   const { data, loading, error } = useFetch('/get_data/branch', null, null, []);
- 
+
   useEffect(() => {
     const interval = setInterval(() => {
       const hourNow = new Date().getHours();
@@ -30,11 +29,12 @@ export default function BarberStatusPage() {
     return () => clearInterval(interval); 
   }, [currentHour]);
 
-  useEffect(() => {
-    const today = new Date();
-    setDate(today.toISOString().split("T")[0]);
-    setTime(timeFormat(today));
-  }, []);
+  const handleBranchChange = (e) => {
+    const selectedId = e.target.value;
+    const selectedBranch = data.find((branch) => branch._id === selectedId);
+    setCurrentBranch(selectedBranch._id);
+
+  }
 
   if (loading) return <AssignmentLoading />;
   if (error) return (
@@ -60,7 +60,7 @@ export default function BarberStatusPage() {
             <p className="text-xs md:text-[20px]">119 Ballecer South Signal Taguig City</p>
           </div>
           <h2 className="hidden md:block md:text-[20px] lg:text-[30px] font-extralight tracking-tighter text-center my-4">
-            {date} {time}
+            {today.toISOString().split("T")[0]} {timeFormat(today)}
           </h2>
         </div>
 
@@ -93,32 +93,42 @@ export default function BarberStatusPage() {
         </div>  
 
         <div className="w-full h-auto md:h-[60%] flex flex-col md:flex-row items-center justify-center gap-4 md:px-4">
-          {barberList && barberList.map((barber, index) => {
-            // Decide badge color
-            let statusColor = "text-red-600"; // default
-            if (barber?.status === "Available" || barber?.status === "Barbering") {
-              statusColor = "text-green-600";
-            } else if (barber?.status === "On-break") {
-              statusColor = "text-orange-500";
-            }
+          {data && data.find(d => d._id === currentBranch).status === 'Close' ? (
+            <div>
+              <h3 className="h-full w-full text-center text-white text-5xl bg-white/10 py-5 px-6 rounded-full tracking-tighter">Sorry, we're close</h3>
+              <p className="text-white mt-2 text-lg tracking-tight">Refresh after a few minutes. To check branch availability</p>
+            </div>
+          ) : (
+            <>
+              {barberList && barberList.map((barber, index) => {
+                // Decide badge color
+                let statusColor = "text-red-600"; // default
+                if (barber?.status === "Available" || barber?.status === "Barbering") {
+                  statusColor = "text-green-600";
+                } else if (barber?.status === "On-break") {
+                  statusColor = "text-orange-500";
+                }
 
-            return (
-              <div
-                key={index}
-                className="h-full w-[90%] md:w-[35%] lg:w-[25%] flex flex-col items-center justify-center rounded-lg bg-black/40 text-white shadow shadow-white p-4"
-              >
-                <FaUserCircle className="text-[80px] md:text-[120px mb-3" />
-                <h1 className="text-[30px] font-semibold tracking-tight text-center">
-                  {barber.fullName}
-                </h1>
-                <span
-                  className={`block w-[80%] text-center text-lg font-medium px-2 py-1 mx-auto rounded-full ${statusColor}`}
-                >
-                  {barber.status}
-                </span>
-              </div>
-            );
-          })}
+                return (
+                  <div
+                    key={index}
+                    className="h-full w-[90%] md:w-[35%] lg:w-[25%] flex flex-col items-center justify-center rounded-lg bg-black/40 text-white shadow shadow-white p-4"
+                  >
+                    <FaUserCircle className="text-[80px] md:text-[120px mb-3" />
+                    <h1 className="text-[30px] font-semibold tracking-tight text-center">
+                      {barber.fullName}
+                    </h1>
+                    <span
+                      className={`block w-[80%] text-center text-lg font-medium px-2 py-1 mx-auto rounded-full ${statusColor}`}
+                    >
+                      {barber.status}
+                    </span>
+                  </div>
+                );
+              })}
+            </>
+          )}
+          
         </div>
       </main>
     </div>

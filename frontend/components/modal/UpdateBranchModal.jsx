@@ -16,11 +16,12 @@ const BranchUpdateModal = ({ currentData, onCancel, setUpdatedData, route}) => {
         if (newState) {
             const info = await update_data(route, newState)
 
-            setUpdatedData((prev) =>
-                prev.map((item) =>
-                    item._id === info?.updatedInfo?._id ? info?.updatedInfo : item
+            setUpdatedData((prev) => ({
+                pageCount: prev.pageCount,
+                branches: prev.branches.map((item) =>
+                    item._id === info?.updatedInfo?._id ? info.updatedInfo : item
                 )
-            );
+            }));
 
             onCancel(false);
         } else {

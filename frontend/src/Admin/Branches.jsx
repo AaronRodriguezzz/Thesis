@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { FaUserPlus, FaSearch, FaEdit, FaTrash } from "react-icons/fa";
-import { delete_data } from "../../services/DeleteMethod";
+import { FaUserPlus, FaSearch, FaEdit, FaLock, FaUnlock  } from "react-icons/fa";
+import { update_data } from "../../services/PutMethod";
 import { useFetch } from "../../hooks/useFetch";
 import { useDebounce } from "../../hooks/useDebounce";
 import UpdateBranchModal from "../../components/modal/UpdateBranchModal";
@@ -25,11 +25,19 @@ const Branches = () => {
 
     const paginationLimit = data?.pageCount || 1;
 
-    const handleDelete = async (id) => {
-        if (!window.confirm("Are you sure you want to delete this branch?")) return;
-        const res = await delete_data(id, "/delete_branch");
-        if (res?.deleted)
-            setData((prev) => prev.filter((branch) => branch._id !== id));
+    const handleStatusUpdate = async (id, status) => {
+        if (!window.confirm("Are you sure you want to open this branch?")) return;
+
+        const newStatus = status === 'Open' ? 'Close' : 'Open';
+
+        const res = await update_data(`/update_branch/${id}?status=${newStatus}`);
+
+        if (res.updatedInfo) {
+            setData((prev) => ({
+                pageCount: prev.pageCount,
+                branches: prev.branches.map(b => b._id === id ? res.updatedInfo : b)
+            }))
+        }
     };
 
     if (loading) return <TableLoading />;
@@ -87,6 +95,7 @@ const Branches = () => {
                                         <th className="px-4 py-3">Address</th>
                                         <th className="px-4 py-3">Phone</th>
                                         <th className="px-4 py-3">Number of Barbers</th>
+                                        <th className="px-4 py-3">Status</th>
                                         <th className="px-4 py-3 text-center">Action</th>
                                     </tr>
                                 </thead>
@@ -107,8 +116,14 @@ const Branches = () => {
                                                 <td className="px-4 py-4 whitespace-nowrap">
                                                     {branch?.phone}
                                                 </td>
-                                                <td className="px-4 py-4 whitespace-nowrap text-center">
-                                                    {branch?.numberOfBarber || 0}
+                                                <td className="px-4 py-4 whitespace-nowrap">
+                                                    {branch?.numberOfBarber || 0} Barbers
+                                                </td>
+                                                <td 
+                                                    className="px-4 py-4 whitespace-nowrap"
+                                                    style={{ color: branch.status === 'Open' ? 'green' : 'red'}}
+                                                >
+                                                    {branch?.status}
                                                 </td>
                                                 <td className="px-4 py-2 text-center">
                                                     <div className="flex justify-center items-center gap-3">
@@ -122,10 +137,16 @@ const Branches = () => {
                                                             <FaEdit size={17} />
                                                         </button>
                                                         <button
-                                                            className="text-red-400 hover:text-red-300"
-                                                            onClick={() => handleDelete(branch._id)}
+                                                            className={`${
+                                                                branch.status === "Open" ? "text-red-400 hover:text-red-300" : "text-green-400 hover:text-green-300"
+                                                            } transition`}
+                                                            onClick={() => handleStatusUpdate(branch._id, branch.status)}
                                                         >
-                                                            <FaTrash size={17} />
+                                                            {branch.status === "Open" ? (
+                                                                <FaLock size={17} /> 
+                                                            ) : (
+                                                                <FaUnlock size={17} /> 
+                                                            )}
                                                         </button>
                                                     </div>
                                                 </td>

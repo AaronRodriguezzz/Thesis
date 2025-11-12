@@ -9,6 +9,6 @@ const { verifyToken } = require('../../middleware/Auth');
 router.get('/api/get_branches', Branch.get_branches);
 router.post('/api/new_branch', verifyToken('admin'), upload.single("image"), Branch.add_new_branch);
 router.put('/api/update_branch', verifyToken('admin'), Branch.update_branch);
-router.delete('/api/delete_branch/:id', verifyToken('admin'), Branch.delete_branch);
+router.put('/api/update_branch/:id', verifyToken('admin'), Branch.update_branch_status);
 
 module.exports = router;

@@ -164,21 +164,25 @@ const update_branch = async (req, res) => {
 
 /**
  * @desc Deletes a branch by ID
- * @route DELETE /api/branch/:id
+ * @route UPDATE /api/branch/:id
  * @access Public or Admin
  */
-const delete_branch = async (req, res) => {
-    const { id } = req.params;
+const update_branch_status = async (req, res) => {
+    const id = req.params.id;
+    const status = req.query.status;
 
     try {
-        // Find and delete the branch
-        const deletedBranch = await Branch.findByIdAndDelete(id);
+        const updatedBranch = await Branch.findByIdAndUpdate(
+            id,
+            { status },
+            { new: true}
+        );
 
-        if (!deletedBranch) {
-            return res.status(404).json({ message: 'Branch not found or already deleted' });
+        if (!updatedBranch) {
+            return res.status(404).json({ message: 'Branch not found' });
         }
 
-        return res.status(200).json({ message: 'Deletion successful', deleted: true });
+        return res.status(200).json({ message: 'Deletion successful', updatedInfo: updatedBranch });
     } catch (err) {
         console.error(err);
         return res.status(500).json({ message: 'Network or service error' });
@@ -189,5 +193,5 @@ module.exports = {
     get_branches,
     add_new_branch,
     update_branch,
-    delete_branch
+    update_branch_status
 };
