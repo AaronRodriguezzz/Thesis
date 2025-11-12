@@ -29,18 +29,13 @@ const Products = () => {
         );
     }, [productList, searchTerm]);
 
-    const handle_delete = async (e, id) => {
-        e.preventDefault();
-        const data = await delete_data(id, '/delete_product');
-        if (data.deleted) {
-            setProductList(prev => prev.filter(product => product._id !== id));
-        }
-    };
-
-    const handle_update = (data) => {
-        setOnUpdate(true);
-        setUpdatingData(data);
-    };
+    // const handle_delete = async (e, id) => {
+    //     e.preventDefault();
+    //     const data = await delete_data(id, '/delete_product');
+    //     if (data.deleted) {
+    //         setProductList(prev => prev.filter(product => product._id !== id));
+    //     }
+    // };
 
     useEffect(() => {
         const get_products = async () => {
@@ -119,21 +114,18 @@ const Products = () => {
 
                                             <div className="flex justify-center mt-3 gap-3">
                                                 <button
-                                                    onClick={() => handle_update(product)}
+                                                    onClick={() => {
+                                                        setOnUpdate(true);
+                                                        setUpdatingData(product);
+                                                    }}
                                                     className="text-white/70 hover:text-orange-400 transition-colors"
                                                 >       
                                                     <FaEdit size={20} />
                                                 </button>
                                                 <button
-                                                    onClick={(e) => handle_delete(e, product._id)}
-                                                    className="text-white/70 hover:text-red-400 transition-colors"
-                                                >
-                                                    <FaTrash size={20} />
-                                                </button>
-                                                <button
                                                     onClick={() => {
                                                         setProductSaleOpen(true);
-                                                        setProductToView(product._id);
+                                                        setProductToView(product);
                                                     }}
                                                     className="text-white/70 hover:text-blue-400 transition-colors"
                                                 >
@@ -170,11 +162,12 @@ const Products = () => {
             }
 
             {/* View Sales */}
-            <ProductSale 
-                onClose={() => setProductSaleOpen(false)} 
-                isOpen={productSaleOpen} 
-                id={productToView} 
-            />
+            {productSaleOpen && 
+                <ProductSale 
+                    onClose={setProductSaleOpen} 
+                    product={productToView} 
+                />
+            }
         </div>
     );
 };

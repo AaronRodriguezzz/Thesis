@@ -134,27 +134,22 @@ const new_product = async (req, res) => {
 const update_product = async (req, res) => {
     const { id } = req.body.newData;
 
-    console.log(req.body);
-
+    console.log(req.body.newData);
     if(!id) {
         return res.status(400).json({ message: 'Product Id Missing'})
     }
 
     try {
 
-        delete req.body.newData.id;
-
         const updatedProduct = await Product.findByIdAndUpdate(
             id,
-            updatedData,
+            req.body.newData,
             { new: true }
         );
 
         if (!updatedProduct) {
             return res.status(404).json({ message: 'Product not found or update failed.' });
         }
-
-        console.log(updatedProduct);
 
         return res.status(200).json({ message: 'Product updated successfully.', updatedInfo: updatedProduct });
 
