@@ -8,7 +8,6 @@ const timeData = require('../../public/timeData');
 const cardDataControls = async (req, res) => {
     const branchId = req.params.branchId
 
-    console.log('log');
     try{
         const startOfToday = new Date();
         startOfToday.setHours(0, 0, 0, 0);
@@ -39,17 +38,23 @@ const cardDataControls = async (req, res) => {
             .sort({ createdAt: -1 })
             .skip(skip)
             .limit(limit);
-            
-        const appointmentsToday = await Appointment.countDocuments({ 
-            createdAt: { $gte: startOfToday, $lte: endOfToday }, 
-            branch: branchId
-        });
+
+
+        let appointmentQuery = { 
+            scheduledDate: { $gte: startOfToday, $lte: endOfToday }, 
+            status: 'Booked'
+        }
+
+        if (branchId) {
+            appointmentQuery.branch = branchId;
+        }            
+
+        const appointmentsToday = await Appointment.countDocuments(appointmentQuery);
 
         const totalProductSales = productsSales?.reduce((sum, s) => sum + s.totalPrice, 0) || 0; 
         const servicesCompleted = serviceSales?.reduce((sum, s) => sum + 1, 0) || 0
         
-
-        return res.status(200).json({ 
+        res.status(200).json({ 
             productsSales, 
             serviceSales,
             totalProductSales,
@@ -65,10 +70,13 @@ const cardDataControls = async (req, res) => {
 }
 
 const chartsDataControls = async (req,res) => {
-    try{
+    const branchId = req.params.branchId
 
-        const productsSales = await ProductSales.find();
-        const serviceSales = await ServiceSales.find();     
+    try{
+        const query = branchId ? { branch: branchId } : {};
+
+        const productsSales = await ProductSales.find(query);
+        const serviceSales = await ServiceSales.find(query);     
 
         const productSalesAggregated = productsSales.reduce((acc, curr) => {
             const existing = acc.find(item => item.month === monthNumberToWord(new Date(curr.createdAt).getMonth()))

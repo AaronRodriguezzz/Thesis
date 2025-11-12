@@ -15,10 +15,10 @@ import { StatCard } from "../../components/DashboardCards";
 import { FaMoneyBillWave, FaCut, FaUserPlus, FaCalendarAlt } from "react-icons/fa";
 import { get_data } from "../../services/GetMethod";
 import { useUser } from "../../hooks/userProtectionHooks";
-import Sales from "./Sales";
+import Sales from "../Admin/Sales";
 import DashboardLoading from "../../components/animations/DashboardLoading";
 
-const Dashboard = () => {
+const FDDashboard = () => {
     const user = useUser();
     const [productsSales, setProductSales] = useState([]);
     const [serviceSales, setServiceSales] = useState([]);
@@ -29,14 +29,14 @@ const Dashboard = () => {
 
     useEffect(() => {
         const getData = async () => {
-            if (!user) return; // wait for user to exist
+            if (!user) return; 
 
             try{
                 setLoading(true);
 
                 const [cards, chart] = await Promise.all([
-                    get_data(`/card-data`),
-                    get_data('/chart-data')
+                    get_data(`/card-data/${user.branchAssigned}`),
+                    get_data(`/chart-data/${user.branchAssigned}`)
                 ])
 
                 if (cards && chart) {
@@ -149,4 +149,4 @@ const Dashboard = () => {
     );
 };
 
-export default Dashboard;
+export default FDDashboard;

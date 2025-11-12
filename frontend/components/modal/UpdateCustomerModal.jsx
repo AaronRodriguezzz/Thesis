@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { update_data } from '../../services/PutMethod';
 
 const CustomerUpdateModal = ({ currentData, onCancel, setUpdatedData, route}) => {
-    console.log(currentData?._id);
     const [newState, setNewState] = useState({  
         id: currentData?._id,
         email: currentData?.email,
@@ -16,11 +15,14 @@ const CustomerUpdateModal = ({ currentData, onCancel, setUpdatedData, route}) =>
         if (newState) {
             const info = await update_data(route, newState)
 
-            setUpdatedData((prev) =>
-                prev.map((item) =>
-                    item._id === info?.customer?._id ? info.customer : item
-                )
-            );
+            if(info.customer){
+                setUpdatedData((prev) => ({
+                    ...prev, // keep pageCount and other properties
+                    customers: prev.customers.map((item) =>
+                        item._id === info.customer._id ? info.customer : item
+                    ),
+                }));  
+            }
 
             onCancel(false);
         } else {
@@ -34,8 +36,6 @@ const CustomerUpdateModal = ({ currentData, onCancel, setUpdatedData, route}) =>
                 <h1 className='text-2xl font-semibold mb-4 tracking-tight'>
                     Current Customer Data
                 </h1>
-
-
 
                 <div className='flex flex-col tracking-tighter'>
                     <h1 className='mt-2'>Email</h1>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaSearch, FaEdit, FaBan } from "react-icons/fa";
+import { FaSearch, FaEdit, FaBan, FaCheck } from "react-icons/fa";
 import { update_data } from "../../services/PutMethod";
 import { useFetch } from "../../hooks/useFetch";
 import { useDebounce } from "../../hooks/useDebounce";
@@ -21,17 +21,26 @@ const Customers = () => {
         [page, debouncedSearch]
     );
 
+    console.log(data);
+    // const customer = data.customers || []
+
+
     const paginationLimit = data?.pageCount || 1;
 
-    const handle_disable = async (id) => {
+    const handle_disable = async (id, status) => {
         if (!window.confirm("Are you sure you want to disable this customer?")) return;
 
+        const newStatus = status === 'Active' ? 'Inactive' : 'Active';
+
         try {
-            const data = await update_data(`/disable_customer/${id}`);
+            const data = await update_data(`/disable_customer/${id}?status=${newStatus}`);
             if (data.customer) {
-                setData((prev) =>
-                    prev.map((customer) => (customer._id === id ? data.customer : customer))
-                );
+                setData((prev) => ({
+                    ...prev, 
+                    customers: prev.customers.map((item) =>
+                        item._id === data.customer._id ? data.customer : item
+                    ),
+                }));
             }
         } catch (error) {
             console.error("Error disabling customer:", error);
@@ -99,7 +108,7 @@ const Customers = () => {
                                     </thead>
 
                                     <tbody className="bg-black/40 divide-y divide-black/20 text-sm text-white/90 tracking-tight">
-                                        {data && data.customers?.map((customer) => (
+                                        {data && data.customers.map((customer) => (
                                             <tr key={customer._id}>
                                                 <td className="px-4 py-4 whitespace-nowrap">
                                                     {customer?.lastName}, {customer?.firstName}
@@ -133,10 +142,18 @@ const Customers = () => {
                                                             <FaEdit size={17} />
                                                         </button>
                                                         <button
-                                                            className="text-red-400 hover:text-red-300"
-                                                            onClick={() => handle_disable(customer._id)}
+                                                            className={`${
+                                                                customer.status === "Inactive"
+                                                                ? "text-green-400 hover:text-green-300"
+                                                                : "text-red-400 hover:text-red-300"
+                                                            }`}
+                                                            onClick={() => handle_disable(customer._id, customer.status)}
                                                         >
-                                                            <FaBan size={17} />
+                                                            {customer.status === "Inactive" ? (
+                                                                <FaCheck size={17} /> 
+                                                            ) : (
+                                                                <FaBan size={17} />
+                                                            )}
                                                         </button>
                                                     </div>
                                                 </td>

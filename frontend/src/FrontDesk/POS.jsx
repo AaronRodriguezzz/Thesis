@@ -114,115 +114,127 @@ const POS = () => {
     return (
         <div className="flex">
             <main className="p-4 w-full">
-                <div className="h-[80vh] flex flex-row gap-6">
-                    <div className="flex-3 flex-col space-y-4">
+                <div className="flex flex-col lg:flex-row gap-6 h-auto lg:h-[80vh]">
+                    {/* PRODUCT CATALOG */}
+                    <div className="flex-[3] flex flex-col space-y-4 w-full">
+                        {/* Search */}
                         <div className="w-full bg-black/40 border border-white/10 p-4 rounded-lg shadow flex flex-col sm:flex-row justify-between items-center gap-4">
                             <div className="relative w-full sm:w-auto flex-grow">
-                                <input 
-                                    type="text"
-                                    placeholder="Search employees (Name, Role, Email)..."
-                                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full text-sm tracking-tight focus:outline-none focus:ring-1 focus:ring-gray-500 focus:border-gray-500 placeholder:text-white"
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                />
-                                <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                            <input 
+                                type="text"
+                                placeholder="Search products (Name, Price, Description)..."
+                                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full text-sm tracking-tight focus:outline-none focus:ring-1 focus:ring-gray-500 focus:border-gray-500 placeholder:text-white"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                            <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                             </div>
                         </div>
 
-
-                        <div className="bg-black/40 border border-white/10 p-6 rounded-lg shadow">
+                        {/* Product Catalog */}
+                        <div className="bg-black/40 border border-white/10 p-6 rounded-lg shadow w-full">
                             <div className="flex flex-row justify-between mb-4">
                                 <h2 className="text-2xl font-semibold mb-4 tracking-tight">Product Catalog</h2>
                             </div>
 
-                            <div className="h-[570px] w-full flex flex-row flex-wrap items-center justify-center gap-4 overflow-x-auto custom-scrollbar">
-                                {filteredProducts.map((product) => (
-                                    <div className="flex flex-col bg-white/10 text-white items-start p-4 w-[200px] shadow-md rounded-lg" key={product._id}>
-                                        <img src={`${baseUrl}/${product.imagePath}`} alt="" className="w-[180px] h-[180px] rounded-lg mb-3 shadow-md"/>
-
-                                        <div className="tracking-tighter" key={product._id}>
-                                            <h1 className="text-sm font-bold">{product.name}</h1>
-                                            <h3 className="text-sm font-semibold">₱ {product.price}</h3>
-                                            <p className="text-sm font-semibold">
-                                                On stock: {product?.stock[product.branch.findIndex(b => b === user.branchAssigned)] || 0}
-                                            </p>
-                                            <button 
-                                                className="bg-green-500 rounded-full text-white px-2 text-md my-2 font-semibold disabled:opacity-50"
-                                                onClick={() => addTo_checkOutList(product)}
-                                                disabled={product?.stock[product.branch.findIndex(b => b === user.branchAssigned)] === checkOutList[checkOutList.findIndex(c => c._id === product._id)]?.checkOutQuantity}
-                                            >
-                                                + Add
-                                            </button>
-                                        </div>
-                                    </div>
-                                ))}
+                            <div className="flex flex-wrap justify-center sm:justify-start gap-4 overflow-y-auto max-h-[65vh] custom-scrollbar">
+                            {filteredProducts.map((product) => (
+                                <div
+                                    key={product._id}
+                                    className="flex flex-col bg-white/10 text-white items-start p-4 w-[45%] sm:w-[200px] md:w-[180px] lg:w-[200px] shadow-md rounded-lg"
+                                >
+                                <img
+                                    src={`${baseUrl}/${product.imagePath}`}
+                                    alt=""
+                                    className="w-full h-[180px] object-cover rounded-lg mb-3 shadow-md"
+                                />
+                                <div className="tracking-tighter w-full">
+                                    <h1 className="text-sm font-bold truncate">{product.name}</h1>
+                                    <h3 className="text-sm font-semibold">₱ {product.price}</h3>
+                                    <p className="text-sm font-semibold">
+                                        On stock: {product?.stock[product.branch.findIndex(b => b === user.branchAssigned)] || 0}
+                                    </p>
+                                    <button 
+                                        className="bg-green-500 rounded-full text-white px-2 py-1 text-sm font-semibold my-2 disabled:opacity-50 w-full"
+                                        onClick={() => addTo_checkOutList(product)}
+                                        disabled={product?.stock[product.branch.findIndex(b => b === user.branchAssigned)] === 0}
+                                    >
+                                        + Add
+                                    </button>
+                                </div>
+                                </div>
+                            ))}
                             </div>
                         </div>
                     </div>
 
-                    <div className="relative h-[775px] flex-1 bg-black/40 border border-white/10 text-white space-y-5 rounded-md p-4 shadow">
-                        <h1 className="font-semibold text-2xl tracking-tight py-2">Check Out Summary</h1>
+                        {/* CHECKOUT SUMMARY */}
+                    <div className="relative lg:w-[400px] xl:w-[450px] w-full bg-black/40 border border-white/10 text-white rounded-md p-4 shadow max-h-[80vh] flex flex-col">
+                        {/* Header */}
+                        <h1 className="font-semibold text-2xl tracking-tight py-2 text-center lg:text-left">
+                            Check Out Summary
+                        </h1>
 
-                        <div className="h-[580px] overflow-y-auto space-y-4 custom-scrollbar">
-                            {checkOutList &&  checkOutList.map((product) => (
-                                <div
-                                    className="relative w-full flex gap-4 bg-white/10 text-white p-3 shadow-md rounded-lg items-start"
-                                    key={product._id}
-                                >
-                                    {/* Image */}
-                                    <img
-                                        src={`${baseUrl}/${product.imagePath}`}
-                                        alt=""
-                                        className="w-[90px] h-[100px] object-cover rounded-lg shadow-md"
-                                    />
+                        {/* Scrollable List */}
+                        <div className="flex-1 overflow-y-auto space-y-4 pr-1 custom-scrollbar">
+                            {checkOutList.map((product) => (
+                            <div
+                                key={product._id}
+                                className="flex flex-col sm:flex-row gap-4 bg-white/10 text-white p-3 shadow-md rounded-lg items-center sm:items-start"
+                            >
+                                <img
+                                src={`${baseUrl}/${product.imagePath}`}
+                                alt=""
+                                className="w-[90px] h-[100px] object-cover rounded-lg shadow-md"
+                                />
 
-                                {/* Product Details */}
-                                    <div className="flex flex-col justify-between flex-1 tracking-tight h-full">
-                                        <div className="space-y-1">
-                                            <h1 className="text-md font-bold">{product.name}</h1>
-                                            <h3 className="text-md font-semibold">₱ {product.price}</h3>
-                                        </div>
-
-                                        {/* Quantity & Remove */}
-                                        <div className="flex flex-row sm:items-center justify-between mt-3 gap-y-2 sm:gap-y-0">
-                                            <div className="flex items-center gap-2 text-sm font-semibold">
-                                                <span>Qty:</span>
-                                                <button 
-                                                    className="px-2 text-lg" 
-                                                    onClick={() => quantityChange(product._id, -1)}
-                                                    disabled={product.checkOutQuantity === 1 }
-                                                >
-                                                    -
-                                                </button>
-                                                
-                                                <span className="w-4 text-center">{product.checkOutQuantity}</span>
-
-                                                <button 
-                                                    className="px-2 text-lg" 
-                                                    onClick={() => quantityChange(product._id, 1)}
-                                                    disabled={product?.stock[product.branch.findIndex(b => b === user.branchAssigned)] === product.checkOutQuantity}
-                                                >
-                                                    +
-                                                </button>
-                                            </div>  
-
-                                            <button 
-                                                className="text-red-500 text-xs sm:text-sm hover:underline self-start sm:self-auto"
-                                                onClick={() => removeItem(product?._id)}
-                                            >
-                                                Remove
-                                            </button>
-                                        </div>
-                                    </div>
+                                <div className="flex flex-col justify-between flex-1 tracking-tight h-full w-full">
+                                <div className="space-y-1 text-center sm:text-left">
+                                    <h1 className="text-md font-bold">{product.name}</h1>
+                                    <h3 className="text-md font-semibold">₱ {product.price}</h3>
                                 </div>
 
+                                <div className="flex flex-col sm:flex-row justify-between mt-3 text-sm font-semibold items-center sm:items-center gap-y-2">
+                                    <div className="flex items-center gap-2">
+                                    <span>Qty:</span>
+                                    <button 
+                                        className="px-2 text-lg"
+                                        onClick={() => quantityChange(product._id, -1)}
+                                        disabled={product.checkOutQuantity === 1}
+                                    >
+                                        -
+                                    </button>
+                                    <span className="w-4 text-center">{product.checkOutQuantity}</span>
+                                    <button 
+                                        className="px-2 text-lg"
+                                        onClick={() => quantityChange(product._id, 1)}
+                                        disabled={
+                                        product?.stock[product.branch.findIndex(b => b === user.branchAssigned)] ===
+                                        product.checkOutQuantity
+                                        }
+                                    >
+                                        +
+                                    </button>
+                                    </div>
+
+                                    <button
+                                    className="text-red-500 text-xs sm:text-sm hover:underline"
+                                    onClick={() => removeItem(product._id)}
+                                    >
+                                    Remove
+                                    </button>
+                                </div>
+                                </div>
+                            </div>
                             ))}
                         </div>
 
-                        <div className="space-y-2">
-                            <h1 className="text-xl font-semibold tracking-tight">Total Price: ₱{totalSummary || 0}.00</h1>
-                            
-                            <button 
+                        {/* Sticky Bottom Section */}
+                        <div className="mt-3 bg-black/60 p-3 rounded-md">
+                            <h1 className="text-xl font-semibold tracking-tight mb-2">
+                                Total: ₱{totalSummary || 0}.00
+                            </h1>
+                            <button
                                 disabled={checkOutList.length === 0}
                                 className="w-full bg-green-400 text-white py-2 rounded-lg tracking-wide hover:bg-green-700 transition ease-in-out disabled:cursor-not-allowed"
                                 onClick={handle_finish}
@@ -230,8 +242,7 @@ const POS = () => {
                                 FINISH
                             </button>
                         </div>
-                        
-                    </div>  
+                    </div>
                 </div>
             </main>
         </div>

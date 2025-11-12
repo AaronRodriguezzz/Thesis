@@ -35,6 +35,7 @@ import AccountPage from "./Admin/Account";
 import FDAppointment from "./FrontDesk/Appointments";
 import POS from "./FrontDesk/POS";
 import Barbers from "./FrontDesk/Barbers";
+import FDDashboard from "./FrontDesk/Dashboard";
 
 // Layouts
 import UserLayout from "../layouts/UserLayout";
@@ -79,7 +80,7 @@ function App() {
 
 
         <Route path="/front-desk" element={<FrontDeskLayout />}>          
-          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="dashboard" element={<FDDashboard />} />
           <Route path="appointments" element={<FDAppointment />} />
           <Route path="customers" element={<Customers />} />
           <Route path="POS" element={<POS />} />

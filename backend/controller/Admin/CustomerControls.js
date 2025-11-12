@@ -127,12 +127,13 @@ const update_customer = async (req, res) => {
  */
 const disable_customer = async (req, res) => {
     const { id } = req.params 
+    const status = req.query.status;
 
     try {
         
         const disabled = await Customer.findByIdAndUpdate(
             id, 
-            {status: 'Inactive'}, 
+            { status }, 
             { new: true}
         );
 
