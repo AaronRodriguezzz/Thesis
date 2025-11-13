@@ -142,6 +142,8 @@ const chartsDataControls = async (req,res) => {
             }
         });
 
+        console.log(mergedAggregated);
+
 
         res.status(200).json({ salesChart: mergedAggregated, peakHours })
 

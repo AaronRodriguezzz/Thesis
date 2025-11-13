@@ -74,6 +74,8 @@ const googleLogin = async (req, res) => {
             });
         }
 
+        console.log(user);
+
         if(user.status === 'Inactive') {
             return res.status(404).json({ message: 'Sorry, your account is temporarily disabled' });
         }

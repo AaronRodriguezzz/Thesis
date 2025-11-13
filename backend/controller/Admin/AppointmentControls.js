@@ -54,6 +54,7 @@ const getAllAppointments = async (req, res) => {
 
                 return (
                     customerLastName.includes(lower) ||
+                    customerFirstName.includes(lower) ||
                     serviceName.includes(lower) ||
                     status.includes(lower) ||
                     a.uniqueCode.includes(lower) ||

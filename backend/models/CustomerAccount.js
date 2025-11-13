@@ -25,7 +25,7 @@ const CustomerSchema = new mongoose.Schema({
     address:{
         type: String,
     },
-    status:{
+    status: {
         type: String,
         enum: ['Active', 'Inactive'],
         default: 'Active',

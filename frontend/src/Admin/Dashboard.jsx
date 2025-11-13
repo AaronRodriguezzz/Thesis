@@ -102,13 +102,13 @@ const Dashboard = () => {
                     <h2 className="text-lg font-semibold mb-4">Monthly Sales (Bar)</h2>
                     <ResponsiveContainer width="100%" height={300}>
                         <BarChart data={salesData}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="month" />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend />
-                        <Bar dataKey="service" fill="#1e3a8a" radius={[10, 10, 0, 0]} /> {/* Dark Blue */}
-                        <Bar dataKey="product" fill="#b91c1c" radius={[10, 10, 0, 0]} /> {/* Dark Red */}
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="month" />
+                            <YAxis />
+                            <Tooltip />
+                            <Legend />
+                            <Bar dataKey="service" fill="#1e3a8a" radius={[10, 10, 0, 0]} /> {/* Dark Blue */}
+                            <Bar dataKey="product" fill="#b91c1c" radius={[10, 10, 0, 0]} /> {/* Dark Red */}
                         </BarChart>
                     </ResponsiveContainer>
                 </div>

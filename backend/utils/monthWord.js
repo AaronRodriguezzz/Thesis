@@ -8,7 +8,7 @@
     throw new Error("Month number must be between 1 and 12");
   }
 
-  return months[monthNum - 1];
+  return months[monthNum];
 }
 
 module.exports = monthNumberToWord
