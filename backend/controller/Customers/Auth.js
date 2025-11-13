@@ -27,6 +27,10 @@ const user_login = async (req, res) => {
             res.status(401).json({ message: 'Invalid credential' });
         }
 
+        if(user.status === 'Inactive') {
+            return res.status(404).json({ message: 'Sorry, your account is temporarily disabled' });
+        }
+
         const adminObj = user.toObject();
         const { password: _, ...customer } = adminObj;
 
