@@ -7,7 +7,6 @@ import { useDebounce } from "../../hooks/useDebounce";
 import { useAuth } from "../../contexts/UserContext";
 
 const Appointments = () => {
-    const { user } = useAuth();
     const [searchTerm, setSearchTerm] = useState("");
     const debouncedSearch = useDebounce(searchTerm, 1000); 
     const [page, setPage] = useState(1);
@@ -16,8 +15,7 @@ const Appointments = () => {
     let endpoint = `/all_appointments?page=${page}`;
     if (debouncedSearch) endpoint += `&search=${debouncedSearch}`;
     if (dateFilter) endpoint += `&date=${dateFilter}`;
-    if (user?.branchAssigned) endpoint += `&branch=${user.branchAssigned}`
-
+    
     const { data, loading, error } = useFetch(
         endpoint,
         page,

@@ -47,12 +47,13 @@ const getAllAppointments = async (req, res) => {
             const lower = search.toLowerCase();
             filteredAppointments = appointments.filter((a) => {
 
-                const customerName = a.customer?.name?.toLowerCase() || "";
+                const customerLastName = a.customer?.lastName?.toLowerCase() || "";
+                const customerFirstName = a.customer?.firstName?.toLowerCase() || "";
                 const serviceName = a.service?.name?.toLowerCase() || "";
                 const status = a.status?.toLowerCase() || "";
 
                 return (
-                    customerName.includes(lower) ||
+                    customerLastName.includes(lower) ||
                     serviceName.includes(lower) ||
                     status.includes(lower) ||
                     a.uniqueCode.includes(lower) ||
@@ -92,10 +93,10 @@ const branchAppointments = async (req, res) => {
         if (search) {
             const customers = await Customers.find({
                 $or: [
-                { firstName: { $regex: search, $options: 'i' } },
-                { lastName: { $regex: search, $options: 'i' } },
-                { email: { $regex: search, $options: 'i' } },
-                { phone: { $regex: search, $options: 'i' } },
+                    { firstName: { $regex: search, $options: 'i' } },
+                    { lastName: { $regex: search, $options: 'i' } },
+                    { email: { $regex: search, $options: 'i' } },
+                    { phone: { $regex: search, $options: 'i' } },
                 ],
             }).select('_id');
 
@@ -106,14 +107,13 @@ const branchAppointments = async (req, res) => {
             const customerIds = customers.map(c => c._id);
             const serviceIds = services.map(s => s._id);
 
-            // Step 2: filter appointments that match
             query = {
                 branch: branchId,
                 $or: [
-                { customer: { $in: customerIds } },
-                { service: { $in: serviceIds } },
-                { uniqueCode: { $regex: search, $options: 'i' } },
-                { status: { $regex: search, $options: 'i' } },
+                    { customer: { $in: customerIds } },
+                    { service: { $in: serviceIds } },
+                    { uniqueCode: { $regex: search, $options: 'i' } },
+                    { status: { $regex: search, $options: 'i' } },
                 ],
             };
         } else {
@@ -157,7 +157,7 @@ const today_appointments = async (req, res) => {
         const endOfToday = new Date();
         endOfToday.setHours(23, 59, 59, 999); 
 
-        const appointments = await Appointment.find({ createdAt: { $gte: startOfToday, $lte: endOfToday } })
+        const appointments = await Appointment.find({ scheduledDate: { $gte: startOfToday, $lte: endOfToday } })
             .populate('customer')
             .populate('service')
             .populate('branch')

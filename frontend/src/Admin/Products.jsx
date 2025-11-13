@@ -29,14 +29,6 @@ const Products = () => {
         );
     }, [productList, searchTerm]);
 
-    // const handle_delete = async (e, id) => {
-    //     e.preventDefault();
-    //     const data = await delete_data(id, '/delete_product');
-    //     if (data.deleted) {
-    //         setProductList(prev => prev.filter(product => product._id !== id));
-    //     }
-    // };
-
     useEffect(() => {
         const get_products = async () => {
             const data = await get_data('/products', page);

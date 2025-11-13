@@ -36,7 +36,7 @@ export default function Login() {
 
   return (
     <div 
-      className="h-screen w-screen flex items-center justify-center overflow-hidden "
+      className="h-screen w-screen flex items-center justify-center overflow-hidden"
     >
       <div className="fixed inset-0 -z-10 overflow-hidden">
         <div className="absolute inset-0 bg-[url('https://res.cloudinary.com/dk3bbinj9/image/upload/login_h4ifyf')] bg-cover bg-center filter invert" />
