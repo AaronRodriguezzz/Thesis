@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaUserPlus, FaSearch, FaEdit, FaTrash } from "react-icons/fa";
+import { FaUserPlus, FaSearch, FaEdit, FaBan, FaCheck } from "react-icons/fa";
 import { delete_data } from "../../services/DeleteMethod";
 import { useFetch } from "../../hooks/useFetch";
 import { useDebounce } from "../../hooks/useDebounce";
@@ -26,12 +26,6 @@ const Employees = () => {
     console.log(data);
 
     const paginationLimit = data?.pageCount || 1;
-
-    const handleDelete = async (id) => {
-        if (!window.confirm("Are you sure you want to delete this employee?")) return;
-        const res = await delete_data(id, "/delete_employee");
-        if (res?.deleted) setData((prev) => prev.filter((e) => e._id !== id));
-    };
 
     if (loading) return <TableLoading />;
     if (error)
@@ -88,6 +82,7 @@ const Employees = () => {
                                         <th className="px-4 py-3">Email</th>
                                         <th className="px-4 py-3">Branch Assigned</th>
                                         <th className="px-4 py-3">Role</th>
+                                        <th className="px-4 py-3">Status</th>
                                         <th className="px-4 py-3 text-center">Action</th>
                                     </tr>
                                 </thead>
@@ -100,24 +95,29 @@ const Employees = () => {
                                                 className="hover:bg-white/10 transition-colors"
                                             >
                                                 <td className="px-4 py-4 whitespace-nowrap">
-                                                    {employee?.fullName || "N/A"}
+                                                    {employee.fullName || "N/A"}
                                                 </td>
                                                 <td className="px-4 py-4 whitespace-nowrap">
-                                                    {employee?.email || "N/A"}
+                                                    {employee.email || "N/A"}
                                                 </td>
                                                 <td className="px-4 py-4 whitespace-nowrap">
-                                                    {employee?.branchAssigned?.name || "N/A"}
+                                                    {employee.branchAssigned?.name || "N/A"}
                                                 </td>
                                                 <td
                                                     className="px-4 py-4 whitespace-nowrap"
                                                     style={{
                                                         color:
-                                                            employee?.role === "Barber"
+                                                            employee.role === "Barber"
                                                                 ? "#22c55e"
                                                                 : "#3b82f6",
                                                     }}
                                                 >
-                                                    {employee?.role || "N/A"}
+                                                    {employee.role || "N/A"}
+                                                </td>
+                                                <td
+                                                    className="px-4 py-4 whitespace-nowrap"
+                                                >
+                                                    {employee.status}
                                                 </td>
                                                 <td className="px-4 py-2 text-center">
                                                     <div className="flex justify-center items-center gap-3">
@@ -129,14 +129,6 @@ const Employees = () => {
                                                             }}
                                                         >
                                                             <FaEdit size={17} />
-                                                        </button>
-                                                        <button
-                                                            className="text-red-400 hover:text-red-300"
-                                                            onClick={() =>
-                                                                handleDelete(employee._id)
-                                                            }
-                                                        >
-                                                            <FaTrash size={17} />
                                                         </button>
                                                     </div>
                                                 </td>

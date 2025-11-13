@@ -27,6 +27,10 @@ const admin_login = async (req, res) => {
             res.status(401).json({ message: 'Invalid credential' });
         }
 
+        if(admin.status === 'Disabled'){
+            res.status(404).json({ message: 'Account Disabled' });
+        }
+
         const adminObj = admin.toObject();
         const { password: _, ...payload } = adminObj;
         

@@ -3,16 +3,21 @@ import { update_data } from '../../services/PutMethod';
 import { get_data } from '../../services/GetMethod';
 
 const UpdateEmployee = ({ currentData, onCancel, setUpdatedData }) => {
+    console.log(currentData);
     const [branches, setBranches] = useState(null);
     const [newState, setNewState] = useState({  
-        id: currentData?._id,
-        email: currentData?.email,
-        fullName: currentData?.fullName, 
-        branchAssigned: currentData?.branchAssigned, 
-        role: currentData?.role
+        id: currentData._id,
+        email: currentData.email,
+        fullName: currentData.fullName, 
+        branchAssigned: currentData?.branchAssigned || '', 
+        status: currentData.status,
+        role: currentData.role
     })
   
     const update_Clicked = async () => {
+
+        if(newState.branchAssigned === '') delete newState.branchAssigned
+
         const info = await update_data("/update_employee", newState)
 
         setUpdatedData((prev) => ({
@@ -45,7 +50,7 @@ const UpdateEmployee = ({ currentData, onCancel, setUpdatedData }) => {
                 </h1>
 
                 <form className='flex flex-col tracking-tighter'>
-                    <h1 className='mt-2'>Email</h1>
+                    <label className='mt-2'>Email</label>
                     <input
                         type='email'
                         value={newState.email}
@@ -53,25 +58,29 @@ const UpdateEmployee = ({ currentData, onCancel, setUpdatedData }) => {
                         className='border-1 border-gray-200 px-3 py-2 rounded-md focus:border-gray-300'
                     />
 
-                    <h1 className='mt-2'>Full Name</h1>
+                    <label className='mt-2'>Full Name</label>
                     <input
                         value={newState.fullName}
                         onChange={(e) => setNewState({ ...newState, fullName: e.target.value })}
                         className='border-1 border-gray-200 px-3 py-2 rounded-md focus:border-gray-300'
                     />
 
-                    <h1 className='mt-2'>Branch Assigned</h1>
-                    <select
-                        value={newState.branchAssigned}
-                        onChange={(e) => setNewState({ ...newState, branchAssigned: e.target.value })}
-                        className='border-1 border-gray-200 px-3 py-2 rounded-md focus:border-gray-300'
-                    >
-                        {branches && branches.map((branch) => (
-                            <option key={branch?._id} value={branch?.name}>{branch?.name}</option>
-                        ))}
-                    </select>
+                    {('branchAssigned' in currentData) && 
+                        <>
+                            <label className='mt-2'>Branch Assigned</label>
+                            <select
+                                value={newState.branchAssigned}
+                                onChange={(e) => setNewState({ ...newState, branchAssigned: e.target.value })}
+                                className='border-1 border-gray-200 px-3 py-2 rounded-md focus:border-gray-300'
+                            >
+                                {branches && branches.map((branch) => (
+                                    <option key={branch?._id} value={branch?.name}>{branch?.name}</option>
+                                ))}
+                            </select>
+                        </>
+                    }
 
-                    <h1 className='mt-2'>Role</h1>
+                    <label className='mt-2'>Role</label>
                     <select
                         value={newState.role}
                         onChange={(e) => setNewState({ ...newState, role: e.target.value })}
@@ -80,6 +89,37 @@ const UpdateEmployee = ({ currentData, onCancel, setUpdatedData }) => {
                         <option value="Front Desk">Front Desk</option>
                         <option value="Barber">Barber</option>
                     </select>
+
+                    {(currentData.role === 'Admin' || currentData.branchAssigned?.status !== 'Open') && (
+                        <>
+                            <label className="mt-2">Status</label>
+                            <select
+                                value={newState.status}
+                                onChange={(e) => setNewState({ ...newState, status: e.target.value })}
+                                className="border-1 border-gray-200 px-3 py-2 rounded-md focus:border-gray-300"
+                            >
+                                {['On Leave', 'Active', 'Disabled']
+                                    .filter(status => {
+                                    if (currentData.role === 'Barber') {
+                                        return ['On Leave', 'Disabled', 'Active'].includes(status);
+                                    }
+
+                                    if (currentData.role === 'Admin' || currentData.role === 'Front Desk') {
+                                        return ['Active', 'Disabled'].includes(status);
+                                    }
+
+                                    return true;
+                                    })
+                                    .map(status => (
+                                        <option key={status} value={status}>
+                                            {status}
+                                        </option>
+                                    ))
+                                }
+                                <option value={currentData.status}>No Status Change</option>
+                            </select>
+                        </>
+                    )}
                 </form>
 
                 <div className='flex justify-end gap-2 mt-4'>

@@ -18,7 +18,7 @@ const initializeBarberAssignments = async (req, res) => {
                 .populate("customer service additionalService branch barber"),
             WalkIn.find({ branch: branchId, status: "Waiting", createdAt: { $gte: start, $lte: end } })
                 .populate("service additionalService barber recordedBy"),
-            Employees.find({ branchAssigned: branchId, role: "Barber" }),
+            Employees.find({ branchAssigned: branchId, role: "Barber", status: { $ne: "Disabled" }}),
         ]);
 
         updateQueueState(branchId, { appointments, walkIns, barbers });
