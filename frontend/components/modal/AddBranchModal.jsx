@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { update_data } from '../../services/PutMethod';
-import { get_data } from '../../services/GetMethod';
 import { post_data } from '../../services/PostMethod';
+import { useDebounce } from '../../hooks/useDebounce';
 
 const NewBranch = ({ onCancel, route, setUpdatedData }) => {
 
@@ -13,7 +12,7 @@ const NewBranch = ({ onCancel, route, setUpdatedData }) => {
         phone: '',
         numberOfBarber: 0,
     });
-    const [debouncedInput, setDebouncedInput] = useState(newBranch);
+    const debounceState = useDebounce(newBranch, 300);
     const [displayedImage, setDisplayedImage] = useState('')
 
     const add_clicked = async (e) => {
@@ -35,7 +34,12 @@ const NewBranch = ({ onCancel, route, setUpdatedData }) => {
             const result = await post_data(formData, route);
 
             if (result?.added) {
+                setUpdatedData((prev) => ({
+                    ...prev,
+                    branches: [result.branch, ...prev.branches]
+                }));
                 onCancel(false);
+                
             }
         }
     };
@@ -50,17 +54,6 @@ const NewBranch = ({ onCancel, route, setUpdatedData }) => {
             setNewBranch({ ...newBranch, imagePath: selectedFile });
         }
     };
-
-
-    // 🔁 Debounce logic
-    useEffect(() => {
-        const handler = setTimeout(() => {
-            setDebouncedInput(newBranch);
-        }, 300);
-
-        return () => clearTimeout(handler);
-    }, [newBranch]);
-
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">

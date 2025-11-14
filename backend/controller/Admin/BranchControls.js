@@ -108,7 +108,7 @@ const add_new_branch = async (req, res) => {
         res.status(200).json({ 
             message: 'New Branch Added', 
             added: true, 
-            product: saved_newBranch
+            branch: saved_newBranch
         });
 
     } catch (err) {
