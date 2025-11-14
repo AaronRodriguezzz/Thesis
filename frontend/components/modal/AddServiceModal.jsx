@@ -14,11 +14,11 @@ const NewService = ({  onCancel, route, setUpdatedData}) => {
 
     const add_clicked = async (e) => {
         e.preventDefault();
-        const new_service = await post_data(newService, route)
+        const response = await post_data(newService, route)
 
 
-        if(new_service){
-            setUpdatedData(prev => [...prev, new_service.service]);
+        if(response){
+            setUpdatedData(prev => ({...prev, services: [response.service, ...prev.services] }));
             onCancel(false);
         }
     }
