@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { AnimatedDropDown } from "../../components/animations/DropDownAnimaton";
@@ -16,8 +16,6 @@ const fadeIn = (delay = 0.3) => ({
 });
 
 const AppointmentPage = () => {
-  useCustomerPageProtection();
-
   const { branchId } = useParams();
   const navigate = useNavigate();
   const user = useUser();
@@ -40,8 +38,9 @@ const AppointmentPage = () => {
     scheduledTime: "",
     service: "",
     additionalService: "",
-    totalAmount: 0,
   });
+
+  useCustomerPageProtection();
 
   // Hooks
   const { data, loading, error } = useFetch("/initialize_appointment_info");
@@ -58,17 +57,18 @@ const AppointmentPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const payload = { ...formData, customer: user._id };
+    const payload = { ...formData, customer: user._id, totalAmount };
     await postData(e, "/new_appointment", payload, () => navigate("/queueing"));
   };
 
   // Calculate total price
-  useEffect(() => {
-    const mainPrice = services.find((s) => s._id === formData.service)?.price || 0;
-    const extraPrice = services.find((s) => s._id === formData.additionalService)?.price || 0;
+  const totalAmount = useMemo(() => {
+    const mainPrice = services.find(s => s._id === formData.service)?.price || 0;
+    const extraPrice = services.find(
+      s => s._id === formData.additionalService
+    )?.price || 0;
 
-    console.log(mainPrice)
-    setFormData((prev) => ({ ...prev, totalAmount: mainPrice + extraPrice }));
+    return mainPrice + extraPrice;
   }, [formData.service, formData.additionalService, services]);
 
   // Socket connection

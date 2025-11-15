@@ -47,11 +47,13 @@ export const useCustomerPageProtection = () => {
     const navigate = useNavigate();
     const { user, loading } = useAuth();
 
-    if (!loading) {
-        if (!user) {
-            navigate("/login", { replace: true });
-        } 
-    }
+    useEffect(() => {
+        if (!loading) {
+            if (!user) {
+                navigate("/login", { replace: true });
+            } 
+        }
+    }, [user, loading]);
 };
 
 export const useAdminPageProtection = () => {

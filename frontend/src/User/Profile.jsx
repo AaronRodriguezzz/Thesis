@@ -6,11 +6,12 @@ import ChangePassword from "../../components/ui/ChangePassword";
 import ProfileUpdate from "../../components/ui/ProfileUpdate";
 
 const ProfilePage = () => {
-  useCustomerPageProtection();
   const navigate = useNavigate();
   const { logout } = useAuth();
   const [editMode, setEditMode] = useState(false);
   const [changingPassMode, setChangingPassMode] = useState(false);  
+  
+  useCustomerPageProtection();
 
   return (
     <div id="Profile" className="min-h-screen w-full flex items-center justify-center p-4">
