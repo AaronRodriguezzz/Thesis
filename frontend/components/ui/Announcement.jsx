@@ -16,7 +16,7 @@ const Announcement = () => {
         exit={{ opacity: 0, y: -20 }}
         className="fixed top-18 left-0 w-full h-12 bg-white/70 text-black flex items-center justify-center z-50"
     >
-      <p className="font-semibold">ANNOUNCEMENT: {data.message.toUpperCase()}</p>
+      <p className="w-full font-semibold text-center">ANNOUNCEMENT: {data.message.toUpperCase()}</p>
     </motion.div>
   );
 }

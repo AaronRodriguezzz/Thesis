@@ -10,9 +10,10 @@ import FeedbackSection from "./HomeSections/FeedbackSection";
 import SubscribeSection from "./HomeSections/SubscribeSection";
 import ReviewFormSection from "./HomeSections/ReviewFormSection";
 
-export default function MainPage() {
+export default function MainPage({ announcementExist }) {
   const container = "w-full max-w-7xl mx-auto px-4 md:px-6";
   const branchImages = ["./lower_bicutan.png", "./toto_studio.JPG", "./totobg.JPG"];
+  
   const { sectionRefs, inViews } = useSectionViews();
   const isMobile = useIsMobile(); 
   const navigate = useNavigate();
@@ -34,7 +35,7 @@ export default function MainPage() {
         initial={{ opacity: 0 }}
         transition={{ type: "spring", duration: 2, ease: "easeInOut" }}
         animate={inViews.home ? { opacity: 1, y: 0 } : {}}
-        className="relative h-screen w-full flex flex-col justify-center items-center text-white px-4 md:px-20 bg-cover bg-center transition ease-in-out"
+        className={`relative h-screen w-full flex flex-col justify-center items-center text-white px-4 ${announcementExist ? '': 'md:pt-20'} bg-cover bg-center transition ease-in-out`}
       >
         <div className={`relative text-center space-y-2 mb-5 z-20 ${container}`}>
           <SlideTxt
