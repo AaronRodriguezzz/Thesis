@@ -24,8 +24,8 @@ const ServiceSection = () => {
                     data.map((service, index) => (
                         <motion.div
                             key={index}
-                            initial={isMobile ? { opacity: 1, x: 0 } : { opacity: 0, y: -20 }}
-                            animate={isMobile || inViews.products ? { opacity: 1, x: 0 } : {  opacity: 1, x: 0 }}
+                            initial={{ opacity: 0, y: -20 }}
+                            whileInView={{ opacity: 1, x: 0 }}
                             transition={{ duration: .5, ease: "easeInOut", delay: index * .1 }}
                             className={`relative w-full h-[320px] bg-cover bg-center rounded-lg flex flex-col md:flex-row shadow-sm  justify-between items-start md:items-center p-4 gap-2 hover:scale-102 transition ease-in-out`}
                             style={{ backgroundImage: `url(./${index + 1}.JPG)`}}

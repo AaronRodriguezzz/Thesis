@@ -33,9 +33,10 @@ const ProductSection = () => {
     return (
         <div id="Products" ref={sectionRefs.products} className="w-full flex flex-col items-center py-20 md:px-4">
             <motion.h1 
-                initial={isMobile ? { opacity: 0, x: 0 } : { opacity: 0, x: -100 }}
+                whileInView={{ opacity: 1, x: 0  }}
+                initial={{ opacity: 0, x: -100 }}
                 transition={{ duration: 1, ease: "easeInOut"}}
-                animate={isMobile || inViews.products ? { opacity: 1, x: 0 } : {}}
+                // animate={isMobile || inViews.products ? { opacity: 1, x: 0 } : {}}
                 className="text-white/80 text-center font-extralight tracking-widest text-2xl md:text-5xl mb-10"
             > 
                 PRODUCT CATALOG
@@ -55,8 +56,8 @@ const ProductSection = () => {
                 {visibleProducts?.map((product, index) => (
                     <motion.div
                         key={product._id}
-                        initial={isMobile ? { opacity: 0, x: 0 } : { opacity: 0, y: -20 }}
-                        animate={isMobile || inViews.products ? { opacity: 1, x: 0, y: 0 } : {}}
+                        initial={{ opacity: 0, y: -20 }}
+                        whileInView={{ opacity: 1, x: 0, y: 0 }}
                         transition={{ duration: 0.3, ease: "easeInOut", delay: index * 0.2 }}
                         className="bg-black/40 h-[500px] w-[85%] sm:w-[45%] md:w-[30%] lg:w-[300px] p-4 hover:scale-105 transition-transform rounded-lg shadow-md"
                     >

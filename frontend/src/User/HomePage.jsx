@@ -34,8 +34,8 @@ export default function MainPage({ announcementExist }) {
         ref={sectionRefs.home}  
         initial={{ opacity: 0 }}
         transition={{ type: "spring", duration: 2, ease: "easeInOut" }}
-        animate={inViews.home ? { opacity: 1, y: 0 } : {}}
-        className={`relative h-screen w-full flex flex-col justify-center items-center text-white px-4 ${announcementExist ? '': 'md:pt-20'} bg-cover bg-center transition ease-in-out`}
+        whileInView={{ opacity: 1, y: 0 }}
+        className={`relative h-screen w-full flex flex-col justify-center items-center text-white px-4 ${announcementExist ? 'md:pt-25': 'md:pt-20'} bg-cover bg-center transition ease-in-out`}
       >
         <div className={`relative text-center space-y-2 mb-5 z-20 ${container}`}>
           <SlideTxt
@@ -53,7 +53,7 @@ export default function MainPage({ announcementExist }) {
           />
           <motion.button
             initial={{ opacity: 0, x: -100 }}
-            animate={inViews.home ? { opacity: 1, x: 0 } : {}}
+            whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 1, ease: "easeInOut" }}
             whileHover={{ scale: 1.03 }}
             onClick={() => navigate("/appointment")}
@@ -83,7 +83,7 @@ export default function MainPage({ announcementExist }) {
           src={branchImages[currentIndex]}
           alt={'Branch Image'}
           initial={{ opacity: 0, scale: 0.95 }}
-          animate={inViews.home ? { opacity: 1, scale: 1 } : {}}
+          whileInView={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5 }}
           className={`w-full max-w-7xl h-[600px] rounded-lg ${isMobile ? 'hidden' : 'block'}`}
@@ -97,7 +97,7 @@ export default function MainPage({ announcementExist }) {
         <motion.div 
           initial={{ opacity: 0, x: -100 }}
           transition={{ duration: 1, ease: "easeInOut"}}
-          animate={inViews.about ? { opacity: 1, x: 0 } : {}}
+          whileInView={{ opacity: 1, x: 0 }}
           className="w-full flex flex-col items-start px-4 xl:px-0"
         >
           <h1 className="text-center text-white font-extralight tracking-widest text-3xl md:text-5xl mb-4">ABOUT US</h1>
@@ -110,7 +110,7 @@ export default function MainPage({ announcementExist }) {
           alt="About us"
           initial={{ opacity: 0 }}
           transition={{ duration: 1, ease: "easeInOut"}}
-          animate={inViews.about  ? { opacity: 1 } : {}}
+          whileInView={{ opacity: 1 }}
           className="w-full max-w-md h-auto rounded-lg"
         />
       </div>
@@ -123,29 +123,7 @@ export default function MainPage({ announcementExist }) {
         <ServiceSection/>
       </div>
 
-      {/* Feedback Prompt
-      <motion.div   
-        ref={sectionRefs.feedback}
-        initial={{ opacity: 0, x: -200 }}
-        animate={inViews.feedback ? { opacity: 1, x: 0 } : {}}
-        transition={{ duration: .7, ease: "easeInOut" }}
-        className={`${container} flex items-center justify-center py-20 z-20`}
-      >
-        <div className="w-full md:w-2/3 lg:w-1/2 bg-black/40 rounded-xl flex flex-col justify-center items-center text-center p-10 text-white shadow shadow-white">
-          <h1 className="text-3xl md:text-5xl font-semibold">Give us your feedback!</h1>
-          <p className="text-md md:text-lg">Help us to find what we could improve!</p>
-          <button 
-            className="py-2 md:py-3 px-3 md:px-6 my-3 border text-white text-sm md:text-md hover:bg-white hover:text-black transition-colors"
-            onClick={() => navigate('/feedback')}
-          >
-            Feedback Form
-          </button>
-        </div>
-      </motion.div> */}
-
-
       <ReviewFormSection/>
-      
       <FeedbackSection/>
       <SubscribeSection/>
     </div>

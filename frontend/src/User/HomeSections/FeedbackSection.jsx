@@ -23,7 +23,7 @@ const FeedbackSection = () => {
                     <motion.div
                       key={index}
                       initial={{ opacity: 0, y: -200 }}
-                      animate={inViews.feedback ? { opacity: 1, y: 0 } : {}}
+                      whileInView={{ opacity: 1, y: 0 }}
                       transition={{ duration: .5, ease: "easeInOut", delay: index * .2 }}
                       className="w-full sm:w-[280px] py-15 md:py-20 flex flex-col gap-y-4 justify-center items-center bg-black/30 text-white shadow shadow-white"
                     >
