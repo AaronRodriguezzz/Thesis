@@ -1,12 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Bot, User, X } from 'lucide-react';
 import { motion } from 'motion/react';
+import { useIsMobile } from '../hooks/useIsInMobile';
 import axios from 'axios';
 import DOMPurify from "dompurify";
 import useScrollDetect from '../hooks/useScrollDetect';
 
 const Chatbot = () => {
   const scrollIsMax = useScrollDetect();
+  const isMobile = useIsMobile();
   const messagesEndRef = useRef(null);
   const [open, setOpen] = useState(false);
   const [waiting, setWaiting] = useState(false);
@@ -49,44 +51,64 @@ const Chatbot = () => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, x: 0 }}
+      initial={{ opacity: 0 }}
       animate={{
-        y: scrollIsMax ? -70 : 0,
+        y: scrollIsMax ? -95 : 0,
         opacity: 1,
       }}
       transition={{ duration: 0.7, ease: "easeInOut" }}
-      className="fixed right-4 bottom-5 z-50 flex flex-col items-end gap-3"
+      className="
+        fixed 
+        right-3 bottom-4
+        sm:right-5 sm:bottom-3
+        md:right-8 md:bottom-8
+        lg:right-5 lg:bottom-5
+        z-100 flex flex-col items-end gap-3
+      "
     >
       {open && (
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.3 }}
-          className="w-[320px] h-[520px] bg-black/40 backdrop-blur-md shadow-lg shadow-white/20 rounded-2xl flex flex-col overflow-hidden border border-white/20"
+          className="
+            w-[260px] h-[460px]
+            sm:w-[320px] sm:h-[520px]
+            md:w-[340px] md:h-[550px]
+            lg:w-[380px] lg:h-[620px]
+            xl:w-[420px] xl:h-[650px]
+
+            bg-black/40 backdrop-blur-md 
+            rounded-2xl shadow-lg shadow-white/20
+            border border-white/20 overflow-hidden flex flex-col
+          "
         >
-          {/* Header */}
+
+          {/* HEADER */}
           <div className="bg-black/50 text-white px-4 py-3 flex justify-between items-center border-b border-white/20">
             <span className="font-semibold text-lg tracking-tight">💈 BarberBot</span>
-            <button
-              onClick={() => setOpen(false)}
-              className="hover:text-gray-300 transition"
-            >
-              <X className="w-5 h-5" />
+            <button onClick={() => setOpen(false)} className="hover:text-gray-300 transition">
+              <X className="w-5 h-5 lg:w-6 lg:h-6" />
             </button>
           </div>
 
-          {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-3 scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent">
-            {messages.map((msg, index) => (
+          {/* MESSAGES */}
+          <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent">
+            {messages.map((msg, idx) => (
               <div
-                key={index}
+                key={idx}
                 className={`flex items-end gap-2 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 {msg.sender === 'bot' ? (
                   <>
-                    <Bot className="w-5 h-5 text-white/70" />
+                    <Bot className="w-5 h-5 sm:w-6 sm:h-6 text-white/70" />
                     <div
-                      className="p-3 rounded-xl max-w-[75%] bg-white/10 backdrop-blur-sm text-sm text-white shadow shadow-white/10"
+                      className="
+                        p-2 sm:p-3 rounded-xl 
+                        max-w-[75%] text-xs sm:text-sm 
+                        bg-white/10 backdrop-blur-sm text-white 
+                        shadow shadow-white/10
+                      "
                       dangerouslySetInnerHTML={{
                         __html: DOMPurify.sanitize(msg.text.replace(/```html|```/g, "").trim())
                       }}
@@ -94,10 +116,16 @@ const Chatbot = () => {
                   </>
                 ) : (
                   <>
-                    <div className="p-3 rounded-xl max-w-[75%] bg-white text-black text-sm shadow shadow-white/20">
+                    <div
+                      className="
+                        p-2 sm:p-3 rounded-xl 
+                        max-w-[75%] text-xs sm:text-sm
+                        bg-white text-black shadow shadow-white/20
+                      "
+                    >
                       {msg.text}
                     </div>
-                    <User className="w-5 h-5 text-white/70" />
+                    <User className="w-5 h-5 sm:w-6 sm:h-6 text-white/70" />
                   </>
                 )}
               </div>
@@ -105,8 +133,8 @@ const Chatbot = () => {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Input */}
-          <div className="flex gap-2 p-3 border-t border-white/20 bg-black/50 backdrop-blur-sm">
+          {/* INPUT BAR */}
+          <div className="flex gap-2 p-2 sm:p-3 border-t border-white/20 bg-black/50 backdrop-blur-sm">
             <input
               type="text"
               placeholder="Type a message..."
@@ -114,11 +142,23 @@ const Chatbot = () => {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyPress}
               disabled={waiting}
-              className="flex-1 bg-white/10 text-white placeholder-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-white/40"
+              className="
+                flex-1 bg-white/10 text-white 
+                placeholder-gray-300 rounded-lg 
+                px-2 py-2 sm:px-3 sm:py-2 
+                text-xs sm:text-sm 
+                focus:outline-none focus:ring-2 focus:ring-white/40
+              "
             />
             <button
               onClick={handleSend}
-              className="bg-white/20 text-white px-4 py-2 rounded-lg hover:bg-white/30 transition font-medium shadow shadow-white/10"
+              className="
+                bg-white/20 text-white 
+                px-3 sm:px-4 py-2 rounded-lg 
+                text-xs sm:text-sm 
+                hover:bg-white/30 transition 
+                shadow shadow-white/10
+              "
             >
               {waiting ? '...' : 'Send'}
             </button>
@@ -126,19 +166,27 @@ const Chatbot = () => {
         </motion.div>
       )}
 
-      {/* Floating Button */}
+      {/* FLOATING BUTTON */}
       <motion.button
         animate={{
-            y: scrollIsMax ? -75 : 0, // shift up when at bottom
-            opacity: 1
+          y: scrollIsMax ? 20 : 0,
+          opacity: 1
         }}
         whileHover={{ scale: 1.1 }}
-        onClick={() => setOpen((prev) => !prev)}
-        className="bg-black/40 border border-white/30 text-white rounded-full p-3 shadow-lg shadow-white/20 hover:bg-white/10 backdrop-blur-md transition"
+        onClick={() => setOpen(prev => !prev)}
+        className="
+          bg-black/40 border border-white/30 text-white rounded-full 
+          p-2 sm:p-3 md:p-4 
+          shadow-lg shadow-white/20 hover:bg-white/10 
+          backdrop-blur-md transition
+        "
       >
-        <img src="./robot.png" alt="robot" className='w-7 h-7 md:w-10 md:h-10' />      
-    </motion.button>
-
+        <img
+          src="./robot.png"
+          alt="robot"
+          className="w-7 h-7 sm:w-8 sm:h-8 md:w-11 md:h-11"
+        />
+      </motion.button>
     </motion.div>
   );
 };
