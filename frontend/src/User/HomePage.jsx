@@ -92,7 +92,7 @@ export default function MainPage() {
 
 
       {/* About Us */}
-      <div id="About Us" ref={sectionRefs.about} className={`relative h-[90vh] ${container} flex flex-col md:flex-row items-center justify-center py-10 gap-6`}>
+      <div id="About Us" ref={sectionRefs.about} className={`relative min-h-[90vh] ${container} flex flex-col md:flex-row items-center justify-center py-10 gap-6`}>
         <motion.div 
           initial={{ opacity: 0, x: -100 }}
           transition={{ duration: 1, ease: "easeInOut"}}
