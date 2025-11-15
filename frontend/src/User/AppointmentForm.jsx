@@ -16,6 +16,8 @@ const fadeIn = (delay = 0.3) => ({
 });
 
 const AppointmentPage = () => {
+  useCustomerPageProtection();
+
   const { branchId } = useParams();
   const navigate = useNavigate();
   const user = useUser();
@@ -40,8 +42,6 @@ const AppointmentPage = () => {
     additionalService: "",
   });
 
-  useCustomerPageProtection();
-
   // Hooks
   const { data, loading, error } = useFetch("/initialize_appointment_info");
   const { postData, postLoading, postError } = usePost();
@@ -64,9 +64,7 @@ const AppointmentPage = () => {
   // Calculate total price
   const totalAmount = useMemo(() => {
     const mainPrice = services.find(s => s._id === formData.service)?.price || 0;
-    const extraPrice = services.find(
-      s => s._id === formData.additionalService
-    )?.price || 0;
+    const extraPrice = services.find(s => s._id === formData.additionalService)?.price || 0;
 
     return mainPrice + extraPrice;
   }, [formData.service, formData.additionalService, services]);
