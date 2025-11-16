@@ -10,6 +10,8 @@ import { useUserProtection } from "../hooks/userProtectionHooks";
 const UserLayout = () => {
   useUserProtection();
   
+  const [announcementExist, setAnnouncementExist] = React.useState(false);
+
   return (
     <div>
       <div className="fixed inset-0 -z-10 overflow-hidden">
@@ -18,7 +20,7 @@ const UserLayout = () => {
       </div>
       <Navigation otherPage={true}/>
       <Announcement /> 
-      <main className="overflow-x-hidden pt-20 z-10">
+      <main className="overflow-x-hidden py-25 z-10">
         <Outlet />
         <HaircutSuggestionBtn/>
         <Chatbot/>

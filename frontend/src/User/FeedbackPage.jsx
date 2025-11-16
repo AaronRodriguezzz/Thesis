@@ -23,7 +23,7 @@ const FeedbackPage = () => {
         )
 
     return (
-        <div className="min-h-screen w-full p-6 py-10 text-white">
+        <div className="min-h-screen w-full p-6 text-white">
             {/* Header Section */}
             <div className="text-center leading-8 mb-10">
                 <h1 className="text-[25px] md:text-3xl font-bold">Customer Feedbacks</h1>

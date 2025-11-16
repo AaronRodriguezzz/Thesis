@@ -14,7 +14,7 @@ const ProfilePage = () => {
   useCustomerPageProtection();
 
   return (
-    <div id="Profile" className="min-h-screen w-full flex items-center justify-center p-4">
+    <div id="Profile" className="min-h-screen w-full flex items-center justify-center">
       <div className="w-full max-w-7xl mx-auto px-4">
         <div className="w-full max-w-3xl p-8 bg-black/40 rounded-xl shadow shadow-white text-white mx-auto">
         {/* Title */}

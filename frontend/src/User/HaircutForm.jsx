@@ -77,7 +77,7 @@ export default function HaircutForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6">
+    <div className="min-h-screen flex items-center justify-center px-6">
       {imageId ? (
         <motion.div
           initial={{ opacity: 0, y: 30 }}

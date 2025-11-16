@@ -1,7 +1,7 @@
 
 const TermsPage = () => {
   return (
-    <div id="terms" className="min-h-screen flex flex-col items-center py-10 px-6">
+    <div id="terms" className="min-h-screen flex flex-col items-center px-6">
       <div className="w-full max-w-7xl mx-auto px-4">
         <div className="max-w-3xl mx-auto bg-black/40 text-white shadow shadow-white rounded-2xl p-8">
         <h1 className="text-3xl font-bold mb-6">Terms & Conditions</h1>

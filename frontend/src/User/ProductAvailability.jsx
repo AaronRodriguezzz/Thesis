@@ -38,7 +38,7 @@ export default function ProductAvailability(){
     },[])
 
     return (
-        <div id='Branches' className="min-h-screen p-6">
+        <div id='Branches' className="min-h-screen px-6">
             {/* Header */}
             <motion.div 
                 className="text-center text-white mb-10"

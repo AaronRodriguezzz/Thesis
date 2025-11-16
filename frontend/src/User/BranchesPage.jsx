@@ -7,7 +7,7 @@ const baseUrl = import.meta.env.MODE === 'development' ? 'http://localhost:4001'
 export default function BranchesPage(){
     const navigate = useNavigate();
     const { data, loading, error } = useFetch('/get_data/branch', null, null, []);
-
+  
     if (loading)
         return (
             <div className="flex h-screen items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
@@ -25,7 +25,6 @@ export default function BranchesPage(){
     return (
         <div id='Branches' className="min-h-screen p-2 pt-10 md:p-12">
           <div className="w-full max-w-7xl mx-auto px-4">
-          {/* Header */}
           <motion.div 
             className="text-center text-white mb-10"
             initial={{ opacity: 0 }}

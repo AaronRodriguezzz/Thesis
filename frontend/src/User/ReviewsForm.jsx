@@ -47,7 +47,7 @@ const ReviewForm = () => {
   };
 
   return (
-    <div className="w-screen h-screen pt-10 flex justify-center items-start">
+    <div className="w-screen h-screen flex justify-center items-start">
       <motion.form 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

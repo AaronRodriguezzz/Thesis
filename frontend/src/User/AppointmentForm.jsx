@@ -92,7 +92,7 @@ const AppointmentPage = () => {
     );
 
   return (
-    <div className="w-screen h-screen overflow-x-hidden pt-10">
+    <div className="w-screen h-screen overflow-x-hidden">
       <main className="flex gap-x-3 justify-center items-center my-2 text-white">
         {/* Video Preview */}
         <motion.video
