@@ -127,7 +127,7 @@ export default function HaircutForm() {
           {/* Face Shape */}
           <section>
             <h2 className="text-xl font-semibold mb-3">Face Shape</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <OptionCard
                 field="faceShape"
                 value="oval"
@@ -180,9 +180,9 @@ export default function HaircutForm() {
           </section>
 
           {/* Hair Type */}
-          <section>x
+          <section>
             <h2 className="text-xl font-semibold mb-3">Hair Type</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 md:grid-cols-4 gap-4">
               {["straight", "wavy", "curly", "coily"].map((type) => (
                 <OptionCard
                   key={type}
@@ -207,7 +207,7 @@ export default function HaircutForm() {
           {/* Hair Length */}
           <section>
             <h2 className="text-xl font-semibold mb-3">Hair Length</h2>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {["short", "medium", "long"].map((len) => (
                 <OptionCard
                   key={len}
@@ -231,7 +231,7 @@ export default function HaircutForm() {
           {/* Hair Density */}
           <section>
             <h2 className="text-xl font-semibold mb-3">Hair Density</h2>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {["thin", "normal", "thick"].map((density) => (
                 <OptionCard
                   key={density}
@@ -255,7 +255,7 @@ export default function HaircutForm() {
           {/* Hairline */}
           <section>
             <h2 className="text-xl font-semibold mb-3">Hairline</h2>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {[
                 { val: "straight", desc: "Even line across the forehead." },
                 {
@@ -300,7 +300,7 @@ export default function HaircutForm() {
           {/* Gender */}
           <section>
             <h2 className="text-xl font-semibold mb-3">Gender</h2>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {[
                 { val: "male", label: "Male", desc: "Masculine style preference." },
                 {
