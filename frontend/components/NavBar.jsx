@@ -37,7 +37,7 @@ export default function Navigation() {
       <div className="flex items-center justify-between w-full">
         {/* Left: Burger icon (mobile only) */}
         <div className="lg:hidden">
-          <button onClick={toggleNav} className="text-black">
+          <button onClick={toggleNav} className="text-white">
             {navVisible ? <FiX size={30} /> : <FiMenu size={30} />}
           </button>
         </div>
@@ -53,40 +53,40 @@ export default function Navigation() {
           className={`
             ${navVisible ? "flex" : "hidden"}
             fixed top-[70px] left-0 h-[calc(100vh-70px)]
-            flex-col items-center bg-white p-16 space-y-4 text-md tracking-wider
-            shadow-2xl transition-all duration-300 ease-in-out
+            flex-col items-center bg-black/90 text-white p-16 space-y-4 text-md tracking-wider
+            transition-all duration-300 ease-in-out
             z-40
-            lg:flex lg:static lg:h-auto lg:flex-row lg:items-center lg:justify-center lg:space-y-0 lg:space-x-6 lg:p-0 lg:bg-transparent lg:shadow-none
+            w-full lg:flex lg:static lg:h-auto lg:flex-row lg:items-center lg:justify-center lg:space-y-0 lg:space-x-6 lg:p-0 lg:bg-transparent lg:shadow-none
           `}
         >
           {["Home", "About Us", "Services", "Products"].map(text => (
             <li
               key={text}
               onClick={() => navClicked(text)}
-              className="cursor-pointer hover:underline transition"
-              style={{ fontWeight: isActive === text ? 600 : 400 }}
+              className={`cursor-pointer hover:bg-white hover:text-black hover:px-2 hover:rounded-full transition 
+                ${isActive === text ? 'bg-white rounded-full text-black px-2' : 'bg-transparent text-white'}`}
             >
               {text}
             </li>
           ))}
           <li
             onClick={() => navClicked("Queueing", "/queueing")}
-            className="cursor-pointer hover:underline transition"
-            style={{ fontWeight: isActive === "Queueing" ? 600 : 400 }}
+            className={`cursor-pointer hover:bg-white hover:text-black hover:px-2 hover:rounded-full transition 
+              ${isActive === 'Queueing' ? 'bg-white rounded-full text-black px-2' : 'bg-transparent text-white'}`}
           >
             Queueing
           </li>
           <li
             onClick={() => navClicked("Faq", "/faq")}
-            className="cursor-pointer hover:underline transition"
-            style={{ fontWeight: isActive === "Faq" ? 600 : 400 }}
+            className={`cursor-pointer hover:bg-white hover:text-black hover:px-2 hover:rounded-full transition 
+                ${isActive === 'Faq' ? 'bg-white rounded-full text-black px-2' : 'bg-transparent text-white'}`}
           >
             FAQ's
           </li>
           <li
             onClick={() => navClicked("Branches", "/branches")}
-            className="cursor-pointer hover:underline transition"
-            style={{ fontWeight: isActive === "Branches" ? 600 : 400 }}
+              className={`cursor-pointer hover:bg-white hover:text-black hover:px-2 hover:rounded-full transition 
+                ${isActive === 'Branches' ? 'bg-white rounded-full text-black px-2' : 'bg-transparent text-white'}`}
           >
             Branches
           </li>
