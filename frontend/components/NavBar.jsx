@@ -63,7 +63,7 @@ export default function Navigation() {
             <li
               key={text}
               onClick={() => navClicked(text)}
-              className={`cursor-pointer hover:bg-white hover:text-black hover:px-2 hover:rounded-full transition 
+              className={`cursor-pointer hover:underline transition 
                 ${isActive === text ? 'bg-white rounded-full text-black px-2' : 'bg-transparent text-white'}`}
             >
               {text}
@@ -71,21 +71,21 @@ export default function Navigation() {
           ))}
           <li
             onClick={() => navClicked("Queueing", "/queueing")}
-            className={`cursor-pointer hover:bg-white hover:text-black hover:px-2 hover:rounded-full transition 
+            className={`cursor-pointer hover:underline transition 
               ${isActive === 'Queueing' ? 'bg-white rounded-full text-black px-2' : 'bg-transparent text-white'}`}
           >
             Queueing
           </li>
           <li
             onClick={() => navClicked("Faq", "/faq")}
-            className={`cursor-pointer hover:bg-white hover:text-black hover:px-2 hover:rounded-full transition 
+            className={`cursor-pointer hover:underline transition 
                 ${isActive === 'Faq' ? 'bg-white rounded-full text-black px-2' : 'bg-transparent text-white'}`}
           >
-            FAQ's
+            FAQ's 
           </li>
           <li
             onClick={() => navClicked("Branches", "/branches")}
-              className={`cursor-pointer hover:bg-white hover:text-black hover:px-2 hover:rounded-full transition 
+              className={`cursor-pointer hover:underline transition 
                 ${isActive === 'Branches' ? 'bg-white rounded-full text-black px-2' : 'bg-transparent text-white'}`}
           >
             Branches
