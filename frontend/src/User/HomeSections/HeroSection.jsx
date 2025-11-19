@@ -39,7 +39,7 @@ const HeroSection = () => {
             initial={{ opacity: 0 }}
             transition={{ type: "spring", duration: 2, ease: "easeInOut" }}
             whileInView={{ opacity: 1, y: 0 }}
-            className={`relative h-screen w-full flex flex-col justify-center items-center text-white px-4 bg-cover bg-center transition ease-in-out`}
+            className={`relative min-h-screen w-full flex flex-col justify-center items-center text-white px-4 bg-cover bg-center transition ease-in-out`}
         >
             <div className='relative text-center space-y-2 mb-5 z-20 w-full max-w-7xl mx-auto px-4 md:px-6'>
             <SlideTxt
@@ -70,27 +70,27 @@ const HeroSection = () => {
 
             {/* Mobile video */}
             <motion.video
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, ease: "easeInOut" }}
-            src="/barbering.mp4"
-            autoPlay
-            loop
-            muted
-            playsInline
-            poster="/fallback.jpg"
-            className="absolute top-0 left-0 block md:hidden w-full h-full object-cover z-0"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1, ease: "easeInOut" }}
+                src="/barbering.mp4"
+                autoPlay
+                loop
+                muted
+                playsInline
+                poster="/fallback.jpg"
+                className="absolute top-0 left-0 block md:hidden w-full h-full object-cover z-0"
             />
 
             <motion.img
-            key={branchImages[currentIndex]} 
-            src={`https://res.cloudinary.com/dk3bbinj9/image/upload/${branchImages[currentIndex]}`}
-            alt={'Branch Image'}
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-            className={`w-full max-w-7xl h-[600px] rounded-lg ${isMobile ? 'hidden' : 'block'}`}
+                key={branchImages[currentIndex]} 
+                src={`https://res.cloudinary.com/dk3bbinj9/image/upload/${branchImages[currentIndex]}`}
+                alt={'Branch Image'}
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5 }}
+                className={`max-w-7xl h-[600px] rounded-lg ${isMobile ? 'hidden' : 'block'}`}
             />
             
         </motion.div>
