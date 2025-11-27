@@ -2,11 +2,9 @@ import {useEffect, useState} from "react";
 import { FaChevronLeft,  FaChevronRight} from 'react-icons/fa';
 import { get_data } from "../../services/GetMethod";
 import { motion } from "framer-motion";
-import { useIsMobile } from "../../hooks/useIsInMobile";
 
 export default function ProductAvailability(){
     const baseUrl = import.meta.env.MODE === 'development' ? 'http://localhost:4001' : 'https://tototumbs.onrender.com';
-    const isMobile = useIsMobile();
     
     const [products, setProducts] = useState(null);
     const [branches, setBranch] = useState(null);

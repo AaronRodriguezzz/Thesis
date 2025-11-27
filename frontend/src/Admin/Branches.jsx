@@ -17,7 +17,7 @@ const Branches = () => {
     const debouncedSearch = useDebounce(searchTerm, 1000);
 
     const { data, loading, error, setData } = useFetch(
-        `/get_branches?search=${debouncedSearch}`,
+        `get_branches?search=${debouncedSearch}`,
         page,
         null,
         [page, debouncedSearch]

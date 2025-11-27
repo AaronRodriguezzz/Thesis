@@ -16,7 +16,7 @@ const POS = () => {
     const branchId = user?.branchAssigned;
 
     const { data, loading, error, setData } = useFetch(
-        branchId ? `/products/${branchId}` : null, 
+        branchId ? `products/${branchId}` : null, 
         null,
         null,
         []

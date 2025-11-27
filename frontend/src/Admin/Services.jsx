@@ -17,7 +17,7 @@ const Services = () => {
     const debouncedSearch = useDebounce(searchTerm, 1000);
 
     const { data, loading, error, setData } = useFetch(
-        `/services?search=${debouncedSearch}`,
+        `services?search=${debouncedSearch}`,
         page,
         null,
         [page, debouncedSearch]

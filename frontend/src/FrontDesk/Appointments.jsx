@@ -16,7 +16,7 @@ const Appointments = () => {
     const [addingAppointment, setAddingAppointment] = useState(false);
     
     const { data, loading, error, setData } = useFetch(
-        user ? `/branch_appointments/${user?.branchAssigned}?search=${searchQuery}` : null,
+        user ? `branch_appointments/${user?.branchAssigned}?search=${searchQuery}` : null,
         page,
         null, 
         [page, user, searchQuery]

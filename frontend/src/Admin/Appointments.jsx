@@ -12,7 +12,7 @@ const Appointments = () => {
     const [page, setPage] = useState(1);
     const [dateFilter, setDateFilter] = useState("");
 
-    let endpoint = `/all_appointments?page=${page}`;
+    let endpoint = `all_appointments?page=${page}`;
     if (debouncedSearch) endpoint += `&search=${debouncedSearch}`;
     if (dateFilter) endpoint += `&date=${dateFilter}`;
     

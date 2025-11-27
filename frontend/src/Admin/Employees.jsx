@@ -18,7 +18,7 @@ const Employees = () => {
 
     // Use useFetch with search + pagination
     const { data, loading, error, setData } = useFetch(
-        `/employees?search=${debouncedSearch}`,
+        `employees?search=${debouncedSearch}`,
         page,
         null,
         [page, debouncedSearch]

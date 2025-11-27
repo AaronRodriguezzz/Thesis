@@ -15,7 +15,7 @@ const Customers = () => {
     const debouncedSearch = useDebounce(searchTerm, 1000);
     
     const { data, loading, error, setData } = useFetch(
-        `/get_customers?search=${debouncedSearch}`,
+        `get_customers?search=${debouncedSearch}`,
         page,
         null,
         [page, debouncedSearch]

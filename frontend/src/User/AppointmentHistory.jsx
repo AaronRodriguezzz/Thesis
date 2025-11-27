@@ -8,7 +8,7 @@ import CancellationModal from "../../components/modal/CancellationModal";
 const AppointmentHistory = () => {
   useCustomerPageProtection();
 
-  const { data, loading, error, setData } = useFetch('/get_data/appointments', null, null, []);
+  const { data, loading, error, setData } = useFetch('get_data/appointments', null, null, []);
   const [showCancellationModal, setShowCancellationModal] = useState(false);
   const [appointmentToCancel, setAppointmentToCancel] = useState(null);
   const statusOrder = {

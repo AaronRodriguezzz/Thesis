@@ -6,7 +6,7 @@ import Rating from '@mui/material/Rating'
 const FeedbackPage = () => {
     
     const [page, setPage] = useState(1)
-    const { data, loading, error } = useFetch('/reviews', null, null, [page])
+    const { data, loading, error } = useFetch('reviews', null, null, [page])
 
     if (loading)
         return (

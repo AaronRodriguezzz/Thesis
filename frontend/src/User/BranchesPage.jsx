@@ -11,7 +11,6 @@ export default function BranchesPage() {
   const navigate = useNavigate();
   const { data, loading, error } = useFetch("get_data/branch");
 
-  console.log(data)
   // Handle loading
   if (loading)
     return (
@@ -25,7 +24,7 @@ export default function BranchesPage() {
   // Handle error
   if (error)
     return (
-      <div className="flex h-screen items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="flex h-screen items-center justify-center">
         <p className="text-red-500 text-lg">
           Failed to load branches. Please try again later.
         </p>
