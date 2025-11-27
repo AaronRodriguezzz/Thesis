@@ -25,7 +25,7 @@ const Products = () => {
         loading,
         error,
         setData: setProductList,
-    } = useFetch(`/products?page=${page}`);
+    } = useFetch(`products?page=${page}`);
 
     const filteredProducts = useMemo(() => {
         if (!productList) return [];
