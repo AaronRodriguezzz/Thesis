@@ -9,7 +9,7 @@ const baseUrl =
 
 export default function BranchesPage() {
   const navigate = useNavigate();
-  const { data, loading, error } = useFetch("/get_data/branch");
+  const { data, loading, error } = useFetch("get_data/branch");
 
   console.log(data)
   // Handle loading

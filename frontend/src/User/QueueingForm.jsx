@@ -12,7 +12,7 @@ export default function BarberStatusPage() {
   const [currentHour, setCurrentHour] = useState(0);
   const [currentBranch, setCurrentBranch] = useState("6862a4bed08d2b82975b2ac6")
 
-  const { data, loading, error } = useFetch('/get_data/branch', null, null, []);
+  const { data, loading, error } = useFetch('get_data/branch', null, null, []);
   const { barberList, appointments, walkIns } = useQueueData(currentBranch);
 
   const handleBranchChange = (e) => {
