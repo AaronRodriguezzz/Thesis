@@ -15,7 +15,7 @@ export default function BranchesPage() {
   // Handle loading
   if (loading)
     return (
-      <div className="flex h-screen items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="flex h-screen items-center justify-center">
         <p className="text-gray-600 text-lg animate-pulse">
           Loading branches...
         </p>
