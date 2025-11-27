@@ -11,6 +11,7 @@ export default function BranchesPage() {
   const navigate = useNavigate();
   const { data, loading, error } = useFetch("/get_data/branch");
 
+  console.log(data)
   // Handle loading
   if (loading)
     return (
@@ -31,6 +32,7 @@ export default function BranchesPage() {
       </div>
     );
 
+  const branches = Array.isArray(data) ? data : [];
 
   return (
     <div id="Branches" className="min-h-screen p-2 pt-10 md:p-12">
@@ -50,7 +52,7 @@ export default function BranchesPage() {
 
         {/* Branch Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {data && data.length > 0 && data.map((branch, index) => (
+          {branches.map((branch, index) => (
             <motion.div
               key={branch?._id || index}
               className="bg-black/40 text-white rounded-2xl shadow-lg overflow-hidden hover:scale-[1.02] transition"
