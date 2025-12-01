@@ -140,78 +140,64 @@ const hairCut_Suggestion = async (req, res) => {
 
       Choices:
         1.Barber’s Cut – Short on the sides, a little longer on top. Clean and simple.
-        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
+        Public Id: barbers_kp1g2p
 
         2.Semi-Kalbo – Very short all around, almost shaved. Easy to maintain.
-        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
+        Public Id: semi_kalbo_birpoy
 
         3.Skin Fade – Sides shaved very short and blended smoothly into longer top. Sharp look.
-        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
+        Public Id: undercut_ba5bsd
 
         4.Taper Fade – Sides gradually shorter, but not shaved. Neat and professional.
         Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
 
         5.Undercut – Short or shaved sides with longer hair on top you can style.        
-        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
+        Public Id: undercut_ba5bsd
 
         6.Pompadour – Hair pushed up and back for a full, stylish look.
-        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
+        Public Id: barbers_kp1g2p
 
         7.Quiff – Hair brushed up at the front with some volume. Casual but neat.
-        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
+        Public Id: barbers_kp1g2p
 
         8.Two-Block Cut – Short sides and back with longer, fuller hair on top. Trendy and youthful.
         Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
 
         9.Flat Top – Hair on top cut flat and level. Clean and bold style.
-        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
+        Public Id: flattop_xuapwt
 
         10.Comb Over – Hair neatly parted to the side. Common for formal looks.
-        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
+        Public Id: crew_cut_tlskvu
 
         11.Long Top with Fade – Long hair on top with faded short sides. Modern style.
-        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
+        Public Id: crew_cut_tlskvu
 
         12.Crew Cut – Short on the sides and slightly longer on top. Simple and sporty.
-        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
+        Public Id: crew_cut_tlskvu
+
 
         13.Buzz Cut – Very short and even all over. Low-maintenance and cool.
-        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
+        Public Id: barbers_kp1g2p
 
         14.French Crop – Short sides with a bit of fringe in the front. Easy to style.
-        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
+        Public Id: crew_cut_tlskvu
 
         15.Caesar Cut – Short cut with straight bangs in front. Works for thinning hair.
         Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
 
         16.Spiky Hair – Hair styled upward into spikes with gel or wax. Fun and energetic.
-        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
+        Public Id: crew_cut_tlskvu
 
         17.High and Tight – Very short sides with a little more hair on top. Clean and sharp.
-        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
+        Public Id: barbers_kp1g2p
 
         18.Slick Back – Medium hair combed straight back with gel. Mature look.
-        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
+        Public Id: barbers_kp1g2p
 
         19.Mohawk (Modern) – Longer hair in the middle, short or faded sides. Bold style.
         Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
 
         20.Disconnected Undercut – Big contrast between shaved sides and long top. Trendy and eye-catching.
-        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
-
-        21.Curly Top with Fade – Natural curls on top with faded sides. Stylish and easy to maintain.
-        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
-
-        22.Textured Crop – Short sides with a bit of length on top styled messily. Casual and modern.
-        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
-
-        23.Asian Fade – Short sides with a gradual fade and longer top. Popular in Asian communities.
-        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
-
-        24.Slick Side Part – Hair neatly parted to the side and slicked down. Classic and polished.
-        Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
-
-        25.Messy Waves – Medium length hair styled into loose, natural waves. Relaxed and trendy.
         Public Id: Bald_Mohawk_Fade_Haircut_for_Men_1_ddmheg 
 
         Base your choice on:
